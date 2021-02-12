@@ -1,5 +1,7 @@
 package com.example.workoutv01;
 
+//THE FUCK IS THIS HORSE SHIT
+
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
