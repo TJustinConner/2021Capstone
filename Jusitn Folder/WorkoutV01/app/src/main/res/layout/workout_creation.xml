@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".WorkoutCreation">
+
+    <Spinner
+        android:id="@+id/WorkoutCreationSpinnerRouteType001"
+        android:layout_width="200dp"
+        android:layout_height="42dp"
+        android:layout_marginEnd="40dp"
+        android:spinnerMode="dropdown"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/WorkoutCreationEditTextNumber002"
+        app:layout_constraintTop_toBottomOf="@+id/WorkoutCreationEditTextNumber002"
+        app:layout_constraintVertical_bias="0.026" />
+
+    <TextView
+        android:id="@+id/WorkoutCreationTextView001"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="44dp"
+        android:text="@string/Distance"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/WorkoutCreationTextView002"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="26dp"
+        android:text="@string/Flights_of_Stairs"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/WorkoutCreationTextView001" />
+
+    <TextView
+        android:id="@+id/WorkoutCreationTextView003"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="39dp"
+        android:text="@string/Route_Type"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/WorkoutCreationTextView002" />
+
+    <EditText
+        android:id="@+id/WorkoutCreationEditTextNumberSigned001"
+        android:layout_width="115dp"
+        android:layout_height="51dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="8dp"
+        android:autofillHints="@string/Number"
+        android:ems="10"
+        android:hint="@string/Number"
+        android:inputType="numberSigned"
+        app:layout_constraintEnd_toStartOf="@+id/spinnerDistanceType"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="264dp"
+        android:onClick="HandleText"
+        android:text="@string/Submit"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <EditText
+        android:id="@+id/WorkoutCreationEditTextNumber002"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="16dp"
+        android:autofillHints="@string/Number"
+        android:ems="10"
+        android:hint="@string/Number"
+        android:inputType="number"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.071"
+        app:layout_constraintStart_toStartOf="@+id/WorkoutCreationEditTextNumberSigned001"
+        app:layout_constraintTop_toBottomOf="@+id/WorkoutCreationEditTextNumberSigned001" />
+
+    <Spinner
+        android:id="@+id/spinnerDistanceType"
+        android:layout_width="118dp"
+        android:layout_height="52dp"
+        android:layout_marginTop="10dp"
+        android:spinnerMode="dropdown"
+        app:layout_constraintBottom_toTopOf="@+id/WorkoutCreationEditTextNumber002"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.482" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

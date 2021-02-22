@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Workout Menu</string>
+    <string name="Miles_Abriviations">Mi</string>
+    <string name="Distance">Distance</string>
+    <string name="Flights_of_Stairs">Flights of Stairs</string>
+    <string name="Route_Type">Route Type</string>
+    <string name="Number">Number</string>
+    <string name="Submit">Submit</string>
+</resources>
