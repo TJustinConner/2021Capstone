@@ -1,7 +1,0 @@
-com/example/event/UploadWorker.java
- com.example.event.UploadWorker
-com/example/event/EventActivity.java
- com.example.event.EventActivity
- com.example.event.EventActivity$1
-com/example/event/BuildConfig.java
- com.example.event.BuildConfig
