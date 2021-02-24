@@ -25,5 +25,8 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(ToAcctCreation);
             }});
     }
-
+    public void StartWorkout (View s){
+        Intent i = new Intent(this, WorkoutCreation.class);
+        startActivity(i);
+    }
 }
