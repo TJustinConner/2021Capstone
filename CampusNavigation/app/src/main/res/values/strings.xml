@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">CampusNavigation</string>
+    <string name="account_creation_btn_txt">Account Creation</string>
+    <string name="Workouts_Btn_Text">Workouts</string>
+    <string name="SchedulingButtonText">Scheduling</string>
+    <string name="EventsButtonText">Events</string>
+</resources>
