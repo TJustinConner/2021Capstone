@@ -1,0 +1,80 @@
+
+
+
+
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MapsActivity">
+
+    <fragment
+        android:id="@+id/map"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".MapsActivity"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+        <Button
+            android:id="@+id/satellite"
+            android:layout_width="106dp"
+            android:layout_height="103dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_gravity="right"
+            android:layout_marginStart="9dp"
+            android:layout_marginLeft="9dp"
+            android:layout_marginTop="678dp"
+            android:onClick="Satellite"
+            android:text="Switch map type" />
+
+        <Button
+            android:id="@+id/zoomout"
+            android:layout_width="41dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginEnd="39dp"
+            android:layout_marginRight="39dp"
+            android:layout_marginBottom="35dp"
+            android:onClick="Zoom"
+            android:text="-" />
+
+        <Button
+            android:id="@+id/zoomin"
+            android:layout_width="41dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginEnd="39dp"
+            android:layout_marginRight="39dp"
+            android:layout_marginBottom="93dp"
+            android:onClick="Zoom"
+            android:text="+" />
+
+        <Button
+            android:id="@+id/rehome"
+            android:layout_width="31dp"
+            android:layout_height="30dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginEnd="355dp"
+            android:layout_marginRight="355dp"
+            android:layout_marginBottom="126dp"
+            android:onClick="ReHome"
+            android:text="*" />
+
+    </RelativeLayout>
+
+</FrameLayout>
+
+
