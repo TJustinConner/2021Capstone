@@ -16,4 +16,50 @@
     <string name="passwordConfMismatch">The passwords do not match.</string>
     <string name="blankFieldsError">One of the fields is blank.</string>
     <string name="ReferToPasswordReqs">Please follow the guidelines in the Password Requirements List.</string>
+
+    <string-array name="Locations">
+        <item>Location</item>
+        <item>Cavalier House</item>
+        <item>David J. Prior Convocation Center</item>
+        <item>Humphreys-Thomas Field House</item>
+        <item>Carl Smith Stadium</item>
+        <item>Ramseyer Press Box</item>
+        <item>Baptitst Collegiate Ministries</item>
+        <item>Culberston Hall</item>
+        <item>College Relations/Napoleon Hill Foundation</item>
+        <item>Commonwealth Hall</item>
+        <item>Lila Vicars Smith House</item>
+        <item>McCrary Hall</item>
+        <item>Gilliam Center for the Arts</item>
+        <item>Hunter J. Smith Dining Commons</item>
+        <item>Thompson Hall</item>
+        <item>Asbury Hall</item>
+        <item>Martha Randolph Hall</item>
+        <item>Crocket Hall (Admissions Office)</item>
+        <item>Cantrell Hall</item>
+        <item>Chapel of all Faiths</item>
+        <item>Henson Hall</item>
+        <item>Smiddy Hall</item>
+        <item>C. Bascom Slemp Student Center</item>
+        <item>Wyllie Hall</item>
+        <item>UVA-Wise Library</item>
+        <item>Zehmer Hall</item>
+        <item>Darden Hall</item>
+        <item>Leonard W. Sandridge Science Center</item>
+        <item>Betty J. Gilliam Sculpture Garden</item>
+        <item>Physical Plant</item>
+        <item>Winston Ely Health and Wellness Center</item>
+        <item>Bower-Sturgill Hall</item>
+        <item>Stallard Field (Baseball)</item>
+        <item>Fred B. Greear Gym and Swimming Pool</item>
+        <item>Humphreys Tennis Complex</item>
+        <item>Women\'s Softball Field</item>
+        <item>Intramural Sports</item>
+        <item>Observatory</item>
+        <item>Townhouses</item>
+        <item>Resource Center</item>
+        <item>Center for Teaching Excellence</item>
+        <item>Wesley Foundation</item>
+        <item>Alumni Hall</item>
+    </string-array>
 </resources>
