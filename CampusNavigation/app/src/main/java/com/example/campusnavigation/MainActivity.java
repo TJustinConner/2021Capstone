@@ -1,7 +1,9 @@
 package com.example.campusnavigation;
 
 import androidx.appcompat.app.AppCompatActivity;
-
+import android.content.Intent;
+import android.view.View;
+import android.widget.Button;
 import android.os.Bundle;
 
 public class MainActivity extends AppCompatActivity {
@@ -10,5 +12,18 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        Button AcctCreationButton = (Button) findViewById(R.id.AccountCreationButton);
+        Button WorkoutsButton = (Button) findViewById(R.id.WorkoutsButton);
+        Button EventsButton = (Button) findViewById(R.id.EventsButton);
+        Button SchedulingButton = (Button) findViewById(R.id.SchedulingButton);
+
+        AcctCreationButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                //takes user to account creation activity
+                Intent ToAcctCreation = new Intent(v.getContext(), AccountCreation.class);
+                startActivity(ToAcctCreation);
+            }});
     }
+
 }

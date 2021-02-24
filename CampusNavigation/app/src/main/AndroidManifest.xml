@@ -9,6 +9,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.CampusNavigation">
+        <activity android:name=".PasswordRequirementsPage"></activity>
+        <activity android:name=".EmailVerifSent" />
+        <activity android:name=".AccountCreation" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
