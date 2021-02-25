@@ -44,6 +44,7 @@
         android:layout_marginTop="366dp"
         android:layout_marginEnd="108dp"
         android:layout_marginBottom="313dp"
+        android:onClick="StartMap"
         android:text="@string/SchedulingButtonText"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
