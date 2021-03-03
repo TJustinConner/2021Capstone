@@ -27,9 +27,9 @@
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
             android:layout_gravity="right"
-            android:layout_marginStart="9dp"
-            android:layout_marginLeft="9dp"
-            android:layout_marginTop="678dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="531dp"
             android:onClick="Satellite"
             android:text="Switch map type" />
 
@@ -77,7 +77,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
 
-            />
+       ></Spinner>
 
     </RelativeLayout>
 
