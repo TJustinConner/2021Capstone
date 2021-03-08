@@ -1,2 +1,0 @@
-include ':app'
-rootProject.name = "google_maps(portion)"
