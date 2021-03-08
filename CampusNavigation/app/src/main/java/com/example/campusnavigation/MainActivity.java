@@ -29,8 +29,4 @@ public class MainActivity extends AppCompatActivity {
         Intent i = new Intent(this, WorkoutCreation.class);
         startActivity(i);
     }
-    public void StartEvent(View e){
-        Intent i = new Intent(this, EventActivity.class);
-        startActivity(i);
-    }
 }

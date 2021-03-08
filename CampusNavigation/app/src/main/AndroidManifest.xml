@@ -9,8 +9,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.CampusNavigation">
-        <activity android:name=".EventActivity"></activity>
-        <activity android:name=".WorkoutRoute" />
+        <activity android:name=".WorkoutRoute"></activity>
         <activity android:name=".WorkoutCreation" />
         <activity android:name=".PasswordRequirementsPage" />
         <activity android:name=".EmailVerifSent" />
