@@ -33,9 +33,4 @@ public class MainActivity extends AppCompatActivity {
         Intent i = new Intent(this, EventActivity.class);
         startActivity(i);
     }
-    public void StartMap(View k){
-        Intent i = new Intent(this, MapsActivity.class);
-        startActivity(i);
-
-    }
 }
