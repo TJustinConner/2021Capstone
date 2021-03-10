@@ -30,14 +30,14 @@ public class AccountCreation extends AppCompatActivity {
 
         setTitle("Account Creation");
 
-        Button CreateAccountButton = (Button) findViewById(R.id.CreateAccountButton);
-        EditText UsernameField = (EditText) findViewById(R.id.UserEmailAddressBox);
-        EditText PasswordField = (EditText) findViewById(R.id.UserPasswordBox);
-        EditText ConfirmPasswordField = (EditText) findViewById((R.id.UserConfirmPasswordBox));
-        TextView PasswordReqsLink = (TextView) findViewById((R.id.PasswordReqsLink));
-        TextView PasswordMismatchText = (TextView) findViewById((R.id.PasswordMismatchError));
-        TextView BlankFieldText = (TextView) findViewById((R.id.BlankFieldsError));
-        TextView MissingRequirementsText = (TextView) findViewById((R.id.MissingRequirementsError));
+        final Button CreateAccountButton = (Button) findViewById(R.id.CreateAccountButton);
+        final EditText UsernameField = (EditText) findViewById(R.id.UserEmailAddressBox);
+        final EditText PasswordField = (EditText) findViewById(R.id.UserPasswordBox);
+        final EditText ConfirmPasswordField = (EditText) findViewById((R.id.UserConfirmPasswordBox));
+        final TextView PasswordReqsLink = (TextView) findViewById((R.id.PasswordReqsLink));
+        final TextView PasswordMismatchText = (TextView) findViewById((R.id.PasswordMismatchError));
+        final TextView BlankFieldText = (TextView) findViewById((R.id.BlankFieldsError));
+        final TextView MissingRequirementsText = (TextView) findViewById((R.id.MissingRequirementsError));
 
         PasswordMismatchText.setVisibility(View.INVISIBLE);
         BlankFieldText.setVisibility(View.INVISIBLE);

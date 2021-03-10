@@ -6,7 +6,6 @@ import android.view.View;
 import android.widget.Button;
 import android.os.Bundle;
 
-//testing12345
 public class MainActivity extends AppCompatActivity {
 
     @Override
@@ -29,5 +28,14 @@ public class MainActivity extends AppCompatActivity {
     public void StartWorkout (View s){
         Intent i = new Intent(this, WorkoutCreation.class);
         startActivity(i);
+    }
+    public void StartEvent(View e){
+        Intent i = new Intent(this, EventActivity.class);
+        startActivity(i);
+    }
+    public void StartMap(View k){
+        Intent i = new Intent(this, MapsActivity.class);
+        startActivity(i);
+
     }
 }
