@@ -2,16 +2,16 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:theme="@style/Theme.AppCompat.Light"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".EventActivity">
+    tools:context=".EventActivity"
+    android:screenOrientation="portrait">
 
     <TextView
         android:id="@+id/SCE"
-        android:gravity="center"
         android:layout_width="327dp"
         android:layout_height="82dp"
+        android:gravity="center"
         android:text="Please refrain from special characters in the event field."
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
         android:textColor="#FF0000"
@@ -19,35 +19,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.696" />
-
-    <TextView
-        android:id="@+id/SCT"
-        android:gravity="center"
-        android:layout_width="327dp"
-        android:layout_height="82dp"
-        android:text="Please keep time in the format HH:MM using 24 hour military time. Example: instead of 1pm, use 13:00"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large"
-        android:textColor="#FF0000"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/submit"
-        app:layout_constraintVertical_bias="0.924" />
-
-    <TextView
-        android:id="@+id/SCD"
-        android:gravity="center"
-        android:layout_width="327dp"
-        android:layout_height="82dp"
-        android:text="Please keep date in the format of MM/DD/YYYY with no special characters."
-        android:textAppearance="@style/TextAppearance.AppCompat.Large"
-        android:textColor="#FF0000"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/submit"
-        app:layout_constraintVertical_bias="0.495" />
+        app:layout_constraintVertical_bias="0.872" />
 
     <EditText
         android:id="@+id/descInput"
@@ -87,7 +59,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/descInput"
-        app:layout_constraintVertical_bias="0.301" />
+        app:layout_constraintVertical_bias="0.41" />
 
     <Spinner
         android:id="@+id/locInput"

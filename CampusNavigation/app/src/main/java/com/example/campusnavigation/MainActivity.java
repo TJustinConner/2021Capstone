@@ -2,6 +2,7 @@ package com.example.campusnavigation;
 
 import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.os.Bundle;
@@ -24,13 +25,16 @@ public class MainActivity extends AppCompatActivity {
                 Intent ToAcctCreation = new Intent(v.getContext(), AccountCreation.class);
                 startActivity(ToAcctCreation);
             }});
+        EventsButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                //takes user to event activity
+                Log.d("SUCCESS", "Going to events");
+                Intent ToAcctCreation = new Intent(v.getContext(), EventActivity.class);
+                startActivity(ToAcctCreation);
+            }});
     }
     public void StartWorkout (View s){
         Intent i = new Intent(this, WorkoutCreation.class);
-        startActivity(i);
-    }
-    public void StartEvent(View e){
-        Intent i = new Intent(this, EventActivity.class);
         startActivity(i);
     }
     public void StartMap(View k){

@@ -34,7 +34,8 @@
         <activity
             android:name=".MapsActivity"
             android:label="@string/title_activity_maps"></activity>
-        <activity android:name=".EventActivity" />
+        <activity android:name=".EventActivity"
+                  android:screenOrientation="portrait"/>
         <activity android:name=".WorkoutRoute" />
         <activity android:name=".WorkoutCreation" />
         <activity android:name=".PasswordRequirementsPage" />

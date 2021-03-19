@@ -10,6 +10,7 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -59,18 +60,15 @@ public class EventActivity extends AppCompatActivity implements AdapterView.OnIt
 
     private TimePickerDialog.OnTimeSetListener mTimeSetListener;
     private TextView timeDisplay;
+    int mHour, mMin;
 
     private EditText eventInput;
-    private EditText timeInput;
     private EditText descInput;
-    private EditText dateEdit;
-
-    private Button dateInput;
-    private Button submitButton;
 
     @Override
     //this runs on start of the app
     protected void onCreate(Bundle savedInstanceState) {
+        Log.d("SUCCESS", "made it into onCreate");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event);
 
@@ -89,15 +87,12 @@ public class EventActivity extends AppCompatActivity implements AdapterView.OnIt
         eventInput = (EditText) findViewById(R.id.eventInput);
         descInput = (EditText) findViewById(R.id.descInput);
         dateDisplay = (TextView) findViewById(R.id.datePicker);
+        timeDisplay = (TextView) findViewById(R.id.timePicker);
         final TextView eventError = (TextView) findViewById(R.id.SCE);
-        final TextView dateError = (TextView) findViewById(R.id.SCD);
-        final TextView timeError = (TextView) findViewById(R.id.SCT);
         eventError.setVisibility(View.INVISIBLE);
-        dateError.setVisibility(View.INVISIBLE);
-        timeError.setVisibility(View.INVISIBLE);
 
         //This handles everything that happens when the user clicks the submit button at the bottom of the screen
-        submitButton = (Button) findViewById(R.id.submit);
+        Button submitButton = (Button) findViewById(R.id.submit);
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {//This is converting the input into strings
@@ -105,11 +100,12 @@ public class EventActivity extends AppCompatActivity implements AdapterView.OnIt
                 String text = spinner.getSelectedItem().toString();
 
                 event = eventInput.getText().toString();
-                time = timeInput.getText().toString();
+                time = timeDisplay.getText().toString();
                 desc = descInput.getText().toString();
                 date = dateDisplay.getText().toString();
                 loc = text;
 
+                Log.d("SUCCESS", "retrieved strings");
 
                 //https://androidexample.com/How_To_Make_HTTP_POST_Request_To_Server_-_Android_Example/index.php?view=article_discription&aid=64&aaid=89
                 //https://stackoverflow.com/questions/7537377/how-to-include-a-php-variable-inside-a-mysql-statement
@@ -121,8 +117,6 @@ public class EventActivity extends AppCompatActivity implements AdapterView.OnIt
                     Log.d("DEBUGGING", testCheck);
 
                     eventError.setVisibility(View.INVISIBLE);
-                    dateError.setVisibility(View.INVISIBLE);
-                    timeError.setVisibility(View.INVISIBLE);
 
                     URL url = null;
                     HttpsURLConnection urlConnection = null;
@@ -193,13 +187,6 @@ public class EventActivity extends AppCompatActivity implements AdapterView.OnIt
                     if (testCheck.equals("SCE")){
                         Log.d("FAILED", "Event error.");
                         eventError.setVisibility(View.VISIBLE);
-                        dateError.setVisibility(View.INVISIBLE);
-                        timeError.setVisibility(View.INVISIBLE);
-                    }
-                    if (testCheck.equals("SCT")){
-                        eventError.setVisibility(View.INVISIBLE);
-                        dateError.setVisibility(View.INVISIBLE);
-                        timeError.setVisibility(View.VISIBLE);
                     }
                 }
 
@@ -231,7 +218,7 @@ public class EventActivity extends AppCompatActivity implements AdapterView.OnIt
             public void onDateSet(DatePicker datePicker, int year, int month, int day) {
                 //months start with jan = 0, so this fixes that issue
                 month = month + 1;
-                Log.d("SUCCESS", "onDateSet: mm/dd/yyyy: " + month + "/" + "day" + "/" + year);
+                Log.d("SUCCESS", "onDateSet: mm/dd/yyyy: " + month + "/" + day + "/" + year);
 
                 String date = month + "/" + day + "/" + year;
                 dateDisplay.setText(date);
@@ -239,28 +226,34 @@ public class EventActivity extends AppCompatActivity implements AdapterView.OnIt
             }
         };
 
-        //setting up the timeWidget
-        /*timeDisplay.setOnClickListener(new View.OnClickListener() {
+        //this creates the object used to get time input from the user and then saves it to a string
+        timeDisplay.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                Calendar cal = Calendar.getInstance();
-                int hours = cal.get(Calendar.HOUR_OF_DAY);
-                int minutes = cal.get(Calendar.MINUTE);
+            public void onClick(View v) {
 
-                TimePickerDialog dialog = new TimePickerDialog(EventActivity.this, )
-                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-                dialog.show();
+                Calendar c = Calendar.getInstance();
+                mHour = c.get(Calendar.HOUR_OF_DAY);
+                mMin = c.get(Calendar.MINUTE);
+
+                //this is the widget used
+                TimePickerDialog timePickerDialog = new TimePickerDialog(EventActivity.this, new TimePickerDialog.OnTimeSetListener() {
+                    @Override
+                    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {//this is the saving of the time as a string
+                        Log.d("SUCCESS", "onTimeSet: HH:MM ->" + hourOfDay + ":" + minute);
+                        if (hourOfDay < 10){
+                            time = "0" + hourOfDay + ":";
+                        }
+                        if (minute < 10){
+                            time += "0" + minute;
+                        }
+                        timeDisplay.setText(time);
+                    }
+                }, mHour, mMin, false);
+                //display the widget with a white background
+                timePickerDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.WHITE));
+                timePickerDialog.show();
             }
-        });*/
-
-        /*mTimeSetListener = new TimePickerDialog.OnTimeSetListener() {
-            @Override
-            public void onTimeSet(TimePicker timePicker, int hour, int minute) {
-                String time = hour + ":" + minute;
-                timeDisplay.setText(time);
-            }
-        };*/
-
+        });
 
         }
 
@@ -287,24 +280,10 @@ public class EventActivity extends AppCompatActivity implements AdapterView.OnIt
         //to something cleaner but this is sufficient for now.
         final ArrayList<Character> SC_ARRAY_E = new ArrayList<Character>(Arrays.<Character>asList('!', '"', '#', '$', '%', '^', '&', '*', '(', ')', '+', '=', '-', '_', ',', '<',
         '.', '>', '/', '?', ':', ';', '|', '[', '{', '}', ']', '`', '~', '@', (char) ('[' + 1)));
-        final ArrayList<Character> SC_ARRAY_T = new ArrayList<Character>(Arrays.<Character>asList('!', '"', '#', '$', '%', '^', '&', '*', '(', ')', '+', '=', '-', '_', ',', '<',
-                '.', '>', '/', '?', ';', '|', '[', '{', '}', ']', '`', '~', '@', (char) ('[' + 1)));
-        final ArrayList<Character> SC_ARRAY_D = new ArrayList<Character>(Arrays.<Character>asList('!', '"', '#', '$', '%', '^', '&', '*', '(', ')', '+', '=', '-', '_', ',', '<',
-                '.', '>', '?', ':', ';', '|', '[', '{', '}', ']', '`', '~', '@', (char) ('[' + 1)));
 
         for (int i = 0; i < event.length(); i+=1){
             if (SC_ARRAY_E.contains(event.charAt(i))){
                 return "SCE";
-            }
-        }
-        for (int i = 0; i < time.length(); i+=1){
-            if (SC_ARRAY_T.contains(time.charAt(i))){
-                return "SCT";
-            }
-        }
-        for (int i = 0; i < date.length(); i+=1){
-            if (SC_ARRAY_D.contains(date.charAt(i))){
-                return "SCD";
             }
         }
         return "SAFE";
