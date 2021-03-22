@@ -12,9 +12,12 @@ import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.os.StrictMode;
+import android.provider.MediaStore;
 import android.view.View;
 import android.webkit.WebView;
 import android.widget.AdapterView;
@@ -39,12 +42,17 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Base64;
 import java.util.Calendar;
 
 import javax.net.ssl.HttpsURLConnection;
@@ -52,7 +60,7 @@ import javax.net.ssl.HttpsURLConnection;
 //This is the Event Activity, this is where you come after selecting events.
 public class EventActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
     private TextView button;
-    private String event, time, desc, loc, date; //For the user inputs
+    private String event, time, desc, loc, date, blob; //For the user inputs
     private String totalInput;
 
     private DatePickerDialog.OnDateSetListener mDateSetListener;
@@ -64,6 +72,8 @@ public class EventActivity extends AppCompatActivity implements AdapterView.OnIt
 
     private EditText eventInput;
     private EditText descInput;
+    private TextView eventImageButton;
+    Uri path;
 
     @Override
     //this runs on start of the app
@@ -88,6 +98,7 @@ public class EventActivity extends AppCompatActivity implements AdapterView.OnIt
         descInput = (EditText) findViewById(R.id.descInput);
         dateDisplay = (TextView) findViewById(R.id.datePicker);
         timeDisplay = (TextView) findViewById(R.id.timePicker);
+        eventImageButton = (TextView) findViewById(R.id.eventImageSelector);
         final TextView eventError = (TextView) findViewById(R.id.SCE);
         eventError.setVisibility(View.INVISIBLE);
 
@@ -105,7 +116,19 @@ public class EventActivity extends AppCompatActivity implements AdapterView.OnIt
                 date = dateDisplay.getText().toString();
                 loc = text;
 
-                Log.d("SUCCESS", "retrieved strings");
+                //convert pdf to blob
+                Path pdfPath = Paths.get(path.toString());
+                byte[] pdfByteArray = new byte[0];
+                try {
+                    pdfByteArray = Files.readAllBytes(pdfPath);
+                    Files.write(pdfPath, pdfByteArray);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                blob = pdfByteArray.toString();
+                Log.d("SUCCESS", "The pdfPathS (before encode) is: " + blob);
+                Log.d("SUCCESS", "Retrieved strings");
+
 
                 //https://androidexample.com/How_To_Make_HTTP_POST_Request_To_Server_-_Android_Example/index.php?view=article_discription&aid=64&aaid=89
                 //https://stackoverflow.com/questions/7537377/how-to-include-a-php-variable-inside-a-mysql-statement
@@ -138,6 +161,9 @@ public class EventActivity extends AppCompatActivity implements AdapterView.OnIt
 
                         totalInput += "&" + URLEncoder.encode("loc", "UTF-8")
                                 + "=" + URLEncoder.encode(loc, "UTF-8");
+
+                        totalInput += "&" + URLEncoder.encode("blob", "UTF-8")
+                                + "=" + URLEncoder.encode(blob, "UTF-8");
 
                         //opening connection to php file
                         url = new URL("https://medusa.mcs.uvawise.edu/~jwe3nv/connect.php");
@@ -230,34 +256,50 @@ public class EventActivity extends AppCompatActivity implements AdapterView.OnIt
         timeDisplay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 Calendar c = Calendar.getInstance();
-                mHour = c.get(Calendar.HOUR_OF_DAY);
-                mMin = c.get(Calendar.MINUTE);
+                int hourOfDay = c.get(Calendar.HOUR_OF_DAY);
+                int minute = c.get(Calendar.MINUTE);
 
-                //this is the widget used
-                TimePickerDialog timePickerDialog = new TimePickerDialog(EventActivity.this, new TimePickerDialog.OnTimeSetListener() {
-                    @Override
-                    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {//this is the saving of the time as a string
-                        Log.d("SUCCESS", "onTimeSet: HH:MM ->" + hourOfDay + ":" + minute);
-                        if (hourOfDay < 10){
-                            time = "0" + hourOfDay + ":";
-                        }
-                        if (minute < 10){
-                            time += "0" + minute;
-                        }
-                        timeDisplay.setText(time);
-                    }
-                }, mHour, mMin, false);
+                TimePickerDialog timePickerDialog = new TimePickerDialog(EventActivity.this, mTimeSetListener, hourOfDay, minute, false);
                 //display the widget with a white background
                 timePickerDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.WHITE));
                 timePickerDialog.show();
             }
         });
 
+        mTimeSetListener = new TimePickerDialog.OnTimeSetListener() {
+            @Override
+            public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                String timeS = hourOfDay + ":" + minute;
+                Log.d("DEBUGGING", "The current time is: " + timeS);
+                timeDisplay.setText(timeS);
+            }
+        };
+
+        //this is supposed to get the pdf from the user
+        eventImageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //https://stackoverflow.com/questions/2227209/how-to-get-the-images-from-device-in-android-java-application
+                Intent pdfPickerIntent = new Intent(Intent.ACTION_GET_CONTENT);
+                pdfPickerIntent.setType("application/pdf");
+                pdfPickerIntent.setAction(Intent.ACTION_GET_CONTENT);
+                startActivityForResult(Intent.createChooser(pdfPickerIntent, "Select PDF"), 1);
+
+            }
+        });
+
+    }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent result) {
+        super.onActivityResult(requestCode, resultCode, result);
+        if (resultCode == RESULT_OK) {
+            if (requestCode == 1) {
+                path = result.getData();
+                Log.d("SUCCESS", "The 'path' saved is: " + path);
+            }
         }
-
-
+    }
     //this is mainly for debugging, it prints the parameter to the screen in a little gray box
     private void displayText(String text){//This just displays the input at the bottom of the screen
         Toast.makeText(EventActivity.this, text, Toast.LENGTH_SHORT).show();
