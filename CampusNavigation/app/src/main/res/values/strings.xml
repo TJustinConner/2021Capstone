@@ -12,10 +12,14 @@
     <string name="confirm_password">Confirm Password</string>
     <string name="acct_verif_email_sent">An account verification email has been sent. Please click on the link in the email to enable your account.</string>
     <string name="password_requirements_list"><u>Password Requirements List</u></string>
-    <string name="PasswordRequirements">Password Requirements:\n12-32 Characters\n\nContains:\n- 1 Uppercase letter\n- 1 Lowercase letter\n- 1 Special character\n- 1 Number</string>
+    <string name="PasswordRequirements">Password Requirements:\n12-32 Characters\n\nContains at least:\n- 1 Uppercase letter\n- 1 Lowercase letter\n- 1 Special character\n- 1 Number</string>
     <string name="passwordConfMismatch">The passwords do not match.</string>
     <string name="blankFieldsError">One of the fields is blank.</string>
     <string name="ReferToPasswordReqs">Please follow the guidelines in the Password Requirements List.</string>
+    <string name="login">Log in</string>
+    <string name="title_activity_maps">Map</string>
+    <string name="faculty_log_in">Faculty Log In</string>
+    <string name="create_an_account"><u>Create An Account</u></string>
 
     <string-array name="Locations">
         <item>Location</item>
@@ -62,5 +66,4 @@
         <item>Wesley Foundation</item>
         <item>Alumni Hall</item>
     </string-array>
-    <string name="title_activity_maps">Map</string>
 </resources>

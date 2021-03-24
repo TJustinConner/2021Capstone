@@ -11,7 +11,7 @@
         android:id="@+id/accountCreationButton"
         android:layout_width="196dp"
         android:layout_height="52dp"
-        android:text="@string/account_creation_btn_txt"
+        android:text="@string/login"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.497"

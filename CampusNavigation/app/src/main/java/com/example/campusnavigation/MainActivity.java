@@ -14,17 +14,17 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Button AcctCreationButton = (Button) findViewById(R.id.accountCreationButton);
+        Button LoginButton = (Button) findViewById(R.id.accountCreationButton);
         Button WorkoutsButton = (Button) findViewById(R.id.workoutsButton);
         Button eventsButton = (Button) findViewById(R.id.eventsButton);
         Button mapButton = (Button) findViewById(R.id.mapButton);
         Button eventSearchButton = (Button) findViewById(R.id.eventSearchButton);
 
-        AcctCreationButton.setOnClickListener(new View.OnClickListener() {
+        LoginButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 //takes user to account creation activity
-                Intent ToAcctCreation = new Intent(v.getContext(), AccountCreation.class);
-                startActivity(ToAcctCreation);
+                Intent ToLoginActivity = new Intent(v.getContext(), LoginActivity.class);
+                startActivity(ToLoginActivity);
             }});
 
         WorkoutsButton.setOnClickListener(new View.OnClickListener() {
