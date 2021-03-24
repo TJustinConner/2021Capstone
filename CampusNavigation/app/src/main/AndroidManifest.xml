@@ -35,13 +35,17 @@
             android:name=".MapsActivity"
             android:label="@string/title_activity_maps"></activity>
         <activity android:name=".EventActivity"
-                  android:screenOrientation="portrait"/>
+                android:screenOrientation="portrait"
+                android:label="Event Creation"/>
         <activity android:name=".WorkoutRoute" />
-        <activity android:name=".WorkoutCreation" />
+        <activity android:name=".WorkoutCreation"
+                android:label="Workout Creation"/>
         <activity android:name=".PasswordRequirementsPage" />
         <activity android:name=".EmailVerifSent" />
-        <activity android:name=".AccountCreation" />
-        <activity android:name=".MainActivity">
+        <activity android:name=".AccountCreation"
+                android:label = "Account Creation"/>
+        <activity android:name=".MainActivity"
+                android:label = "Home Screen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

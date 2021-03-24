@@ -14,10 +14,11 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Button AcctCreationButton = (Button) findViewById(R.id.AccountCreationButton);
-        Button WorkoutsButton = (Button) findViewById(R.id.WorkoutsButton);
-        Button EventsButton = (Button) findViewById(R.id.EventsButton);
-        Button SchedulingButton = (Button) findViewById(R.id.SchedulingButton);
+        Button AcctCreationButton = (Button) findViewById(R.id.accountCreationButton);
+        Button WorkoutsButton = (Button) findViewById(R.id.workoutsButton);
+        Button eventsButton = (Button) findViewById(R.id.eventsButton);
+        Button mapButton = (Button) findViewById(R.id.mapButton);
+        Button eventSearchButton = (Button) findViewById(R.id.eventSearchButton);
 
         AcctCreationButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -25,21 +26,39 @@ public class MainActivity extends AppCompatActivity {
                 Intent ToAcctCreation = new Intent(v.getContext(), AccountCreation.class);
                 startActivity(ToAcctCreation);
             }});
-        EventsButton.setOnClickListener(new View.OnClickListener() {
+
+        WorkoutsButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                //takes user to event activity
-                Log.d("SUCCESS", "Going to events");
-                Intent ToAcctCreation = new Intent(v.getContext(), EventActivity.class);
-                startActivity(ToAcctCreation);
+                //takes user to workouts
+                Log.d("SUCCESS", "Going to event search");
+                Intent workouts = new Intent(v.getContext(), WorkoutCreation.class);
+                startActivity(workouts);
             }});
-    }
-    public void StartWorkout (View s){
-        Intent i = new Intent(this, WorkoutCreation.class);
-        startActivity(i);
-    }
-    public void StartMap(View k){
-        Intent i = new Intent(this, MapsActivity.class);
-        startActivity(i);
+
+        mapButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                //takes user to maps
+                Log.d("SUCCESS", "Going to event search");
+                Intent maps = new Intent(v.getContext(), MapsActivity.class);
+                startActivity(maps);
+            }});
+
+        eventsButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                //takes user to event creation
+                Log.d("SUCCESS", "Going to events");
+                Intent eventCreation = new Intent(v.getContext(), EventActivity.class);
+                startActivity(eventCreation);
+            }});
+
+        eventSearchButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                //takes user to event search
+                Log.d("SUCCESS", "Going to event search");
+                Intent eventSearch = new Intent(v.getContext(), eventSearch.class);
+                startActivity(eventSearch);
+            }});
+
 
     }
 }
