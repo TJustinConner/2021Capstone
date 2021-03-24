@@ -4,8 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".AccountCreation"
-    tools:ignore="LabelFor">
+    tools:context=".LoginActivity">
 
     <TextView
         android:id="@+id/EmailText"
@@ -39,22 +38,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/NewConfirmPasswordText"
-        android:layout_width="156dp"
-        android:layout_height="45dp"
-        android:layout_marginStart="116dp"
-        android:layout_marginTop="397dp"
-        android:layout_marginEnd="139dp"
-        android:layout_marginBottom="289dp"
-        android:scaleX="1.5"
-        android:scaleY="1.5"
-        android:text="@string/confirm_password"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
     <Button
         android:id="@+id/LoginButton"
         android:layout_width="197dp"
@@ -63,7 +46,7 @@
         android:layout_marginTop="565dp"
         android:layout_marginEnd="107dp"
         android:layout_marginBottom="110dp"
-        android:text="@string/create_account"
+        android:text="@string/login"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -109,38 +92,24 @@
         android:layout_marginTop="64dp"
         android:layout_marginEnd="98dp"
         android:layout_marginBottom="618dp"
-        android:text="@string/new_account_label"
+        android:gravity="center"
+        android:text="@string/faculty_log_in"
         android:textAppearance="@style/TextAppearance.AppCompat.Display1"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <EditText
-        android:id="@+id/UserConfirmPasswordBox"
-        android:layout_width="252dp"
-        android:layout_height="70dp"
-        android:layout_marginStart="79dp"
-        android:layout_marginTop="416dp"
-        android:layout_marginEnd="80dp"
-        android:layout_marginBottom="245dp"
-        android:ems="10"
-        android:importantForAutofill="no"
-        android:inputType="textPassword"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
     <TextView
-        android:id="@+id/PasswordReqsLink"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="91dp"
-        android:layout_marginTop="514dp"
-        android:layout_marginEnd="92dp"
-        android:layout_marginBottom="193dp"
-        android:text="@string/password_requirements_list"
+        android:id="@+id/newAccountLink"
+        android:layout_width="174dp"
+        android:layout_height="29dp"
+        android:layout_marginStart="118dp"
+        android:layout_marginTop="405dp"
+        android:layout_marginEnd="119dp"
+        android:layout_marginBottom="297dp"
+        android:gravity="center"
+        android:text="@string/create_an_account"
         android:textColor="#2196F3"
         android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -148,56 +117,5 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/PasswordMismatchError"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="112dp"
-        android:layout_marginTop="631dp"
-        android:layout_marginEnd="113dp"
-        android:layout_marginBottom="81dp"
-        android:text="@string/passwordConfMismatch"
-        android:textColor="#E91E1E"
-        android:textSize="18sp"
-        android:visibility="invisible"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/BlankFieldsError"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="105dp"
-        android:layout_marginTop="629dp"
-        android:layout_marginEnd="106dp"
-        android:layout_marginBottom="78dp"
-        android:text="@string/blankFieldsError"
-        android:textColor="#E91E1E"
-        android:textSize="18sp"
-        android:visibility="invisible"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/MissingRequirementsError"
-        android:layout_width="312dp"
-        android:layout_height="43dp"
-        android:layout_marginStart="49dp"
-        android:layout_marginTop="629dp"
-        android:layout_marginEnd="50dp"
-        android:layout_marginBottom="59dp"
-        android:gravity="center"
-        android:text="@string/ReferToPasswordReqs"
-        android:textColor="#E91E1E"
-        android:textSize="18sp"
-        android:visibility="invisible"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
