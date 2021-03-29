@@ -38,6 +38,7 @@
             android:label="Event Creation"
             android:screenOrientation="portrait" />
         <activity android:name=".WorkoutRoute" />
+<<<<<<< Updated upstream
         <activity
             android:name=".WorkoutCreation"
             android:label="Workout Creation" />
@@ -49,6 +50,19 @@
         <activity
             android:name=".MainActivity"
             android:label="Home Screen">
+=======
+        <activity android:name=".WorkoutCreation"
+                android:label="Workout Creation"
+                android:screenOrientation="portrait"/>
+        <activity android:name=".PasswordRequirementsPage" />
+        <activity android:name=".EmailVerifSent" />
+        <activity android:name=".AccountCreation"
+                android:label = "Account Creation"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".MainActivity"
+                android:label = "Home Screen"
+                android:screenOrientation="portrait">
+>>>>>>> Stashed changes
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
