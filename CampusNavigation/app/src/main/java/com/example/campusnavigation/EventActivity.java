@@ -1,30 +1,20 @@
 package com.example.campusnavigation;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.work.OneTimeWorkRequest;
-import androidx.work.WorkManager;
-import androidx.work.WorkRequest;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.StrictMode;
 import android.provider.CalendarContract;
-import android.provider.MediaStore;
 import android.view.View;
-import android.webkit.WebView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.Spinner;
 import android.os.Bundle;
@@ -65,7 +55,6 @@ public class EventActivity extends AppCompatActivity implements AdapterView.OnIt
     private String event, time, desc, loc, date, blob, recurrence; //For the user inputs
     private String eTime;
     private String totalInput;
-    private CheckBox checkbox;
 
     private DatePickerDialog.OnDateSetListener mDateSetListener;
     private TextView dateDisplay;

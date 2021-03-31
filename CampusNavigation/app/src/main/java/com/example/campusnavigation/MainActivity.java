@@ -51,13 +51,13 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(eventCreation);
             }});
 
-        eventSearchButton.setOnClickListener(new View.OnClickListener() {
+        /*eventSearchButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 //takes user to event search
                 Log.d("SUCCESS", "Going to event search");
                 Intent eventSearch = new Intent(v.getContext(), eventSearch.class);
                 startActivity(eventSearch);
-            }});
+            }});*/
 
 
     }
