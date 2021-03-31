@@ -3,13 +3,14 @@ package com.example.campusnavigation;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.util.Log;
 import android.os.Bundle;
 import android.widget.TextView;
-import android.os.AsyncTask;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -17,6 +18,9 @@ import java.io.OutputStreamWriter;
 import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Random;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.net.URLEncoder;
 import javax.net.ssl.HttpsURLConnection;
 import java.net.URL;
@@ -26,36 +30,14 @@ public class AccountCreation extends AppCompatActivity {
     final ArrayList<Character> ACCEPTED_SPECIAL_CHARS = new ArrayList<Character>(Arrays.asList('!', '@', '#', '$', '%', '^', '&', '*',
             '(', ')', '.', '?', '-', '_'));
 
+    final String possibleSaltChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
     final int MAX_PASSWORD_LENGTH = 32;
     final int MIN_PASSWORD_LENGTH = 12;
     final int MAX_EMAIL_LENGTH = 22;
 
 
     private final String link = "https://medusa.mcs.uvawise.edu/~jdl8y/accountCreation.php";
-
-    //used to attempt to create an account, task can't be done on main thread, so it is ran in an AsyncTask
-    private class AttemptCreateAccount extends AsyncTask<Object, Void, Boolean> {
-        @Override
-        protected Boolean doInBackground(Object... acctInfo) {
-            String email = (String) acctInfo[0];
-            String password = (String) acctInfo[1];
-
-            boolean result = SendData(email, password);
-
-            return result;
-        }
-
-        @Override
-        protected void onPostExecute(Boolean aBoolean) {
-            if (aBoolean) {
-                //change screen to confirmation email sent page
-                startActivity(new Intent(AccountCreation.this, EmailVerifSent.class));
-            } else {
-                //set message account could not be created
-                System.out.println("Account couldn't be created");
-            }
-        }
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,8 +47,8 @@ public class AccountCreation extends AppCompatActivity {
         setTitle("Account Creation");
 
         Button CreateAccountButton = (Button) findViewById(R.id.LoginButton);
-        final EditText UsernameField = (EditText) findViewById(R.id.UserEmailAddressBox);
-        final EditText PasswordField = (EditText) findViewById(R.id.UserPasswordBox);
+        final EditText UsernameField = (EditText) findViewById(R.id.LoginEmailAddressBox);
+        final EditText PasswordField = (EditText) findViewById(R.id.LoginPasswordBox);
         final EditText ConfirmPasswordField = (EditText) findViewById((R.id.UserConfirmPasswordBox));
         TextView PasswordReqsLink = (TextView) findViewById((R.id.PasswordReqsLink));
         final TextView PasswordMismatchText = (TextView) findViewById((R.id.PasswordMismatchError));
@@ -114,7 +96,7 @@ public class AccountCreation extends AppCompatActivity {
                     inputIsGood = false;
                 }
                 //check to see if input length is in our set bounds
-                else if(!InputLengthIsGood(password, email)){
+                else if(!InputLengthIsGood(email, password)){
                     MissingRequirementsText.setVisibility(View.VISIBLE);
                     //shows refer to password requirements if email length is bad
                     inputIsGood = false;
@@ -136,9 +118,11 @@ public class AccountCreation extends AppCompatActivity {
                     //hash password
                     MessageDigest digest = null;
                     String passwordInHex = null;
+                    String salt = GenerateRandomSalt();
+                    String saltAndPassword = salt.trim() + password.trim();
                     try {
                         digest = MessageDigest.getInstance("SHA-512");
-                        byte[] inBytes = digest.digest(password.getBytes());
+                        byte[] inBytes = digest.digest(saltAndPassword.getBytes());
                         //change from byte array to hex
                         StringBuilder createdHexRep = new StringBuilder();
                         for(int i = 0; i < inBytes.length; i++){
@@ -155,13 +139,34 @@ public class AccountCreation extends AppCompatActivity {
 
 
                     if(inputIsGood) {
-                        //attempt to create account
-                        Object[] UserAccountInfo = new Object[2];
-                        UserAccountInfo[0] = email;
-                        UserAccountInfo[1] = passwordInHex;
+                        final String[] UserAccountInfo = {email, passwordInHex, salt};
 
-                        //establish connection
-                        AsyncTask<Object, Void, Boolean> createdAccount = new AttemptCreateAccount().execute(UserAccountInfo);
+                        //https://stackoverflow.com/questions/58767733/android-asynctask-api-deprecating-in-android-11-what-are-the-alternatives
+                        //can't run network tasks on main thread, so we use an executor to do this task
+                        ExecutorService executor = Executors.newSingleThreadExecutor();
+                        final Handler handler = new Handler(Looper.getMainLooper());
+
+                        executor.execute(new Runnable() {
+                            @Override
+                            public void run() {
+                                //try to create the account
+                                final boolean result = SendData(UserAccountInfo[0], UserAccountInfo[1], UserAccountInfo[2]);
+
+                                handler.post(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        //if the account was created
+                                        if (result) {
+                                            //change screen to confirmation email sent page
+                                            startActivity(new Intent(AccountCreation.this, EmailVerifSent.class));
+                                        } else {
+                                            //set message account could not be created
+                                            Log.d("AcctCreation","Account Couldn't Be Created");
+                                        }
+                                    }
+                                });
+                            }
+                        });
                     }
                 }
             }
@@ -229,7 +234,7 @@ public class AccountCreation extends AppCompatActivity {
         }
     }
 
-    private boolean InputLengthIsGood(String password, String email){
+    private boolean InputLengthIsGood(String email, String password){
         if(password.length() >= MIN_PASSWORD_LENGTH && password.length() <= MAX_PASSWORD_LENGTH && email.length() <= MAX_EMAIL_LENGTH){
             return true;
         }
@@ -240,7 +245,7 @@ public class AccountCreation extends AppCompatActivity {
         }
     }
 
-    private boolean SendData(String email, String password){
+    private boolean SendData(String email, String password, String salt){
         Boolean accountCreated = false;
         URL url = null;
         HttpsURLConnection conn = null;
@@ -257,22 +262,20 @@ public class AccountCreation extends AppCompatActivity {
             //tries to encode the user's data
             data = URLEncoder.encode("email", "UTF-8") + "=" + URLEncoder.encode(email, "UTF-8");
             data += "&" + URLEncoder.encode("password", "UTF-8") + "=" + URLEncoder.encode(password, "UTF-8");
+            data += "&" + URLEncoder.encode("salt", "UTF-8") + "=" + URLEncoder.encode(salt, "UTF-8");
 
             OutputStreamWriter writer = new OutputStreamWriter(conn.getOutputStream());
-            System.out.println("outputstreamwriter made");
 
             writer.write(data); //send the user's data
             writer.flush();
 
-            System.out.println("Data written to server");
+            Log.d("AcctCreation","Data Written to Server");
 
             //can't get input stream
             //read returned message from server
             reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
             StringBuilder builder = new StringBuilder();
             String line = "";
-
-            System.out.println("String builder created");
 
             while((line = reader.readLine()) != null) {
                 builder.append(line + "\n");
@@ -286,6 +289,7 @@ public class AccountCreation extends AppCompatActivity {
             //see if the server returned that the account was created
             if(result.contains("true")){
                 accountCreated = true;
+                Log.d("AcctCreation","Account Successfully Created");
             }
             else if(result.contains("false")){
                 accountCreated = false;
@@ -294,15 +298,29 @@ public class AccountCreation extends AppCompatActivity {
             writer.close();
         }
         catch (java.net.MalformedURLException malformedURLException){
-            System.out.println("Bad url.");
+            Log.d("AcctCreation","Bad URL");
         }
         catch(java.io.UnsupportedEncodingException unsupportedEncodingException){
-            System.out.println("Could not encode data.");
+            Log.d("AcctCreation","Could not encode data");
         }
         catch (java.io.IOException ioException){
-            System.out.println("Could not open connection");
+            Log.d("AcctCreation","Could not open connection");
         }
 
         return accountCreated; //true if account was created
+    }
+
+    //generate a random salt value of length 8 to use for the password hash
+    private String GenerateRandomSalt(){
+        StringBuilder salt = new StringBuilder();
+        Random rand = new Random();
+        //generate a hash 8 characters long, with each char from the possibleSaltChars characters
+        for(int i = 0; i < 8; i++){
+            salt.append(possibleSaltChars.charAt(rand.nextInt(possibleSaltChars.length())));
+        }
+
+        System.out.println(salt.toString());
+
+        return salt.toString();
     }
 }

@@ -3,8 +3,11 @@ package com.example.campusnavigation;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.provider.ContactsContract;
+import android.telecom.Call;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -19,6 +22,13 @@ import java.net.URLEncoder;
 import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.FutureTask;
 
 import javax.net.ssl.HttpsURLConnection;
 
@@ -30,30 +40,8 @@ public class LoginActivity extends AppCompatActivity {
     final int MAX_PASSWORD_LENGTH = 32;
     final int MIN_PASSWORD_LENGTH = 12;
     final int MAX_EMAIL_LENGTH = 22;
-    private final String link = "";
-
-    private class AttemptLogin extends AsyncTask<Object, Void, Boolean> {
-        @Override
-        protected Boolean doInBackground(Object... acctInfo) {
-            String email = (String) acctInfo[0];
-            String password = (String) acctInfo[1];
-
-            boolean result = SendData(email, password);
-
-            return result;
-        }
-
-        @Override
-        protected void onPostExecute(Boolean aBoolean) {
-            if (aBoolean) {
-                //change screen to home page
-                startActivity(new Intent(LoginActivity.this, MainActivity.class));
-            } else {
-                //set message account could not be created
-                System.out.println("Could not login");
-            }
-        }
-    }
+    private final String loginLink = "https://medusa.mcs.uvawise.edu/~jdl8y/login.php";
+    private final String getSaltLink = "https://medusa.mcs.uvawise.edu/~jdl8y/getSalt.php";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,8 +51,8 @@ public class LoginActivity extends AppCompatActivity {
         setTitle("Account Log In");
 
         Button LoginButton = (Button) findViewById(R.id.LoginButton);
-        final EditText UsernameField = (EditText) findViewById(R.id.UserEmailAddressBox);
-        final EditText PasswordField = (EditText) findViewById(R.id.UserPasswordBox);
+        final EditText EmailLoginField = (EditText) findViewById(R.id.LoginEmailAddressBox);
+        final EditText PasswordLoginField = (EditText) findViewById(R.id.LoginPasswordBox);
         TextView NewAccountLink = (TextView) findViewById((R.id.newAccountLink));
 
         NewAccountLink.setOnClickListener(new View.OnClickListener() {
@@ -79,53 +67,114 @@ public class LoginActivity extends AppCompatActivity {
         LoginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String email = UsernameField.getText().toString();
-                String password = PasswordField.getText().toString();
+                final String email = EmailLoginField.getText().toString();
+                final String password = PasswordLoginField.getText().toString();
 
                 boolean inputIsGood = true;
 
                 //check if any fields are empty
-                if(email.isEmpty() || password.isEmpty()){
+                if (email.isEmpty() || password.isEmpty()) {
                     inputIsGood = false;
                 }
 
                 //check to see if input length is in our set bounds
-                else if(!InputLengthIsGood(password, email)){
+                else if (!InputLengthIsGood(email, password)) {
                     inputIsGood = false;
                 }
 
                 //take user to email sent page if all input was good
-                if(inputIsGood) {
+                if (inputIsGood) {
 
-                    //hash password
-                    MessageDigest digest = null;
-                    String passwordInHex = null;
-                    try {
-                        digest = MessageDigest.getInstance("SHA-512");
-                        byte[] inBytes = digest.digest(password.getBytes());
-                        //change from byte array to hex
-                        StringBuilder createdHexRep = new StringBuilder();
-                        for (int i = 0; i < inBytes.length; i++) {
-                            //https://docs.oracle.com/javase/6/docs/api/java/util/Formatter.html#syntax
-                            createdHexRep.append(String.format("%02X", inBytes[i]));
+                    //https://stackoverflow.com/questions/58767733/android-asynctask-api-deprecating-in-android-11-what-are-the-alternatives
+                    //can't run network tasks on main thread, so we use an executor to do this task
+                    final ExecutorService saltExecutor = Executors.newSingleThreadExecutor();
+
+                    //have to use a callable to return a result and use a future task to store the result
+                    FutureTask task = new FutureTask(new Callable<String>() {
+                        @Override
+                        public String call() throws Exception {
+
+                            final String returnedSalt = GetSalt(email);
+
+                            return returnedSalt;
                         }
-                        passwordInHex = createdHexRep.toString();
-                        System.out.println(passwordInHex);
+                    });
 
-                    } catch (java.security.NoSuchAlgorithmException e) {
-                        System.out.println("error in finding hashing algorithm");
-                        inputIsGood = false; //stops data from being entered into db
+                    saltExecutor.execute(task); //run the task, try to get the salt
+
+                    StringBuilder salt = new StringBuilder();
+
+                    try {
+                        salt.append(task.get()); //get the salt from the task
+                    } catch (ExecutionException e) {
+                        e.printStackTrace();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
                     }
 
-                    if(inputIsGood){
+                    //check if the salt was returned
+                    if(salt.toString().contains("Account Does Not Exist") || salt.toString().isEmpty()){
+                        inputIsGood = false;
+                    }
 
+                    if (inputIsGood) {
+                        //hash password
+                        MessageDigest digest = null;
+                        String passwordInHex = null;
+                        String saltAndPassword = salt.toString().trim() + password.trim();
+
+                        try {
+                            digest = MessageDigest.getInstance("SHA-512");
+                            byte[] inBytes = digest.digest(saltAndPassword.getBytes());
+                            //change from byte array to hex
+                            StringBuilder createdHexRep = new StringBuilder();
+                            for (int i = 0; i < inBytes.length; i++) {
+                                //https://docs.oracle.com/javase/6/docs/api/java/util/Formatter.html#syntax
+                                createdHexRep.append(String.format("%02X", inBytes[i]));
+                            }
+                            passwordInHex = createdHexRep.toString();
+
+                        } catch (java.security.NoSuchAlgorithmException e) {
+                            System.out.println("error in finding hashing algorithm");
+                            inputIsGood = false; //stops data from being entered into db
+                        }
+                        if (inputIsGood) {
+                            //attempt to login to an account
+                            final String[] UserAccountInfo = {email, passwordInHex};
+
+                            ExecutorService executor = Executors.newSingleThreadExecutor();
+                            final Handler handler = new Handler(Looper.getMainLooper());
+
+                            executor.execute(new Runnable() {
+                                @Override
+                                public void run() {
+                                    //try to login
+                                    final boolean result = SendDataLogin(UserAccountInfo[0], UserAccountInfo[1]);
+
+                                    handler.post(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            //if login was successful
+                                            if (result) {
+                                                //change screen to home page
+                                                startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                                            } else {
+                                                //wrong password, set message
+                                                System.out.println("Could not login");
+                                            }
+                                        }
+                                    });
+                                }
+                            });
+                        }
                     }
                 }
             }
         });
     }
 
-    private boolean InputLengthIsGood(String password, String email){
+
+    private boolean InputLengthIsGood(String email, String password){
         if(password.length() >= MIN_PASSWORD_LENGTH && password.length() <= MAX_PASSWORD_LENGTH && email.length() <= MAX_EMAIL_LENGTH){
             return true;
         }
@@ -136,7 +185,7 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-    private boolean SendData(String password, String email){
+    private boolean SendDataLogin(String email, String password){
         Boolean successfulSignIn = false;
         URL url = null;
         HttpsURLConnection conn = null;
@@ -145,7 +194,7 @@ public class LoginActivity extends AppCompatActivity {
         try {
             //https://www.tutorialspoint.com/android/android_php_mysql.htm
             //create a url object and open a connection to the specified link
-            url = new URL(link);
+            url = new URL(loginLink);
             conn = (HttpsURLConnection) url.openConnection();
             conn.setDoOutput(true);
             conn.setDoInput(true);
@@ -155,12 +204,9 @@ public class LoginActivity extends AppCompatActivity {
             data += "&" + URLEncoder.encode("password", "UTF-8") + "=" + URLEncoder.encode(password, "UTF-8");
 
             OutputStreamWriter writer = new OutputStreamWriter(conn.getOutputStream());
-            System.out.println("outputstreamwriter made");
 
             writer.write(data); //send the user's data
             writer.flush();
-
-            System.out.println("Data written to server");
 
             //can't get input stream
             //read returned message from server
@@ -168,19 +214,15 @@ public class LoginActivity extends AppCompatActivity {
             StringBuilder builder = new StringBuilder();
             String line = "";
 
-            System.out.println("String builder created");
-
             while((line = reader.readLine()) != null) {
                 builder.append(line + "\n");
                 //break;
             }
 
-            String result = builder.toString();
-
-            System.out.println(builder.toString()); //test code
+            System.out.println(password);
 
             //see if the server returned that the user was logged in
-            if(builder.toString() == "true"){
+            if(builder.toString().contains("true")){
                 successfulSignIn = true;
             }
 
@@ -197,5 +239,53 @@ public class LoginActivity extends AppCompatActivity {
         }
 
         return successfulSignIn; //true if account was created
+    }
+
+    private String GetSalt(String email){
+        StringBuilder salt = new StringBuilder();
+        URL url = null;
+        HttpsURLConnection conn = null;
+        String data = null;
+        BufferedReader reader = null;
+
+        try {
+            //https://www.tutorialspoint.com/android/android_php_mysql.htm
+            //create a url object and open a connection to the specified link
+            url = new URL(getSaltLink);
+            conn = (HttpsURLConnection) url.openConnection();
+            conn.setDoOutput(true);
+            conn.setDoInput(true);
+
+            //tries to encode the user's data
+            data = URLEncoder.encode("email", "UTF-8") + "=" + URLEncoder.encode(email, "UTF-8");
+
+            OutputStreamWriter writer = new OutputStreamWriter(conn.getOutputStream());
+
+            writer.write(data); //send the user's data
+            writer.flush();
+
+            //can't get input stream
+            //read returned message from server
+            reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+            String line = "";
+
+            while((line = reader.readLine()) != null) {
+                salt.append(line + "\n");
+                //break;
+            } //salt will either be empty or contain an error message if no salt was found
+
+            writer.close();
+        }
+        catch (java.net.MalformedURLException malformedURLException){
+            System.out.println("Bad url.");
+        }
+        catch(java.io.UnsupportedEncodingException unsupportedEncodingException){
+            System.out.println("Could not encode data.");
+        }
+        catch (java.io.IOException ioException){
+            System.out.println("Could not open connection");
+        }
+
+        return salt.toString(); //true if account was created
     }
 }
