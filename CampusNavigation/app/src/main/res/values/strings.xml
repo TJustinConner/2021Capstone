@@ -21,6 +21,12 @@
     <string name="faculty_log_in">Faculty Log In</string>
     <string name="create_an_account"><u>Create An Account</u></string>
 
+    <string-array name = "Recurrence">
+        <item>Does not recur</item>
+        <item>Weekly</item>
+        <item>Monthly</item>
+    </string-array>
+
     <string-array name="Locations">
         <item>Location</item>
         <item>Cavalier House</item>

@@ -17,12 +17,14 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.StrictMode;
+import android.provider.CalendarContract;
 import android.provider.MediaStore;
 import android.view.View;
 import android.webkit.WebView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.Spinner;
 import android.os.Bundle;
@@ -60,19 +62,24 @@ import javax.net.ssl.HttpsURLConnection;
 //This is the Event Activity, this is where you come after selecting events.
 public class EventActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
     private TextView button;
-    private String event, time, desc, loc, date, blob; //For the user inputs
+    private String event, time, desc, loc, date, blob, recurrence; //For the user inputs
+    private String eTime;
     private String totalInput;
+    private CheckBox checkbox;
 
     private DatePickerDialog.OnDateSetListener mDateSetListener;
     private TextView dateDisplay;
 
     private TimePickerDialog.OnTimeSetListener mTimeSetListener;
     private TextView timeDisplay;
-    int mHour, mMin;
+
+    private TimePickerDialog.OnTimeSetListener meTimeSetListener;
+    private TextView eTimeDisplay;
 
     private EditText eventInput;
     private EditText descInput;
     private TextView eventImageButton;
+    private TextView exportCalendarButton;
     Uri path;
 
     @Override
@@ -93,12 +100,20 @@ public class EventActivity extends AppCompatActivity implements AdapterView.OnIt
         spinner.setAdapter(adapter);
         spinner.setOnItemSelectedListener(this);
 
+        Spinner spunner = (Spinner) findViewById(R.id.recInput);
+        ArrayAdapter<CharSequence> edapter = ArrayAdapter.createFromResource(this, R.array.Recurrence, android.R.layout.simple_spinner_item);
+        edapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spunner.setAdapter(edapter);
+        spunner.setOnItemSelectedListener(this);
+
         //This is all the prep for the input from users for events, time, description, and date.
         eventInput = (EditText) findViewById(R.id.eventInput);
         descInput = (EditText) findViewById(R.id.descInput);
         dateDisplay = (TextView) findViewById(R.id.datePicker);
         timeDisplay = (TextView) findViewById(R.id.timePicker);
+        eTimeDisplay = (TextView) findViewById(R.id.eTimePicker);
         eventImageButton = (TextView) findViewById(R.id.eventImageSelector);
+        exportCalendarButton = (TextView) findViewById(R.id.exportCalendarEvent);
         final TextView eventError = (TextView) findViewById(R.id.SCE);
         eventError.setVisibility(View.INVISIBLE);
 
@@ -110,11 +125,16 @@ public class EventActivity extends AppCompatActivity implements AdapterView.OnIt
                 Spinner spinner = (Spinner) findViewById(R.id.locInput);
                 String text = spinner.getSelectedItem().toString();
 
+                Spinner spunner = (Spinner) findViewById(R.id.recInput);
+                String text2 = spunner.getSelectedItem().toString();
+
                 event = eventInput.getText().toString();
                 time = timeDisplay.getText().toString();
+                eTime = eTimeDisplay.getText().toString();
                 desc = descInput.getText().toString();
                 date = dateDisplay.getText().toString();
                 loc = text;
+                recurrence = text2;
 
                 //convert pdf to blob
                 Path pdfPath = Paths.get(path.toString());
@@ -151,6 +171,9 @@ public class EventActivity extends AppCompatActivity implements AdapterView.OnIt
                                 + "=" + URLEncoder.encode(event, "UTF-8");
 
                         totalInput += "&" + URLEncoder.encode("time", "UTF-8") + "="
+                                + URLEncoder.encode(time, "UTF-8");
+
+                        totalInput += "&" + URLEncoder.encode("eTime", "UTF-8") + "="
                                 + URLEncoder.encode(time, "UTF-8");
 
                         totalInput += "&" + URLEncoder.encode("desc", "UTF-8")
@@ -201,14 +224,14 @@ public class EventActivity extends AppCompatActivity implements AdapterView.OnIt
                     //This is displaying the text that was saved in the previous step
                     displayText(event);
                     displayText(time);
+                    displayText(eTime);
                     displayText(date);
                     displayText(loc);
                     displayText(desc);
 
-                    //This is a debugging tag
-                    Log.d("SUCCESS", "Properly Saved Event Data");
                 }
-                else{
+                else{//this prints error messages to the screen for the user and gives a debugging
+                    //message to console/terminal/whatever its called
                     Log.d("FAILED", "user input is bad: " + testCheck);
                     if (testCheck.equals("SCE")){
                         Log.d("FAILED", "Event error.");
@@ -216,6 +239,8 @@ public class EventActivity extends AppCompatActivity implements AdapterView.OnIt
                     }
                 }
 
+                Intent toMain = new Intent(v.getContext(), MainActivity.class);
+                startActivity(toMain);
             }
 
         });
@@ -267,12 +292,38 @@ public class EventActivity extends AppCompatActivity implements AdapterView.OnIt
             }
         });
 
+        //this sets the time properly
         mTimeSetListener = new TimePickerDialog.OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
                 String timeS = hourOfDay + ":" + minute;
                 Log.d("DEBUGGING", "The current time is: " + timeS);
                 timeDisplay.setText(timeS);
+            }
+        };
+
+        //this creates the object used to get end time input from the user and then saves it to a string
+        eTimeDisplay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Calendar c = Calendar.getInstance();
+                int hourOfDay = c.get(Calendar.HOUR_OF_DAY);
+                int minute = c.get(Calendar.MINUTE);
+
+                TimePickerDialog timePickerDialog = new TimePickerDialog(EventActivity.this, meTimeSetListener, hourOfDay, minute, false);
+                //display the widget with a white background
+                timePickerDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.WHITE));
+                timePickerDialog.show();
+            }
+        });
+
+        //this sets the end time properly
+        meTimeSetListener = new TimePickerDialog.OnTimeSetListener() {
+            @Override
+            public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                String timeS = hourOfDay + ":" + minute;
+                Log.d("DEBUGGING", "The current time is: " + timeS);
+                eTimeDisplay.setText(timeS);
             }
         };
 
@@ -289,8 +340,34 @@ public class EventActivity extends AppCompatActivity implements AdapterView.OnIt
             }
         });
 
+        exportCalendarButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //get all the inputs
+                Spinner spinner = (Spinner) findViewById(R.id.locInput);
+                String text = spinner.getSelectedItem().toString();
+
+                Spinner spunner = (Spinner) findViewById(R.id.recInput);
+                String text2 = spunner.getSelectedItem().toString();
+
+                event = eventInput.getText().toString();
+                time = timeDisplay.getText().toString();
+                eTime = eTimeDisplay.getText().toString();
+                desc = descInput.getText().toString();
+                date = dateDisplay.getText().toString();
+                loc = text;
+                recurrence = text2;
+
+                addToCalendar(event, loc, date, time, eTime, desc, recurrence);
+
+
+            }
+        });
+
     }
 
+    //This function if required for the pdf and flier stuff. This is just returning the proper path
+    //and submitting a debugging message
     public void onActivityResult(int requestCode, int resultCode, Intent result) {
         super.onActivityResult(requestCode, resultCode, result);
         if (resultCode == RESULT_OK) {
@@ -300,21 +377,22 @@ public class EventActivity extends AppCompatActivity implements AdapterView.OnIt
             }
         }
     }
+
     //this is mainly for debugging, it prints the parameter to the screen in a little gray box
+    //However this can/is used for just displaying text to the user for a brief period of time.
     private void displayText(String text){//This just displays the input at the bottom of the screen
         Toast.makeText(EventActivity.this, text, Toast.LENGTH_SHORT).show();
     }
 
+    //This does something after an item is selected from the spinner
     @Override
-    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {//This does something after an item is selected from the spinner
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         String text = parent.getItemAtPosition(position).toString();
         //Toast.makeText(parent.getContext(), text, Toast.LENGTH_SHORT).show();
     }
 
     @Override
-    public void onNothingSelected(AdapterView<?> parent) {
-
-    }
+    public void onNothingSelected(AdapterView<?> parent){}//default function, has no purpose, but is required for syntax
 
     private String sanitize(String event, String time, String date){//sanitize user input for special characters
         //checks the given user input for any of the ArrayList of characters. There has to be separate ArrayLists
@@ -329,6 +407,42 @@ public class EventActivity extends AppCompatActivity implements AdapterView.OnIt
             }
         }
         return "SAFE";
+    }
+
+    public void addToCalendar(String title, String location, String date, String sTime, String eTime, String description, String recurrence){
+        //This is to add events a user has created or selected from a bulletin board to their personal calendar
+        //The title, location, date, time(start then end time), and description are required for the import.
+        //Adding the possibility of inviting other people (perhaps through user accounts or emails) to the events is a good future
+
+        //setting intents
+        Intent intent = new Intent(Intent.ACTION_INSERT);
+        intent.setData(CalendarContract.Events.CONTENT_URI);
+
+        Log.d("DEBUG", "The recurrence is: " + recurrence);
+        //modify below if you need to add/change calendar inputs
+        intent.putExtra(CalendarContract.Events.TITLE, title);
+        intent.putExtra(CalendarContract.Events.DESCRIPTION, description);
+        intent.putExtra(CalendarContract.Events.EVENT_LOCATION, location);
+        intent.putExtra(CalendarContract.Events.ALL_DAY, "false");
+        intent.putExtra(CalendarContract.Events.DTSTART, sTime);
+        intent.putExtra(CalendarContract.Events.DTEND, eTime);
+        if (recurrence.equals("Monthly")){
+            intent.putExtra(CalendarContract.Events.RRULE, "FREQ=MONTHLY;COUNT=12");
+        }
+        if (recurrence.equals("Weekly")){
+            Log.d("DEBUG", "in weekly add");
+            intent.putExtra(CalendarContract.Events.RRULE, "FREQ=WEEKLY;COUNT=52");
+        }
+        //intent.putExtra(Intent.EXTRA_EMAIL, value "insert email");
+
+        if(intent.resolveActivity(getPackageManager()) != null){
+            startActivity(intent);
+        }
+        else{
+            displayText("There is no app to support this action");
+        }
+        displayText("Successfully saved event to personal calendar.");
+        Log.d("SUCCESS", "Calendar event 'created' check phone calendar");
     }
 
 
