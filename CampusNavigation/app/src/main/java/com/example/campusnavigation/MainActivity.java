@@ -18,7 +18,7 @@ public class MainActivity extends AppCompatActivity {
         Button WorkoutsButton = (Button) findViewById(R.id.workoutsButton);
         Button eventsButton = (Button) findViewById(R.id.eventsButton);
         Button mapButton = (Button) findViewById(R.id.mapButton);
-        Button eventSearchButton = (Button) findViewById(R.id.eventSearchButton);
+        //Button eventSearchButton = (Button) findViewById(R.id.eventSearchButton);
 
         LoginButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
