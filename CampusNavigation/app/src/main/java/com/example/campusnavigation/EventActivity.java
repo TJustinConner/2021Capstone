@@ -177,6 +177,9 @@ public class EventActivity extends AppCompatActivity implements AdapterView.OnIt
                         totalInput += "&" + URLEncoder.encode("blob", "UTF-8")
                                 + "=" + URLEncoder.encode(blob, "UTF-8");
 
+                        totalInput += "&" + URLEncoder.encode("recur", "UTF-8")
+                                + "=" + URLEncoder.encode(recurrence, "UTF-8");
+
                         //opening connection to php file
                         url = new URL("https://medusa.mcs.uvawise.edu/~jwe3nv/connect.php");
                         urlConnection = (HttpsURLConnection) url.openConnection();
@@ -218,6 +221,11 @@ public class EventActivity extends AppCompatActivity implements AdapterView.OnIt
                     displayText(loc);
                     displayText(desc);
 
+                    try {
+                        BulletinBoard.eventSearch(loc);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
                 else{//this prints error messages to the screen for the user and gives a debugging
                     //message to console/terminal/whatever its called
@@ -228,8 +236,8 @@ public class EventActivity extends AppCompatActivity implements AdapterView.OnIt
                     }
                 }
 
-                Intent toMain = new Intent(v.getContext(), MainActivity.class);
-                startActivity(toMain);
+                //Intent toMain = new Intent(v.getContext(), MainActivity.class);
+                //startActivity(toMain);
             }
 
         });
