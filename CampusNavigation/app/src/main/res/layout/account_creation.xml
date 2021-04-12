@@ -8,7 +8,7 @@
     tools:ignore="LabelFor">
 
     <TextView
-        android:id="@+id/NewEmailText"
+        android:id="@+id/EmailText"
         android:layout_width="95dp"
         android:layout_height="46dp"
         android:layout_marginStart="99dp"
@@ -24,7 +24,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/NewPasswordText"
+        android:id="@+id/PasswordText"
         android:layout_width="95dp"
         android:layout_height="46dp"
         android:layout_marginStart="99dp"
@@ -56,7 +56,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/CreateAccountButton"
+        android:id="@+id/LoginButton"
         android:layout_width="197dp"
         android:layout_height="56dp"
         android:layout_marginStart="107dp"
@@ -70,7 +70,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
-        android:id="@+id/UserPasswordBox"
+        android:id="@+id/LoginPasswordBox"
         android:layout_width="252dp"
         android:layout_height="79dp"
         android:layout_marginStart="79dp"
@@ -86,7 +86,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
-        android:id="@+id/UserEmailAddressBox"
+        android:id="@+id/LoginEmailAddressBox"
         android:layout_width="252dp"
         android:layout_height="79dp"
         android:layout_marginStart="79dp"
@@ -102,7 +102,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/NewAccountHeader"
+        android:id="@+id/LoginHeader"
         android:layout_width="215dp"
         android:layout_height="49dp"
         android:layout_marginStart="98dp"

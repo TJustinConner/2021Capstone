@@ -14,11 +14,13 @@
          location permissions for the "MyLocation" functionality.
     -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.READ_CALENDAR" />
+    <uses-permission android:name="android.permission.WRITE_CALENDAR" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
-    <uses-permission android:name="android.permission.INTERNET" />
 
     <uses-feature
         android:glEsVersion="0x00020000"
@@ -35,7 +37,7 @@
         android:supportsRtl="true"
         android:testOnly="true"
         android:theme="@style/Theme.CampusNavigation" >
-
+        <activity android:name="com.example.campusnavigation.LoginActivity" />
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
@@ -51,13 +53,24 @@
         <activity
             android:name="com.example.campusnavigation.MapsActivity"
             android:label="@string/title_activity_maps" />
-        <activity android:name="com.example.campusnavigation.EventActivity" />
+        <activity
+            android:name="com.example.campusnavigation.EventActivity"
+            android:label="Event Creation"
+            android:screenOrientation="portrait" />
         <activity android:name="com.example.campusnavigation.WorkoutRoute" />
-        <activity android:name="com.example.campusnavigation.WorkoutCreation" />
+        <activity
+            android:name="com.example.campusnavigation.WorkoutCreation"
+            android:label="Workout Creation"
+            android:screenOrientation="portrait" />
         <activity android:name="com.example.campusnavigation.PasswordRequirementsPage" />
         <activity android:name="com.example.campusnavigation.EmailVerifSent" />
-        <activity android:name="com.example.campusnavigation.AccountCreation" />
-        <activity android:name="com.example.campusnavigation.MainActivity" >
+        <activity
+            android:name="com.example.campusnavigation.AccountCreation"
+            android:label="Account Creation" />
+        <activity
+            android:name="com.example.campusnavigation.MainActivity"
+            android:label="Home Screen"
+            android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -152,6 +165,16 @@
             <intent-filter>
                 <action android:name="androidx.work.impl.background.systemalarm.UpdateProxies" />
             </intent-filter>
+        </receiver>
+        <receiver
+            android:name="androidx.work.impl.diagnostics.DiagnosticsReceiver"
+            android:directBootAware="false"
+            android:enabled="true"
+            android:exported="true"
+            android:permission="android.permission.DUMP" >
+            <intent-filter>
+                <action android:name="androidx.work.diagnostics.REQUEST_DIAGNOSTICS" />
+            </intent-filter>
         </receiver> <!-- Needs to be explicitly declared on P+ -->
         <uses-library
             android:name="org.apache.http.legacy"
@@ -168,6 +191,7 @@
 
         <service
             android:name="androidx.room.MultiInstanceInvalidationService"
+            android:directBootAware="true"
             android:exported="false" />
     </application>
 

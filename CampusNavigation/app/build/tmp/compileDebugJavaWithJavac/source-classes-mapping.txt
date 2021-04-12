@@ -6,18 +6,41 @@ com/example/campusnavigation/AccountCreation.java
  com.example.campusnavigation.AccountCreation
  com.example.campusnavigation.AccountCreation$1
  com.example.campusnavigation.AccountCreation$2
-com/example/campusnavigation/EventActivity.java
- com.example.campusnavigation.EventActivity
- com.example.campusnavigation.EventActivity$1
+ com.example.campusnavigation.AccountCreation$2$1
+ com.example.campusnavigation.AccountCreation$2$1$1
+com/example/campusnavigation/eventSearch.java
+ com.example.campusnavigation.eventSearch
 com/example/campusnavigation/EmailVerifSent.java
  com.example.campusnavigation.EmailVerifSent
+com/example/campusnavigation/LoginActivity.java
+ com.example.campusnavigation.LoginActivity
+ com.example.campusnavigation.LoginActivity$1
+ com.example.campusnavigation.LoginActivity$2
+ com.example.campusnavigation.LoginActivity$2$1
+ com.example.campusnavigation.LoginActivity$2$2
+ com.example.campusnavigation.LoginActivity$2$2$1
 com/example/campusnavigation/WorkoutCreation.java
  com.example.campusnavigation.WorkoutCreation
 com/example/campusnavigation/BuildConfig.java
  com.example.campusnavigation.BuildConfig
+com/example/campusnavigation/EventActivity.java
+ com.example.campusnavigation.EventActivity
+ com.example.campusnavigation.EventActivity$1
+ com.example.campusnavigation.EventActivity$2
+ com.example.campusnavigation.EventActivity$3
+ com.example.campusnavigation.EventActivity$4
+ com.example.campusnavigation.EventActivity$5
+ com.example.campusnavigation.EventActivity$6
+ com.example.campusnavigation.EventActivity$7
+ com.example.campusnavigation.EventActivity$8
+ com.example.campusnavigation.EventActivity$9
 com/example/campusnavigation/MapsActivity.java
  com.example.campusnavigation.MapsActivity
+ com.example.campusnavigation.MapsActivity$1
  com.example.campusnavigation.MapsActivity$DijkstrasAlgorithm
 com/example/campusnavigation/MainActivity.java
  com.example.campusnavigation.MainActivity
  com.example.campusnavigation.MainActivity$1
+ com.example.campusnavigation.MainActivity$2
+ com.example.campusnavigation.MainActivity$3
+ com.example.campusnavigation.MainActivity$4

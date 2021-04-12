@@ -8,6 +8,10 @@
          location permissions for the "MyLocation" functionality.
     -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.READ_CALENDAR"/>
+    <uses-permission android:name="android.permission.WRITE_CALENDAR"/>
 
     <application
         android:allowBackup="true"
@@ -16,7 +20,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.CampusNavigation">
-
+        <activity android:name=".LoginActivity"></activity>
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
@@ -31,14 +35,25 @@
 
         <activity
             android:name=".MapsActivity"
-            android:label="@string/title_activity_maps"></activity>
-        <activity android:name=".EventActivity" />
+            android:label="@string/title_activity_maps" />
+        <activity
+            android:name=".EventActivity"
+            android:label="Event Creation"
+            android:screenOrientation="portrait" />
         <activity android:name=".WorkoutRoute" />
-        <activity android:name=".WorkoutCreation" />
+        <activity
+            android:name=".WorkoutCreation"
+            android:label="Workout Creation"
+            android:screenOrientation="portrait"/>
         <activity android:name=".PasswordRequirementsPage" />
         <activity android:name=".EmailVerifSent" />
-        <activity android:name=".AccountCreation" />
-        <activity android:name=".MainActivity">
+        <activity
+            android:name=".AccountCreation"
+            android:label="Account Creation" />
+        <activity
+            android:name=".MainActivity"
+            android:label="Home Screen"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
