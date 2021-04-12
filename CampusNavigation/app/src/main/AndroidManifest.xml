@@ -54,7 +54,7 @@
             android:screenOrientation="portrait"/>
         <activity
             android:name=".MainActivity"
-            android:label="Home Screen"
+            android:label="@string/main_activity_title"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

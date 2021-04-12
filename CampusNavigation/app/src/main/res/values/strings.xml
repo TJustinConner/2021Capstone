@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">CampusNavigation</string>
+    <string name="app_name">Wise Navigation</string>
     <string name="account_creation_btn_txt">Account Creation</string>
     <string name="Workouts_Btn_Text">Workouts</string>
     <string name="SchedulingButtonText">Map</string>
@@ -20,6 +20,7 @@
     <string name="title_activity_maps">Map</string>
     <string name="faculty_log_in">Faculty Log In</string>
     <string name="create_an_account"><u>Create An Account</u></string>
+    <string name="main_activity_title">Wise Navigation</string>
 
     <string-array name = "Recurrence">
         <item>Does not recur</item>

@@ -10,6 +10,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.util.regex.Pattern;
 
 import javax.net.ssl.HttpsURLConnection;
 
@@ -55,13 +56,24 @@ public class BulletinBoard {
             sb.append(line + "\n");
         }
         output = sb.toString();
-        //Log.d("SUCCESS", "The SQL QUERY RETURNED:" + output);
+        Log.d("SUCCESS", "The SQL QUERY RETURNED:" + output);
 
         output.trim();
         String outputS[] = output.split("\n");
+        String temp[];
+        Integer int1, int2;
         output = "";
+        boolean flag = false;
+
         for (int i = 0; i < outputS.length; i += 1){
-            if (outputS[i].contains("id")){
+            if (outputS[i].contains("id")){//finds the id line
+                i += 1;
+                if(outputS[i].indexOf('(') != -1){//finds a " in the string
+                    Log.d("DEBUG", "found the first quote");
+                    int1 = outputS[i].indexOf('(');//saves the first pos
+                    int2 = outputS[i].indexOf(')');//saves the second pos
+                    output += outputS[i].substring(int1, int2);
+                }
                 output+="a";
             }
             else if (outputS[i].contains("name")){
