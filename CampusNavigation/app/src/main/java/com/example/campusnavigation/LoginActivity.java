@@ -39,11 +39,7 @@ public class LoginActivity extends AppCompatActivity {
 
     final int MAX_PASSWORD_LENGTH = 32;
     final int MIN_PASSWORD_LENGTH = 12;
-<<<<<<< HEAD
     final int MAX_EMAIL_LENGTH = 22;
-=======
-    final int MAX_EMAIL_LENGTH = 30;
->>>>>>> main
     private final String loginLink = "https://medusa.mcs.uvawise.edu/~jdl8y/login.php";
     private final String getSaltLink = "https://medusa.mcs.uvawise.edu/~jdl8y/getSalt.php";
 
@@ -86,14 +82,6 @@ public class LoginActivity extends AppCompatActivity {
                     inputIsGood = false;
                 }
 
-<<<<<<< HEAD
-=======
-                //check to see if input length is in our set bounds
-                else if (!ContainsReqCharTypes(email, false) || !ContainsReqCharTypes(password, true)){
-                    inputIsGood = false;
-                }
-
->>>>>>> main
                 //take user to email sent page if all input was good
                 if (inputIsGood) {
 
@@ -147,11 +135,7 @@ public class LoginActivity extends AppCompatActivity {
                             passwordInHex = createdHexRep.toString();
 
                         } catch (java.security.NoSuchAlgorithmException e) {
-<<<<<<< HEAD
                             System.out.println("error in finding hashing algorithm");
-=======
-                            Log.d("Login","error in finding hashing algorithm");
->>>>>>> main
                             inputIsGood = false; //stops data from being entered into db
                         }
                         if (inputIsGood) {
@@ -176,11 +160,7 @@ public class LoginActivity extends AppCompatActivity {
                                                 startActivity(new Intent(LoginActivity.this, MainActivity.class));
                                             } else {
                                                 //wrong password, set message
-<<<<<<< HEAD
                                                 System.out.println("Could not login");
-=======
-                                                Log.d("Login","Could not login");
->>>>>>> main
                                             }
                                         }
                                     });
@@ -205,63 +185,6 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-<<<<<<< HEAD
-=======
-    //checks to see if input has the required chars in it, isPassword is true for checking the password, false for the email address
-    //password requires 1 uppercase letter, 1 lowercase letter, 1 number, and 1 special character
-    private boolean ContainsReqCharTypes(String input, boolean isPassword){
-
-        //check the password
-        if(isPassword){
-            boolean containsLowerAlpha = false;
-            boolean containsUpperAlpha = false;
-            boolean containsNumber = false;
-            boolean containsSpecialChar = false;
-            boolean containsInvalidChar = false;
-
-            //check for each needed type of char, check each position
-            for(int i = 0; i < input.length(); i++){
-                if(Character.isLowerCase(input.charAt(i))){
-                    containsLowerAlpha = true;
-                }
-                else if(Character.isUpperCase(input.charAt(i))){
-                    containsUpperAlpha = true;
-                }
-                else if(Character.isDigit(input.charAt(i))){
-                    containsNumber = true;
-                }
-                else if(ACCEPTED_SPECIAL_CHARS.contains(input.charAt(i))){
-                    containsSpecialChar = true;
-                }
-                else{
-                    containsInvalidChar = true;
-                }
-            }
-
-            //if the password meets all char requirements and doesn't contain an invalid char
-            if(containsLowerAlpha && containsNumber && containsSpecialChar && containsUpperAlpha && !containsInvalidChar){
-                return true;
-            }
-            else{
-                Log.d("Login","Missing Required Char Type(s) or Invalid Char");
-                return false;
-            }
-
-        }
-
-        //check the email
-        else{
-            if(input.contains("@uvawise.edu") || input.contains("@mcs.uvawise.edu") || input.contains("@virginia.edu")){
-                return true;
-            }
-            else{
-                Log.d("Login","Missing Correct Email Domain");
-                return false;
-            }
-        }
-    }
-
->>>>>>> main
     private boolean SendDataLogin(String email, String password){
         Boolean successfulSignIn = false;
         URL url = null;
@@ -306,7 +229,6 @@ public class LoginActivity extends AppCompatActivity {
             writer.close();
         }
         catch (java.net.MalformedURLException malformedURLException){
-<<<<<<< HEAD
             System.out.println("Bad url.");
         }
         catch(java.io.UnsupportedEncodingException unsupportedEncodingException){
@@ -314,15 +236,6 @@ public class LoginActivity extends AppCompatActivity {
         }
         catch (java.io.IOException ioException){
             System.out.println("Could not open connection");
-=======
-            Log.d("Login","Bad url.");
-        }
-        catch(java.io.UnsupportedEncodingException unsupportedEncodingException){
-            Log.d("Login","Could not encode data.");
-        }
-        catch (java.io.IOException ioException){
-            Log.d("Login","Could not open connection");
->>>>>>> main
         }
 
         return successfulSignIn; //true if account was created
@@ -364,7 +277,6 @@ public class LoginActivity extends AppCompatActivity {
             writer.close();
         }
         catch (java.net.MalformedURLException malformedURLException){
-<<<<<<< HEAD
             System.out.println("Bad url.");
         }
         catch(java.io.UnsupportedEncodingException unsupportedEncodingException){
@@ -372,15 +284,6 @@ public class LoginActivity extends AppCompatActivity {
         }
         catch (java.io.IOException ioException){
             System.out.println("Could not open connection");
-=======
-            Log.d("Login","Bad url.");
-        }
-        catch(java.io.UnsupportedEncodingException unsupportedEncodingException){
-            Log.d("Login","Could not encode data.");
-        }
-        catch (java.io.IOException ioException){
-            Log.d("Login","Could not open connection");
->>>>>>> main
         }
 
         return salt.toString(); //true if account was created
