@@ -1,2 +1,6 @@
+<<<<<<< HEAD
 include ':app'
+=======
+include ':app'
+>>>>>>> main
 rootProject.name = "CampusNavigation"

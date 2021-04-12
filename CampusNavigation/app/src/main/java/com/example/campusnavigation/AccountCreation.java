@@ -34,7 +34,11 @@ public class AccountCreation extends AppCompatActivity {
 
     final int MAX_PASSWORD_LENGTH = 32;
     final int MIN_PASSWORD_LENGTH = 12;
+<<<<<<< HEAD
     final int MAX_EMAIL_LENGTH = 22;
+=======
+    final int MAX_EMAIL_LENGTH = 30;
+>>>>>>> main
 
 
     private final String link = "https://medusa.mcs.uvawise.edu/~jdl8y/accountCreation.php";
@@ -133,7 +137,11 @@ public class AccountCreation extends AppCompatActivity {
 
                     }
                     catch(java.security.NoSuchAlgorithmException e) {
+<<<<<<< HEAD
                         System.out.println("error in finding hashing algorithm");
+=======
+                        Log.d("AcctCreation","error in finding hashing algorithm");
+>>>>>>> main
                         inputIsGood = false; //stops data from being entered into db
                     }
 
@@ -194,6 +202,7 @@ public class AccountCreation extends AppCompatActivity {
             boolean containsUpperAlpha = false;
             boolean containsNumber = false;
             boolean containsSpecialChar = false;
+<<<<<<< HEAD
 
             //check for each needed type of char, check each position
             for(int i = 0; i < input.length(); i++){
@@ -201,6 +210,13 @@ public class AccountCreation extends AppCompatActivity {
                     containsSpecialChar = true;
                 }
                 else if(Character.isLowerCase(input.charAt(i))){
+=======
+            boolean containsInvalidChar = false;
+
+            //check for each needed type of char, check each position
+            for(int i = 0; i < input.length(); i++){
+                if(Character.isLowerCase(input.charAt(i))){
+>>>>>>> main
                     containsLowerAlpha = true;
                 }
                 else if(Character.isUpperCase(input.charAt(i))){
@@ -209,6 +225,7 @@ public class AccountCreation extends AppCompatActivity {
                 else if(Character.isDigit(input.charAt(i))){
                     containsNumber = true;
                 }
+<<<<<<< HEAD
             }
 
             //if the password meets all char requirements
@@ -217,6 +234,22 @@ public class AccountCreation extends AppCompatActivity {
             }
             else{
                 Log.d("AcctCreation","Missing Required Char Type(s)");
+=======
+                else if(ACCEPTED_SPECIAL_CHARS.contains(input.charAt(i))){
+                    containsSpecialChar = true;
+                }
+                else{
+                    containsInvalidChar = true;
+                }
+            }
+
+            //if the password meets all char requirements and doesn't contain an invalid char
+            if(containsLowerAlpha && containsNumber && containsSpecialChar && containsUpperAlpha && !containsInvalidChar){
+                return true;
+            }
+            else{
+                Log.d("AcctCreation","Missing Required Char Type(s) or Invalid Char");
+>>>>>>> main
                 return false;
             }
 
@@ -224,7 +257,11 @@ public class AccountCreation extends AppCompatActivity {
 
         //check the email
         else{
+<<<<<<< HEAD
             if(input.contains("@uvawise.edu")){
+=======
+            if(input.contains("@uvawise.edu") || input.contains("@mcs.uvawise.edu") || input.contains("@virginia.edu")){
+>>>>>>> main
                 return true;
             }
             else{
