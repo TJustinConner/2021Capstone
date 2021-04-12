@@ -15,7 +15,7 @@
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="ExecutionTargetManager" SELECTED_TARGET="device_and_snapshot_combo_box_target[]" />
+  <component name="ExecutionTargetManager" SELECTED_TARGET="device_and_snapshot_combo_box_target[Pixel_2_API_26]" />
   <component name="ExternalProjectsData">
     <projectState path="$PROJECT_DIR$">
       <ProjectState />
@@ -48,6 +48,7 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="SelectDeploymentTargetsDialog.selectedDevices" value="Pixel_3a_API_30_x86" />
+    <property name="settings.editor.selected.configurable" value="project.propVCSSupport.Mappings" />
   </component>
   <component name="RunManager">
     <configuration default="true" type="AndroidJUnit" factoryName="Android JUnit">
@@ -133,10 +134,10 @@
       <screen x="0" y="0" width="1768" height="952" />
     </state>
     <state x="92" y="92" width="1584" height="768" key="AVDManager/0.0.1768.952@0.0.1768.952" timestamp="1614785685984" />
-    <state x="385" y="121" key="SettingsEditor" timestamp="1614785393225">
+    <state x="385" y="121" key="SettingsEditor" timestamp="1618250808704">
       <screen x="0" y="0" width="1768" height="952" />
     </state>
-    <state x="385" y="121" key="SettingsEditor/0.0.1768.952@0.0.1768.952" timestamp="1614785393225" />
+    <state x="385" y="121" key="SettingsEditor/0.0.1768.952@0.0.1768.952" timestamp="1618250808704" />
     <state x="586" y="285" key="com.android.tools.idea.run.deployment.ModifyDeviceSetDialog" timestamp="1614785367156">
       <screen x="0" y="0" width="1768" height="952" />
     </state>
