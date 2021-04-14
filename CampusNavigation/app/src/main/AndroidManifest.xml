@@ -21,8 +21,7 @@
         android:theme="@style/Base.Theme.AppCompat">
         <activity
             android:name=".BulletinBoardGUI"
-            android:label="@string/title_activity_bulletin_board_g_u_i"
-            android:theme="@style/NoActionBar"></activity>
+            android:label="@string/title_activity_bulletin_board_g_u_i"></activity>
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").

@@ -24,7 +24,7 @@
     <string name="bulletin_board_search_title">Bulletin Board Search</string>
     <string name="title_activity_bulletin_board_g_u_i">Bulletin Board GUI</string>
     <string name="event_search_button">Event Search</string>
-    <string name="locations">Locations</string>
+    <string name="location">Locations</string>
 
     <string-array name="Recurrence">
         <item>Does not recur</item>

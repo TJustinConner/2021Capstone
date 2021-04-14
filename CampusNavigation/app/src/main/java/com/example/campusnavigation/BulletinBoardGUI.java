@@ -8,8 +8,12 @@ import com.google.android.material.snackbar.Snackbar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import android.os.StrictMode;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -20,25 +24,26 @@ import java.net.URLEncoder;
 
 import javax.net.ssl.HttpsURLConnection;
 
-public class BulletinBoardGUI extends AppCompatActivity {
+public class BulletinBoardGUI extends AppCompatActivity implements AdapterView.OnItemSelectedListener{
+
+    private String location;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bulletin_board_g_u_i);
-        /*Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
 
-        FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });*/
+        Log.d("DEBUG", "Java sucks dick.");
+        //This is the setup of the Locations spinner dropdown menu
+        Spinner spinner = (Spinner) findViewById(R.id.locationSpinner);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.Locations, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(adapter);
+        spinner.setOnItemSelectedListener(this);
     }
-    protected static void eventSearch(String location) throws IOException {//query the database with the location that was given
+    protected static String eventSearch(String location) throws IOException {//query the database with the location that was given
         URL url = null;
         HttpsURLConnection urlConnection = null;;
         BufferedReader reader = null;
@@ -132,5 +137,20 @@ public class BulletinBoardGUI extends AppCompatActivity {
             }
         }
         Log.d("SUCCESS", "The trimmed output is: " + output);
+        return output;
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        try {
+            Log.d("DEBUG", "Results of test are: " + eventSearch(parent.getItemAtPosition(position).toString()));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+
     }
 }
