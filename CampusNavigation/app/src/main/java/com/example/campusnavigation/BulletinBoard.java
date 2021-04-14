@@ -72,33 +72,49 @@ public class BulletinBoard {
                     Log.d("DEBUG", "found the first quote");
                     int1 = outputS[i].indexOf('(');//saves the first pos
                     int2 = outputS[i].indexOf(')');//saves the second pos
-                    output += outputS[i].substring(int1, int2);
+                    output += "ID: " + outputS[i].substring(int1+1, int2) + "\n";
                 }
-                output+="a";
             }
-            else if (outputS[i].contains("name")){
-                output+="a";
+            else if (outputS[i].contains("name")){//found the name field
+                Log.d("DEBUG", "Found the name string.");
+                i +=1;
+                int1 = outputS[i].indexOf(')');
+                output += "NAME: " + outputS[i].substring(int1 +3, outputS[i].length() - 1) + "\n";
             }
             else if (outputS[i].contains("Time")){
-                output+="a";
+                i +=1;
+                int1 = outputS[i].indexOf(')');
+                output += "TIME: " + outputS[i].substring(int1 +3, outputS[i].length() - 1) + "\n";
             }
             else if (outputS[i].contains("eTime")){
-                output+="a";
+                i +=1;
+                int1 = outputS[i].indexOf(')');
+                output += "ETIME: " + outputS[i].substring(int1 +3, outputS[i].length() - 1) + "\n";
             }
             else if (outputS[i].contains("Date")){
-                output+="a";
+                i +=1;
+                int1 = outputS[i].indexOf(')');
+                output += "DATE: " + outputS[i].substring(int1 +3, outputS[i].length() - 1) + "\n";
             }
             else if (outputS[i].contains("recur")){
-                output+="a";
+                i +=1;
+                int1 = outputS[i].indexOf(')');
+                output += "RECUR: " + outputS[i].substring(int1 +3, outputS[i].length() - 1) + "\n";;
             }
             else if (outputS[i].contains("location")){
-                output+="a";
+                i +=1;
+                int1 = outputS[i].indexOf(')');
+                output += "LOCATION: " + outputS[i].substring(int1 +3, outputS[i].length() - 1) + "\n";
             }
             else if (outputS[i].contains("description")){
-                output+="a";
+                i +=1;
+                int1 = outputS[i].indexOf(')');
+                output += "DESCRIPTION: " + outputS[i].substring(int1 +3, outputS[i].length() - 1) + "\n";
             }
             else if (outputS[i].contains("image")){
-                output+="a";
+                i +=1;
+                int1 = outputS[i].indexOf(')');
+                output += "BLOB: " + outputS[i].substring(int1 +3, outputS[i].length() - 1) + "\n";
             }
         }
         Log.d("SUCCESS", "The trimmed output is: " + output);
