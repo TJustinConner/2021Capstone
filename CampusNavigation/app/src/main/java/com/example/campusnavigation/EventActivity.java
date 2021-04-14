@@ -221,11 +221,11 @@ public class EventActivity extends AppCompatActivity implements AdapterView.OnIt
                     displayText(loc);
                     displayText(desc);
 
-                    try {
+                    /*try {
                         BulletinBoard.eventSearch(loc);
                     } catch (IOException e) {
                         e.printStackTrace();
-                    }
+                    }*/
                 }
                 else{//this prints error messages to the screen for the user and gives a debugging
                     //message to console/terminal/whatever its called

@@ -1,29 +1,43 @@
 package com.example.campusnavigation;
 
+import android.os.Bundle;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+
 import android.util.Log;
+import android.view.View;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-import java.io.UnsupportedEncodingException;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
-import java.util.regex.Pattern;
 
 import javax.net.ssl.HttpsURLConnection;
 
-public class BulletinBoard {
-    private String locationOnCampus;// this is where the specific bulletin board is located on campus
+public class BulletinBoardGUI extends AppCompatActivity {
 
-    protected void create(String location) throws IOException {//this create function takes a location string as a parameter
-        locationOnCampus = location;
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_bulletin_board_g_u_i);
+        /*Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
-        eventSearch(location);
-
+        FloatingActionButton fab = findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+            }
+        });*/
     }
-
     protected static void eventSearch(String location) throws IOException {//query the database with the location that was given
         URL url = null;
         HttpsURLConnection urlConnection = null;;
