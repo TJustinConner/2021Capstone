@@ -56,7 +56,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/LoginButton"
+        android:id="@+id/CreateAcctButton"
         android:layout_width="197dp"
         android:layout_height="56dp"
         android:layout_marginStart="107dp"
@@ -70,7 +70,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
-        android:id="@+id/LoginPasswordBox"
+        android:id="@+id/NewAcctPasswordBox"
         android:layout_width="252dp"
         android:layout_height="79dp"
         android:layout_marginStart="79dp"
@@ -86,7 +86,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
-        android:id="@+id/LoginEmailAddressBox"
+        android:id="@+id/NewAcctEmailBox"
         android:layout_width="252dp"
         android:layout_height="79dp"
         android:layout_marginStart="79dp"
@@ -102,7 +102,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/LoginHeader"
+        android:id="@+id/ConfirmHeader"
         android:layout_width="215dp"
         android:layout_height="49dp"
         android:layout_marginStart="98dp"
@@ -117,7 +117,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
-        android:id="@+id/UserConfirmPasswordBox"
+        android:id="@+id/ConfirmPasswordNewBox"
         android:layout_width="252dp"
         android:layout_height="70dp"
         android:layout_marginStart="79dp"
