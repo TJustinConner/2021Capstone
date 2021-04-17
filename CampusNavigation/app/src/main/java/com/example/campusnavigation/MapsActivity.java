@@ -3,14 +3,19 @@ package com.example.campusnavigation;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
 
 import android.Manifest;
+import android.content.Context;
+import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
+import android.os.Handler;
+import android.os.Looper;
 import android.provider.Settings;
 import android.util.Log;
 import android.os.Bundle;
@@ -20,8 +25,15 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.google.android.gms.common.api.ResolvableApiException;
 import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.LocationSettingsRequest;
+import com.google.android.gms.location.LocationSettingsResponse;
+import com.google.android.gms.location.SettingsClient;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -33,6 +45,8 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 
 import java.io.BufferedReader;
@@ -44,25 +58,60 @@ import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.lang.Math;
 
 import static java.sql.DriverManager.println;
 
 
 /*
-This can now find the shortest path between two points
-and save the directions into a list that is accessable
-then there is an array of values that represets the number of each of these values
-so doing something like coorda[values][0] would get the lat for the first point
+Currently this code can:
+find the current locaiton of the user
+find the closest point between a set point and other points on campus
+draw a line from your current location to the one you are going to
 */
 
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, AdapterView.OnItemSelectedListener {
+    private static final String TAG = "MapsActivity";
+
+
+    int Location_Request_CODE = 10001;
+    double Longitude;
+    double Latitude;
+    int Coord_number = 0;
+
+    Polyline polylineFinal;
+    PolylineOptions polylineOptions;
+
     FusedLocationProviderClient fusedLocationProviderClient;
+    LocationRequest locationrequest;
+
+    LocationCallback locationCallback = new LocationCallback() {
+        @Override
+        public void onLocationResult(LocationResult locationResult){
+            if(locationResult == null){
+                return;
+            }
+            for(Location location: locationResult.getLocations()){
+                //this method updates location to keep it current
+                Longitude = location.getLongitude();
+                Latitude = location.getLatitude();
+
+            }
+
+        }
+    };
 
 
-    private static final String TAG = "MapActivity";
+    Handler handler = new Handler();
+    Runnable runnable;
+    int delay = 1*1000;
+
+
+
     private GoogleMap mMap;
     int buttonChooser = 0;//used to show which button type you are on Satellite or
+
     List<Marker> AllMarkers = new ArrayList<Marker>(); //Holds all the markers in the map
     //default
     //each time you update the map this needs to be updataed as well
@@ -70,8 +119,215 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     int[][] Matrix = new int[440][440];
     double[][] Coords = new double[440][2];
     List<Polyline> polylines = new ArrayList<Polyline>();
+
     // List<Integer> my_paths = new ArrayList<Integer>();
 ///////////////////////////////////////////
+
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+
+        int i = 0;
+
+
+        InputStream is = getResources().openRawResource(R.raw.paths);
+        BufferedReader reader = new BufferedReader(
+                new InputStreamReader(is, Charset.forName("UTF-8"))
+        );
+        String line = "";
+
+        try {
+            List<String[]> temp = new ArrayList<String[]>();
+            while ((line = reader.readLine()) != null) {
+                // String[] token = line.split(",");
+                temp.add((line.split(",")));
+                //            Log.i("test","at least it prints: "+token[332].length());
+                Log.i("test", "i: " + i);
+
+                i++;
+            }
+            // Log.i("matrix output: ","correct output?"+temp.size());
+            String[][] array = new String[temp.size()][0];
+            temp.toArray(array);
+/*
+            Log.i("matrix output: ","correct output?"+temp.size());
+            String[][]array = new String[temp.size()][0];
+            temp.toArray(array);
+            */
+            for (int row = 0; row < 440; row++) {
+                for (int column = 0; column < 440; column++) {
+                    Matrix[row][column] = Integer.parseInt(array[row][column]);
+                }
+
+            }
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
+        locationrequest = LocationRequest.create();
+        locationrequest.setInterval(3000);
+        locationrequest.setFastestInterval(2000);
+        locationrequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_maps);
+        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
+
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.map);
+        mapFragment.getMapAsync(this);
+        Spinner spinner = findViewById(R.id.maps_Spinners);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.Locations, android.R.layout.simple_dropdown_item_1line);
+        adapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
+        spinner.setAdapter(adapter);
+        spinner.setOnItemSelectedListener(this);
+
+
+    }//onCreate
+
+
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) { //if app permissions for using location is granted
+            //  getLastLocation();//this gets the last location of the phone
+
+            checksettingsAndStartLocationUpdates();
+        } else {
+            askLocationPermission();
+        }
+    }//onStart
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        stoplocationupdates();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        startlocationupdates();
+
+    }
+
+    private void checksettingsAndStartLocationUpdates() {
+        LocationSettingsRequest request = new LocationSettingsRequest.Builder().addLocationRequest(locationrequest).build();
+
+        SettingsClient client = LocationServices.getSettingsClient(this);
+
+        Task<LocationSettingsResponse> locationSettingsResponseTask = client.checkLocationSettings(request);
+        locationSettingsResponseTask.addOnSuccessListener(new OnSuccessListener<LocationSettingsResponse>() {
+            @Override
+            public void onSuccess(LocationSettingsResponse locationSettingsResponse) {
+                //make sure that settings on the device are met
+                //start location updates
+                //call the location updates method
+                startlocationupdates();
+
+            }
+        });
+
+        locationSettingsResponseTask.addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                //settings are no good
+                //ask user for input
+                if (e instanceof ResolvableApiException) {
+                    ResolvableApiException apiException = (ResolvableApiException) e;
+                    try {
+                        apiException.startResolutionForResult(MapsActivity.this, 1001);
+                    } catch (IntentSender.SendIntentException sendIntentException) {
+                        sendIntentException.printStackTrace();
+                    }
+
+                }
+
+            }
+        });
+    }
+
+
+    private void startlocationupdates() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+      //  fusedLocationProviderClient.requestLocationUpdates(locationrequest,locationCallback, Looper.getMainLooper());
+
+        fusedLocationProviderClient.requestLocationUpdates(locationrequest,locationCallback, Looper.myLooper());
+
+
+    }
+    private void stoplocationupdates(){
+        fusedLocationProviderClient.removeLocationUpdates(locationCallback);
+    }
+
+    private void askLocationPermission() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_FINE_LOCATION)) {
+                Log.i("make alert diolog", "diologe");
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, Location_Request_CODE);
+            } else {
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, Location_Request_CODE);
+            }
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (requestCode == Location_Request_CODE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                //granted
+               // getLastLocation();
+                checksettingsAndStartLocationUpdates();
+            } else {
+                //not granted
+            }
+        }
+    }
+
+    private void getLastLocation() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        Task<Location> locationTask = fusedLocationProviderClient.getLastLocation();
+        locationTask.addOnSuccessListener(new OnSuccessListener<Location>() {
+            @Override
+            public void onSuccess(Location location) {
+                if(location !=null){
+                    //we get location here
+
+                }
+                else{
+                    //location null...
+                }
+            }
+        });
+        locationTask.addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.e("error_cant find","cannot get location");
+            }
+        });
+
+    }
 
     public static class DijkstrasAlgorithm {
 
@@ -203,158 +459,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
 
 
-/*
-        // Driver Code
-        public static void main(String[] args)
-        {
-            //zero represents a non path
-            int[][] adjacencyMatrix = { { 0, 4, 0, 0, 0, 0, 0, 8, 0 },
-                    { 4, 0, 8, 0, 0, 0, 0, 11, 0 },
-                    { 0, 8, 0, 7, 0, 4, 0, 0, 2 },
-                    { 0, 0, 7, 0, 9, 14, 0, 0, 0 },
-                    { 0, 0, 0, 9, 0, 10, 0, 0, 0 },
-                    { 0, 0, 4, 0, 10, 0, 2, 0, 0 },
-                    { 0, 0, 0, 14, 0, 2, 0, 1, 6 },
-                    { 8, 11, 0, 0, 0, 0, 1, 0, 7 },
-                    { 0, 0, 2, 0, 0, 0, 6, 7, 0 } };
-            //dijkstra(adjacencyMatrix, 2,7);
-       // Log.i("test","out[ut");
-        }
-
-        */
     }
 
     //////////////////////////////////////////
 
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-
-        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
-        if (ActivityCompat.checkSelfPermission(MapsActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            //this is when the permision is granted
-            getLocation();
-        } else {
-            //user no trust us so they give us the slap
-            ActivityCompat.requestPermissions(MapsActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 44);
-        }
-
-        int i = 0;
-
-
-        InputStream is = getResources().openRawResource(R.raw.paths);
-        BufferedReader reader = new BufferedReader(
-                new InputStreamReader(is, Charset.forName("UTF-8"))
-        );
-        String line = "";
-
-        try {
-            List<String[]> temp = new ArrayList<String[]>();
-            while ((line = reader.readLine()) != null) {
-                // String[] token = line.split(",");
-                temp.add((line.split(",")));
-                //            Log.i("test","at least it prints: "+token[332].length());
-                Log.i("test", "i: " + i);
-
-                i++;
-            }
-            // Log.i("matrix output: ","correct output?"+temp.size());
-            String[][] array = new String[temp.size()][0];
-            temp.toArray(array);
-/*
-            Log.i("matrix output: ","correct output?"+temp.size());
-            String[][]array = new String[temp.size()][0];
-            temp.toArray(array);
-            */
-            for (int row = 0; row < 440; row++) {
-                for (int column = 0; column < 440; column++) {
-                    Matrix[row][column] = Integer.parseInt(array[row][column]);
-                }
-
-            }
-            /*
-            int checker = 0;
-            int problem_row = 0;
-            int problem_column = 0;
-            for(int row=0;row<333;row++){
-                for(int column=0; column<333;column++){
-                    if(Matrix[row][column]!=Matrix[column][row]){
-                        checker = 1;
-                        problem_column = column;
-                        problem_row = row;
-                    }
-                  //  Matrix[row][column] = Integer.parseInt(array[row][column]);
-                }
-
-                Log.i("matrix output: ","Zero if good: "+checker);
-
-            }
-            */
-
-            //  Log.i("matrix output: ","correct output?"+Matrix[331][332]);
-
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-///////////////////
-        //This works so good!!! Now all I need is a dictionary that takes in matrix values and
-        //returns coords.
-        // my_paths.clear();
-        //    DijkstrasAlgorithm.dijkstra(Matrix,0,1);
-///////////////////
-
-
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_maps);
-        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
-        Spinner spinner = findViewById(R.id.maps_Spinners);
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.Locations, android.R.layout.simple_dropdown_item_1line);
-        adapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
-        spinner.setAdapter(adapter);
-        spinner.setOnItemSelectedListener(this);
-
-
-    }
-
-    private void getLocation() {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            return;
-        }
-        fusedLocationProviderClient.getLastLocation().addOnCompleteListener(new OnCompleteListener<Location>() {
-            @Override
-            public void onComplete(@NonNull Task<Location> task) {
-                Location location = task.getResult();
-                if(location != null){
-
-                    try {
-                        Geocoder geocoder = new Geocoder(MapsActivity.this, Locale.getDefault());
-                        List<Address> addresses = geocoder.getFromLocation(
-                                location.getLatitude(),location.getLongitude(),1
-                        );
-                        LatLng marker = new LatLng(addresses.get(0).getLatitude(), addresses.get(0).getLongitude());
-                        Marker mark = mMap.addMarker(new MarkerOptions().position(marker).title("Common Wealth"));
-                        AllMarkers.add(mark);
-
-
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        });
-    }
 
     LatLng Wise = new LatLng(36.970702412486304, -82.56071600207069); //changes where
     //the map appears
@@ -392,7 +500,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 // String[] token = line.split(",");
                 temp.add((line.split(",")));
                 //            Log.i("test","at least it prints: "+token[332].length());
-              //  Log.i("test","i: "+i);
+                //  Log.i("test","i: "+i);
 
 
             }
@@ -411,69 +519,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
             }
 
-            /*
-            int checker = 0;
-            int problem_row = 0;
-            int problem_column = 0;
-            for(int row=0;row<333;row++){
-                for(int column=0; column<333;column++){
-                    if(Matrix[row][column]!=Matrix[column][row]){
-                        checker = 1;
-                        problem_column = column;
-                        problem_row = row;
-                    }
-                  //  Matrix[row][column] = Integer.parseInt(array[row][column]);
-                }
-
-                Log.i("matrix output: ","Zero if good: "+checker);
-
-            }
-            */
-
-            //  Log.i("matrix output: ","correct output?"+Matrix[331][332]);
-
 
         } catch (Exception e) {
             e.printStackTrace();
         }
 
 
-      //  Log.i("coords","//////////////////////////////////////////////coords for one: ");
-       // Log.i("coords","//////////////////////////////////////////////coords for one: "+Coords[0][1]);
-
-        //////////////////////////
-//This is used for generating lines on the map
-//it will get node data from the nodes created in the dijkstra's algorithm
-//and will make a black line between all of the points
-       /*
-
-        Polyline polyline1 = mMap.addPolyline(new PolylineOptions().clickable(true).add(
-                new LatLng(36.97053391196394, -82.55990677023982),
-                new LatLng(36.970692489150636, -82.56020717763906)));
-       */
-        //new LatLng(36.97101392838035, -82.56078921697508))
-/////////////////////////
-//DijkstrasAlgorithm path = new DijkstrasAlgorithm();
-//path.dijkstra(Matrix,0,68); //actually returns values for coords
-
-//Log.i("hello","message/////////////////////"+path.my_paths.size());
-////////////////////////
-
-       // for(int start =1;start<path.my_paths.size()/2;start++) {
-
-          //  Polyline polyline2 = mMap.addPolyline(new PolylineOptions().clickable(true).add(
-                   // new LatLng(Coords[path.my_paths.get(start-1)][1], Coords[path.my_paths.get(start-1)][0]),
-                    //new LatLng(Coords[path.my_paths.get(start)][1], Coords[path.my_paths.get(start)][0])));
-/*
-            Polyline polyline2 = mMap.addPolyline(new PolylineOptions().clickable(true).add(
-                    new LatLng(Coords[start][1], Coords[start][0]),
-                    new LatLng(Coords[start+1][1], Coords[start+1][0])));
-            // new LatLng(36.97101392838035, -82.56078921697508)));
-            */
-
-       // }
-
-        // mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Uva wise Va"));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(Wise));
         mMap.setMinZoomPreference(15.5f);//sets the max zoom so you cant zoom out to infinity
 
@@ -488,10 +539,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             if (buttonChooser == 0) {
                 mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
                 buttonChooser = 1;
+               // onPause();
+
             }
             else{
                 mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
                 buttonChooser = 0;
+                // onResume();
+
             }
         }
     }
@@ -523,6 +578,104 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         polylines.clear();
     }
 
+    private double GetDistance(double tlat1,double tlon1){
+        /*
+        double Lat1 = java.lang.Math.toRadians(36.9710275);
+        double Lon1 = java.lang.Math.toRadians(-82.5615663);
+        double Lat2 = java.lang.Math.toRadians(36.9709426);
+        double Lon2 = java.lang.Math.toRadians(-82.5613);
+        */
+    double Lat1 = java.lang.Math.toRadians(tlat1);
+    double Lon1 = java.lang.Math.toRadians(tlon1);
+    double Lat2 = java.lang.Math.toRadians(Latitude);
+    double Lon2 = java.lang.Math.toRadians(Longitude);
+
+    double radius = 6373.0;
+
+    double dlon = Lon2 - Lon1;
+    double dlat = Lat2 - Lat1;
+
+    double a = java.lang.Math.pow(java.lang.Math.sin(dlat/2),2)
+            + java.lang.Math.cos(Lat1) * java.lang.Math.cos(Lat2)
+            * java.lang.Math.pow(java.lang.Math.sin(dlon/2),2);
+    double c = 2 * java.lang.Math.atan2( java.lang.Math.sqrt(a),java.lang.Math.sqrt(1 - a));
+
+
+
+        return (radius * c);
+    }
+
+    private int GetClosest(){
+      double distance=900000000;
+      int counter = 0;
+      for(int x=0;x<440;x++){
+          if(GetDistance(Coords[x][1],Coords[x][0])<distance){
+              counter = x;
+              distance = GetDistance(Coords[x][1],Coords[x][0]);
+          }
+      }
+      return counter;
+    }
+private void makeToast(final int stoper){
+        if(Coord_number !=0 && Coord_number != 289){
+          handler.postDelayed(runnable = new Runnable() {
+              @Override
+              public void run() {
+                  Context context = getApplicationContext();
+                  CharSequence text = "Hello toast!";
+                  int duration = Toast.LENGTH_SHORT;
+
+                  Toast toast = Toast.makeText(context, text, duration);
+                  toast.show();
+                  killLines();
+                  makePaths(stoper);
+
+
+                  handler.postDelayed(runnable,delay);
+              }
+          }, delay);
+
+        }
+        if(stoper == 289){
+            handler.removeCallbacks(runnable);
+        }
+
+}
+
+private void killLines(){
+        for(Polyline line : polylines){
+            line.remove();
+        }
+        polylines.clear();
+}
+
+    private void makePaths(int Coord_number) {
+
+        onPause();
+        DijkstrasAlgorithm path = new DijkstrasAlgorithm();
+        path.dijkstra(Matrix, GetClosest(), Coord_number); //actually returns values for coords
+
+        if(Coord_number !=0) {
+
+            polylines.add(this.mMap.addPolyline(new PolylineOptions().color(Color.RED).clickable(true).add(
+                    new LatLng(Coords[GetClosest()][1], Coords[GetClosest()][0]),
+                    new LatLng(Latitude, Longitude))));
+
+        }
+        onResume();
+
+
+        for (int start = 1; start < path.my_paths.size(); start++) {
+
+            polylines.add(this.mMap.addPolyline(new PolylineOptions().color(Color.RED).clickable(true).add(
+                    new LatLng(Coords[path.my_paths.get(start - 1)][1], Coords[path.my_paths.get(start - 1)][0]),
+                    new LatLng(Coords[path.my_paths.get(start)][1], Coords[path.my_paths.get(start)][0]))));
+
+        }
+
+        path.clear_All();
+    }
+
     public void display(String name){
   //This was terrible to implement
         //the problem is that you have to have each of the the
@@ -532,7 +685,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         //the GPS coordinates for all the main locations on campus so have fun with that.poly
 
     RemoveAll();//this eliminates the all the nodes each time a new node is added so that only one node is displayed at a time
-        int Coord_number = 0;
+
 
 
         if( name.contains("Commonwealth Hall")) {
@@ -780,29 +933,19 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             Coord_number =398;
         }
 
-        DijkstrasAlgorithm path = new DijkstrasAlgorithm();
-        path.dijkstra(Matrix,0,Coord_number); //actually returns values for coords
+        makeToast(Coord_number);
 
-      //  Log.i("path_dest","message/////////////////////"+path.my_paths);
-////////////////////////
+       makePaths(Coord_number);
 
-        for(int start =1;start<path.my_paths.size();start++) {
-
-          polylines.add(this.mMap.addPolyline(new PolylineOptions().color(Color.RED).clickable(true).add(
-                    new LatLng(Coords[path.my_paths.get(start-1)][1], Coords[path.my_paths.get(start-1)][0]),
-                    new LatLng(Coords[path.my_paths.get(start)][1], Coords[path.my_paths.get(start)][0]))));
-
-
-/*
+        /*
             Polyline polyline2 = mMap.addPolyline(new PolylineOptions().clickable(true).add(
                     new LatLng(Coords[start][1], Coords[start][0]),
                     new LatLng(Coords[start+1][1], Coords[start+1][0])));
             // new LatLng(36.97101392838035, -82.56078921697508)));
             */
 
-        }
 
-    path.clear_All();
+
         }//display
 
 
