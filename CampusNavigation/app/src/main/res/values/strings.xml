@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">CampusNavigation</string>
+    <string name="app_name">Wise Navigation</string>
     <string name="account_creation_btn_txt">Account Creation</string>
     <string name="Workouts_Btn_Text">Workouts</string>
     <string name="SchedulingButtonText">Map</string>
@@ -20,8 +20,18 @@
     <string name="title_activity_maps">Map</string>
     <string name="faculty_log_in">Faculty Log In</string>
     <string name="create_an_account"><u>Create An Account</u></string>
+    <string name="confirm_account_link"><u>Confirm Account</u></string>
+    <string name="confirmation_code">Confirmation Code</string>
+    <string name="confirm">Confirm</string>
+    <string name="confirm_account">Confirm Account</string>
+    <string name="main_activity_title">Wise Navigation</string>
+    <string name="bulletin_board_search_title">Bulletin Board Search</string>
+    <string name="title_activity_bulletin_board_g_u_i">Bulletin Board GUI</string>
+    <string name="event_search_button">Event Search</string>
+    <string name="location">Locations</string>
+    <string name="title_activity_basic_login_functionality">BasicLoginFunctionality</string>
 
-    <string-array name = "Recurrence">
+    <string-array name="Recurrence">
         <item>Does not recur</item>
         <item>Weekly</item>
         <item>Monthly</item>
@@ -72,4 +82,5 @@
         <item>Wesley Foundation</item>
         <item>Alumni Hall</item>
     </string-array>
+
 </resources>

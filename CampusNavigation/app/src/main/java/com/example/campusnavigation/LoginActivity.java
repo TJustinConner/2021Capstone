@@ -1,13 +1,9 @@
 package com.example.campusnavigation;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.provider.ContactsContract;
-import android.telecom.Call;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -22,26 +18,17 @@ import java.net.URLEncoder;
 import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 import java.util.concurrent.FutureTask;
 
 import javax.net.ssl.HttpsURLConnection;
 
-public class LoginActivity extends AppCompatActivity {
+public class LoginActivity extends BasicLoginFunctionality {
 
-    final ArrayList<Character> ACCEPTED_SPECIAL_CHARS = new ArrayList<Character>(Arrays.asList('!', '@', '#', '$', '%', '^', '&', '*',
-            '(', ')', '.', '?', '-', '_'));
-
-    final int MAX_PASSWORD_LENGTH = 32;
-    final int MIN_PASSWORD_LENGTH = 12;
-    final int MAX_EMAIL_LENGTH = 22;
     private final String loginLink = "https://medusa.mcs.uvawise.edu/~jdl8y/login.php";
-    private final String getSaltLink = "https://medusa.mcs.uvawise.edu/~jdl8y/getSalt.php";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,10 +37,11 @@ public class LoginActivity extends AppCompatActivity {
 
         setTitle("Account Log In");
 
-        Button LoginButton = (Button) findViewById(R.id.LoginButton);
-        final EditText EmailLoginField = (EditText) findViewById(R.id.LoginEmailAddressBox);
-        final EditText PasswordLoginField = (EditText) findViewById(R.id.LoginPasswordBox);
-        TextView NewAccountLink = (TextView) findViewById((R.id.newAccountLink));
+        final Button LoginButton = (Button) findViewById(R.id.CreateAcctButton);
+        final EditText EmailLoginField = (EditText) findViewById(R.id.NewAcctEmailBox);
+        final EditText PasswordLoginField = (EditText) findViewById(R.id.NewAcctPasswordBox);
+        final TextView NewAccountLink = (TextView) findViewById((R.id.newAccountLink));
+        final TextView ConfirmAccountLink = (TextView) findViewById((R.id.confirmAccountLink));
 
         NewAccountLink.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -61,6 +49,15 @@ public class LoginActivity extends AppCompatActivity {
                 //takes user to password requirements activity
                 Intent ToAccountCreation = new Intent(v.getContext(), AccountCreation.class);
                 startActivity(ToAccountCreation);
+            }
+        });
+
+        ConfirmAccountLink.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //takes user to password requirements activity
+                Intent ToAccountConfirmation = new Intent(v.getContext(), ConfirmAcctActivity.class);
+                startActivity(ToAccountConfirmation);
             }
         });
 
@@ -79,6 +76,11 @@ public class LoginActivity extends AppCompatActivity {
 
                 //check to see if input length is in our set bounds
                 else if (!InputLengthIsGood(email, password)) {
+                    inputIsGood = false;
+                }
+
+                //check to see if input length is in our set bounds
+                else if (!ContainsReqCharTypes(email, false) || !ContainsReqCharTypes(password, true)){
                     inputIsGood = false;
                 }
 
@@ -135,7 +137,7 @@ public class LoginActivity extends AppCompatActivity {
                             passwordInHex = createdHexRep.toString();
 
                         } catch (java.security.NoSuchAlgorithmException e) {
-                            System.out.println("error in finding hashing algorithm");
+                            Log.d("Login","error in finding hashing algorithm");
                             inputIsGood = false; //stops data from being entered into db
                         }
                         if (inputIsGood) {
@@ -160,7 +162,7 @@ public class LoginActivity extends AppCompatActivity {
                                                 startActivity(new Intent(LoginActivity.this, MainActivity.class));
                                             } else {
                                                 //wrong password, set message
-                                                System.out.println("Could not login");
+                                                Log.d("Login","Could not login");
                                             }
                                         }
                                     });
@@ -173,18 +175,7 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-
-    private boolean InputLengthIsGood(String email, String password){
-        if(password.length() >= MIN_PASSWORD_LENGTH && password.length() <= MAX_PASSWORD_LENGTH && email.length() <= MAX_EMAIL_LENGTH){
-            return true;
-        }
-
-        else{
-            Log.d("Login","Invalid Input Length");
-            return false;
-        }
-    }
-
+    //tries to log in the user
     private boolean SendDataLogin(String email, String password){
         Boolean successfulSignIn = false;
         URL url = null;
@@ -229,63 +220,15 @@ public class LoginActivity extends AppCompatActivity {
             writer.close();
         }
         catch (java.net.MalformedURLException malformedURLException){
-            System.out.println("Bad url.");
+            Log.d("Login","Bad url.");
         }
         catch(java.io.UnsupportedEncodingException unsupportedEncodingException){
-            System.out.println("Could not encode data.");
+            Log.d("Login","Could not encode data.");
         }
         catch (java.io.IOException ioException){
-            System.out.println("Could not open connection");
+            Log.d("Login","Could not open connection");
         }
 
         return successfulSignIn; //true if account was created
-    }
-
-    private String GetSalt(String email){
-        StringBuilder salt = new StringBuilder();
-        URL url = null;
-        HttpsURLConnection conn = null;
-        String data = null;
-        BufferedReader reader = null;
-
-        try {
-            //https://www.tutorialspoint.com/android/android_php_mysql.htm
-            //create a url object and open a connection to the specified link
-            url = new URL(getSaltLink);
-            conn = (HttpsURLConnection) url.openConnection();
-            conn.setDoOutput(true);
-            conn.setDoInput(true);
-
-            //tries to encode the user's data
-            data = URLEncoder.encode("email", "UTF-8") + "=" + URLEncoder.encode(email, "UTF-8");
-
-            OutputStreamWriter writer = new OutputStreamWriter(conn.getOutputStream());
-
-            writer.write(data); //send the user's data
-            writer.flush();
-
-            //can't get input stream
-            //read returned message from server
-            reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-            String line = "";
-
-            while((line = reader.readLine()) != null) {
-                salt.append(line + "\n");
-                //break;
-            } //salt will either be empty or contain an error message if no salt was found
-
-            writer.close();
-        }
-        catch (java.net.MalformedURLException malformedURLException){
-            System.out.println("Bad url.");
-        }
-        catch(java.io.UnsupportedEncodingException unsupportedEncodingException){
-            System.out.println("Could not encode data.");
-        }
-        catch (java.io.IOException ioException){
-            System.out.println("Could not open connection");
-        }
-
-        return salt.toString(); //true if account was created
     }
 }

@@ -18,7 +18,7 @@ public class MainActivity extends AppCompatActivity {
         Button WorkoutsButton = (Button) findViewById(R.id.workoutsButton);
         Button eventsButton = (Button) findViewById(R.id.eventsButton);
         Button mapButton = (Button) findViewById(R.id.mapButton);
-       // Button eventSearchButton = (Button) findViewById(R.id.eventSearchButton);
+        Button eventSearchButton = (Button) findViewById(R.id.event_search_button_main);
 
         LoginButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -51,13 +51,13 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(eventCreation);
             }});
 
-        /*eventSearchButton.setOnClickListener(new View.OnClickListener() {
+        eventSearchButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 //takes user to event search
                 Log.d("SUCCESS", "Going to event search");
-                Intent eventSearch = new Intent(v.getContext(), eventSearch.class);
+                Intent eventSearch = new Intent(v.getContext(), BulletinBoardGUI.class);
                 startActivity(eventSearch);
-            }});*/
+            }});
 
 
     }
