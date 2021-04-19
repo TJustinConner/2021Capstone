@@ -37,11 +37,6 @@ com/example/campusnavigation/EventActivity.java
 com/example/campusnavigation/MapsActivity.java
  com.example.campusnavigation.MapsActivity
  com.example.campusnavigation.MapsActivity$1
- com.example.campusnavigation.MapsActivity$2
- com.example.campusnavigation.MapsActivity$3
- com.example.campusnavigation.MapsActivity$4
- com.example.campusnavigation.MapsActivity$5
- com.example.campusnavigation.MapsActivity$6
  com.example.campusnavigation.MapsActivity$DijkstrasAlgorithm
 com/example/campusnavigation/MainActivity.java
  com.example.campusnavigation.MainActivity
