@@ -33,4 +33,5 @@ public class WorkoutRoute extends AppCompatActivity {
         String StairAmount = i.getStringExtra("Flights_of_Stairs");
         ((TextView)findViewById(R.id.textView2)).setText(StairAmount);
     }
+
 }
