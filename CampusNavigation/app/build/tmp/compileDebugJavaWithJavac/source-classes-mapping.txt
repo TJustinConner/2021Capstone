@@ -33,12 +33,8 @@ com/example/campusnavigation/AccountCreation.java
  com.example.campusnavigation.AccountCreation$2$1$1
 com/example/campusnavigation/BulletinBoardGUI.java
  com.example.campusnavigation.BulletinBoardGUI
-com/example/campusnavigation/MapsActivity.java
- com.example.campusnavigation.MapsActivity
- com.example.campusnavigation.MapsActivity$1
- com.example.campusnavigation.MapsActivity$2
- com.example.campusnavigation.MapsActivity$3
- com.example.campusnavigation.MapsActivity$4
+com/example/campusnavigation/eventSearch.java
+ com.example.campusnavigation.eventSearch
 com/example/campusnavigation/EmailVerifSent.java
  com.example.campusnavigation.EmailVerifSent
 com/example/campusnavigation/LoginActivity.java
@@ -49,6 +45,12 @@ com/example/campusnavigation/LoginActivity.java
  com.example.campusnavigation.LoginActivity$3$1
  com.example.campusnavigation.LoginActivity$3$2
  com.example.campusnavigation.LoginActivity$3$2$1
+com/example/campusnavigation/MapsActivity.java
+ com.example.campusnavigation.MapsActivity
+ com.example.campusnavigation.MapsActivity$1
+ com.example.campusnavigation.MapsActivity$2
+ com.example.campusnavigation.MapsActivity$3
+ com.example.campusnavigation.MapsActivity$4
 com/example/campusnavigation/MainActivity.java
  com.example.campusnavigation.MainActivity
  com.example.campusnavigation.MainActivity$1
@@ -56,5 +58,3 @@ com/example/campusnavigation/MainActivity.java
  com.example.campusnavigation.MainActivity$3
  com.example.campusnavigation.MainActivity$4
  com.example.campusnavigation.MainActivity$5
-com/example/campusnavigation/eventSearch.java
- com.example.campusnavigation.eventSearch

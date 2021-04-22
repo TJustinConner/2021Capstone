@@ -1818,9 +1818,6 @@ id SYM
 id TOP_END
 id TOP_START
 id UserConfirmCodeBox
-id __arcore_cancelButton
-id __arcore_continueButton
-id __arcore_messageText
 id accelerate
 id accessibility_action_clickable_span
 id accessibility_custom_action_0
@@ -2301,7 +2298,6 @@ interpolator mtrl_fast_out_linear_in
 interpolator mtrl_fast_out_slow_in
 interpolator mtrl_linear
 interpolator mtrl_linear_out_slow_in
-layout __arcore_education
 layout abc_action_bar_title_item
 layout abc_action_bar_up_container
 layout abc_action_menu_item_layout
@@ -2428,7 +2424,6 @@ mipmap ic_launcher
 mipmap ic_launcher_round
 plurals mtrl_badge_content_description
 raw coords
-raw keep_arcore
 raw paths
 string AccountCreationPage
 string EventsButtonText
@@ -2436,11 +2431,6 @@ string PasswordRequirements
 string ReferToPasswordReqs
 string SchedulingButtonText
 string Workouts_Btn_Text
-string __arcore_cancel
-string __arcore_continue
-string __arcore_install_app
-string __arcore_install_feature
-string __arcore_installing
 string abc_action_bar_home_description
 string abc_action_bar_up_description
 string abc_action_menu_overflow_description

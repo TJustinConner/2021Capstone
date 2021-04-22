@@ -1,114 +1,114 @@
 [
     {
-        "merged": "C:\\Users\\Owner.000\\Documents\\GitHub\\2021Capstone\\CampusNavigation\\app\\build\\intermediates\\res\\merged\\debug\\raw_coords.csv.flat",
-        "source": "C:\\Users\\Owner.000\\Documents\\GitHub\\2021Capstone\\CampusNavigation\\app\\src\\main\\res\\raw\\coords.csv"
+        "merged": "C:\\Users\\bjw3j\\Documents\\GitHub\\2021Capstone\\CampusNavigation\\app\\build\\intermediates\\res\\merged\\debug\\mipmap-xxhdpi_ic_launcher.png.flat",
+        "source": "C:\\Users\\bjw3j\\Documents\\GitHub\\2021Capstone\\CampusNavigation\\app\\src\\main\\res\\mipmap-xxhdpi\\ic_launcher.png"
     },
     {
-        "merged": "C:\\Users\\Owner.000\\Documents\\GitHub\\2021Capstone\\CampusNavigation\\app\\build\\intermediates\\res\\merged\\debug\\layout_activity_confirm_acct.xml.flat",
-        "source": "C:\\Users\\Owner.000\\Documents\\GitHub\\2021Capstone\\CampusNavigation\\app\\src\\main\\res\\layout\\activity_confirm_acct.xml"
+        "merged": "C:\\Users\\bjw3j\\Documents\\GitHub\\2021Capstone\\CampusNavigation\\app\\build\\intermediates\\res\\merged\\debug\\mipmap-xxxhdpi_ic_launcher.png.flat",
+        "source": "C:\\Users\\bjw3j\\Documents\\GitHub\\2021Capstone\\CampusNavigation\\app\\src\\main\\res\\mipmap-xxxhdpi\\ic_launcher.png"
     },
     {
-        "merged": "C:\\Users\\Owner.000\\Documents\\GitHub\\2021Capstone\\CampusNavigation\\app\\build\\intermediates\\res\\merged\\debug\\mipmap-mdpi_ic_launcher_round.png.flat",
-        "source": "C:\\Users\\Owner.000\\Documents\\GitHub\\2021Capstone\\CampusNavigation\\app\\src\\main\\res\\mipmap-mdpi\\ic_launcher_round.png"
+        "merged": "C:\\Users\\bjw3j\\Documents\\GitHub\\2021Capstone\\CampusNavigation\\app\\build\\intermediates\\res\\merged\\debug\\mipmap-xxhdpi_ic_launcher_round.png.flat",
+        "source": "C:\\Users\\bjw3j\\Documents\\GitHub\\2021Capstone\\CampusNavigation\\app\\src\\main\\res\\mipmap-xxhdpi\\ic_launcher_round.png"
     },
     {
-        "merged": "C:\\Users\\Owner.000\\Documents\\GitHub\\2021Capstone\\CampusNavigation\\app\\build\\intermediates\\res\\merged\\debug\\layout_activity_workout_route.xml.flat",
-        "source": "C:\\Users\\Owner.000\\Documents\\GitHub\\2021Capstone\\CampusNavigation\\app\\src\\main\\res\\layout\\activity_workout_route.xml"
+        "merged": "C:\\Users\\bjw3j\\Documents\\GitHub\\2021Capstone\\CampusNavigation\\app\\build\\intermediates\\res\\merged\\debug\\mipmap-xhdpi_ic_launcher.png.flat",
+        "source": "C:\\Users\\bjw3j\\Documents\\GitHub\\2021Capstone\\CampusNavigation\\app\\src\\main\\res\\mipmap-xhdpi\\ic_launcher.png"
     },
     {
-        "merged": "C:\\Users\\Owner.000\\Documents\\GitHub\\2021Capstone\\CampusNavigation\\app\\build\\intermediates\\res\\merged\\debug\\mipmap-xhdpi_ic_launcher.png.flat",
-        "source": "C:\\Users\\Owner.000\\Documents\\GitHub\\2021Capstone\\CampusNavigation\\app\\src\\main\\res\\mipmap-xhdpi\\ic_launcher.png"
+        "merged": "C:\\Users\\bjw3j\\Documents\\GitHub\\2021Capstone\\CampusNavigation\\app\\build\\intermediates\\res\\merged\\debug\\drawable-v24_ic_launcher_foreground.xml.flat",
+        "source": "C:\\Users\\bjw3j\\Documents\\GitHub\\2021Capstone\\CampusNavigation\\app\\src\\main\\res\\drawable-v24\\ic_launcher_foreground.xml"
     },
     {
-        "merged": "C:\\Users\\Owner.000\\Documents\\GitHub\\2021Capstone\\CampusNavigation\\app\\build\\intermediates\\res\\merged\\debug\\layout_activity_main.xml.flat",
-        "source": "C:\\Users\\Owner.000\\Documents\\GitHub\\2021Capstone\\CampusNavigation\\app\\src\\main\\res\\layout\\activity_main.xml"
+        "merged": "C:\\Users\\bjw3j\\Documents\\GitHub\\2021Capstone\\CampusNavigation\\app\\build\\intermediates\\res\\merged\\debug\\raw_paths.csv.flat",
+        "source": "C:\\Users\\bjw3j\\Documents\\GitHub\\2021Capstone\\CampusNavigation\\app\\src\\main\\res\\raw\\paths.csv"
     },
     {
-        "merged": "C:\\Users\\Owner.000\\Documents\\GitHub\\2021Capstone\\CampusNavigation\\app\\build\\intermediates\\res\\merged\\debug\\mipmap-xxxhdpi_ic_launcher_round.png.flat",
-        "source": "C:\\Users\\Owner.000\\Documents\\GitHub\\2021Capstone\\CampusNavigation\\app\\src\\main\\res\\mipmap-xxxhdpi\\ic_launcher_round.png"
+        "merged": "C:\\Users\\bjw3j\\Documents\\GitHub\\2021Capstone\\CampusNavigation\\app\\build\\intermediates\\res\\merged\\debug\\mipmap-mdpi_ic_launcher.png.flat",
+        "source": "C:\\Users\\bjw3j\\Documents\\GitHub\\2021Capstone\\CampusNavigation\\app\\src\\main\\res\\mipmap-mdpi\\ic_launcher.png"
     },
     {
-        "merged": "C:\\Users\\Owner.000\\Documents\\GitHub\\2021Capstone\\CampusNavigation\\app\\build\\intermediates\\res\\merged\\debug\\layout_activity_basic_login_functionality.xml.flat",
-        "source": "C:\\Users\\Owner.000\\Documents\\GitHub\\2021Capstone\\CampusNavigation\\app\\src\\main\\res\\layout\\activity_basic_login_functionality.xml"
+        "merged": "C:\\Users\\bjw3j\\Documents\\GitHub\\2021Capstone\\CampusNavigation\\app\\build\\intermediates\\res\\merged\\debug\\layout_activity_workout_creation.xml.flat",
+        "source": "C:\\Users\\bjw3j\\Documents\\GitHub\\2021Capstone\\CampusNavigation\\app\\src\\main\\res\\layout\\activity_workout_creation.xml"
     },
     {
-        "merged": "C:\\Users\\Owner.000\\Documents\\GitHub\\2021Capstone\\CampusNavigation\\app\\build\\intermediates\\res\\merged\\debug\\layout_activity_bulletin_board_g_u_i.xml.flat",
-        "source": "C:\\Users\\Owner.000\\Documents\\GitHub\\2021Capstone\\CampusNavigation\\app\\src\\main\\res\\layout\\activity_bulletin_board_g_u_i.xml"
+        "merged": "C:\\Users\\bjw3j\\Documents\\GitHub\\2021Capstone\\CampusNavigation\\app\\build\\intermediates\\res\\merged\\debug\\drawable_ic_launcher_background.xml.flat",
+        "source": "C:\\Users\\bjw3j\\Documents\\GitHub\\2021Capstone\\CampusNavigation\\app\\src\\main\\res\\drawable\\ic_launcher_background.xml"
     },
     {
-        "merged": "C:\\Users\\Owner.000\\Documents\\GitHub\\2021Capstone\\CampusNavigation\\app\\build\\intermediates\\res\\merged\\debug\\layout_activity_event.xml.flat",
-        "source": "C:\\Users\\Owner.000\\Documents\\GitHub\\2021Capstone\\CampusNavigation\\app\\src\\main\\res\\layout\\activity_event.xml"
+        "merged": "C:\\Users\\bjw3j\\Documents\\GitHub\\2021Capstone\\CampusNavigation\\app\\build\\intermediates\\res\\merged\\debug\\layout_activity_password_requirements_page.xml.flat",
+        "source": "C:\\Users\\bjw3j\\Documents\\GitHub\\2021Capstone\\CampusNavigation\\app\\src\\main\\res\\layout\\activity_password_requirements_page.xml"
     },
     {
-        "merged": "C:\\Users\\Owner.000\\Documents\\GitHub\\2021Capstone\\CampusNavigation\\app\\build\\intermediates\\res\\merged\\debug\\mipmap-anydpi-v26_ic_launcher_round.xml.flat",
-        "source": "C:\\Users\\Owner.000\\Documents\\GitHub\\2021Capstone\\CampusNavigation\\app\\src\\main\\res\\mipmap-anydpi-v26\\ic_launcher_round.xml"
+        "merged": "C:\\Users\\bjw3j\\Documents\\GitHub\\2021Capstone\\CampusNavigation\\app\\build\\intermediates\\res\\merged\\debug\\mipmap-anydpi-v26_ic_launcher.xml.flat",
+        "source": "C:\\Users\\bjw3j\\Documents\\GitHub\\2021Capstone\\CampusNavigation\\app\\src\\main\\res\\mipmap-anydpi-v26\\ic_launcher.xml"
     },
     {
-        "merged": "C:\\Users\\Owner.000\\Documents\\GitHub\\2021Capstone\\CampusNavigation\\app\\build\\intermediates\\res\\merged\\debug\\mipmap-hdpi_ic_launcher_round.png.flat",
-        "source": "C:\\Users\\Owner.000\\Documents\\GitHub\\2021Capstone\\CampusNavigation\\app\\src\\main\\res\\mipmap-hdpi\\ic_launcher_round.png"
+        "merged": "C:\\Users\\bjw3j\\Documents\\GitHub\\2021Capstone\\CampusNavigation\\app\\build\\intermediates\\res\\merged\\debug\\mipmap-mdpi_ic_launcher_round.png.flat",
+        "source": "C:\\Users\\bjw3j\\Documents\\GitHub\\2021Capstone\\CampusNavigation\\app\\src\\main\\res\\mipmap-mdpi\\ic_launcher_round.png"
     },
     {
-        "merged": "C:\\Users\\Owner.000\\Documents\\GitHub\\2021Capstone\\CampusNavigation\\app\\build\\intermediates\\res\\merged\\debug\\layout_activity_email_verif_sent.xml.flat",
-        "source": "C:\\Users\\Owner.000\\Documents\\GitHub\\2021Capstone\\CampusNavigation\\app\\src\\main\\res\\layout\\activity_email_verif_sent.xml"
+        "merged": "C:\\Users\\bjw3j\\Documents\\GitHub\\2021Capstone\\CampusNavigation\\app\\build\\intermediates\\res\\merged\\debug\\layout_activity_maps.xml.flat",
+        "source": "C:\\Users\\bjw3j\\Documents\\GitHub\\2021Capstone\\CampusNavigation\\app\\src\\main\\res\\layout\\activity_maps.xml"
     },
     {
-        "merged": "C:\\Users\\Owner.000\\Documents\\GitHub\\2021Capstone\\CampusNavigation\\app\\build\\intermediates\\res\\merged\\debug\\mipmap-xhdpi_ic_launcher_round.png.flat",
-        "source": "C:\\Users\\Owner.000\\Documents\\GitHub\\2021Capstone\\CampusNavigation\\app\\src\\main\\res\\mipmap-xhdpi\\ic_launcher_round.png"
+        "merged": "C:\\Users\\bjw3j\\Documents\\GitHub\\2021Capstone\\CampusNavigation\\app\\build\\intermediates\\res\\merged\\debug\\layout_activity_event.xml.flat",
+        "source": "C:\\Users\\bjw3j\\Documents\\GitHub\\2021Capstone\\CampusNavigation\\app\\src\\main\\res\\layout\\activity_event.xml"
     },
     {
-        "merged": "C:\\Users\\Owner.000\\Documents\\GitHub\\2021Capstone\\CampusNavigation\\app\\build\\intermediates\\res\\merged\\debug\\drawable_ic_launcher_background.xml.flat",
-        "source": "C:\\Users\\Owner.000\\Documents\\GitHub\\2021Capstone\\CampusNavigation\\app\\src\\main\\res\\drawable\\ic_launcher_background.xml"
+        "merged": "C:\\Users\\bjw3j\\Documents\\GitHub\\2021Capstone\\CampusNavigation\\app\\build\\intermediates\\res\\merged\\debug\\mipmap-anydpi-v26_ic_launcher_round.xml.flat",
+        "source": "C:\\Users\\bjw3j\\Documents\\GitHub\\2021Capstone\\CampusNavigation\\app\\src\\main\\res\\mipmap-anydpi-v26\\ic_launcher_round.xml"
     },
     {
-        "merged": "C:\\Users\\Owner.000\\Documents\\GitHub\\2021Capstone\\CampusNavigation\\app\\build\\intermediates\\res\\merged\\debug\\layout_activity_maps.xml.flat",
-        "source": "C:\\Users\\Owner.000\\Documents\\GitHub\\2021Capstone\\CampusNavigation\\app\\src\\main\\res\\layout\\activity_maps.xml"
+        "merged": "C:\\Users\\bjw3j\\Documents\\GitHub\\2021Capstone\\CampusNavigation\\app\\build\\intermediates\\res\\merged\\debug\\mipmap-hdpi_ic_launcher_round.png.flat",
+        "source": "C:\\Users\\bjw3j\\Documents\\GitHub\\2021Capstone\\CampusNavigation\\app\\src\\main\\res\\mipmap-hdpi\\ic_launcher_round.png"
     },
     {
-        "merged": "C:\\Users\\Owner.000\\Documents\\GitHub\\2021Capstone\\CampusNavigation\\app\\build\\intermediates\\res\\merged\\debug\\layout_activity_login.xml.flat",
-        "source": "C:\\Users\\Owner.000\\Documents\\GitHub\\2021Capstone\\CampusNavigation\\app\\src\\main\\res\\layout\\activity_login.xml"
+        "merged": "C:\\Users\\bjw3j\\Documents\\GitHub\\2021Capstone\\CampusNavigation\\app\\build\\intermediates\\res\\merged\\debug\\layout_activity_confirm_acct.xml.flat",
+        "source": "C:\\Users\\bjw3j\\Documents\\GitHub\\2021Capstone\\CampusNavigation\\app\\src\\main\\res\\layout\\activity_confirm_acct.xml"
     },
     {
-        "merged": "C:\\Users\\Owner.000\\Documents\\GitHub\\2021Capstone\\CampusNavigation\\app\\build\\intermediates\\res\\merged\\debug\\mipmap-mdpi_ic_launcher.png.flat",
-        "source": "C:\\Users\\Owner.000\\Documents\\GitHub\\2021Capstone\\CampusNavigation\\app\\src\\main\\res\\mipmap-mdpi\\ic_launcher.png"
+        "merged": "C:\\Users\\bjw3j\\Documents\\GitHub\\2021Capstone\\CampusNavigation\\app\\build\\intermediates\\res\\merged\\debug\\mipmap-xhdpi_ic_launcher_round.png.flat",
+        "source": "C:\\Users\\bjw3j\\Documents\\GitHub\\2021Capstone\\CampusNavigation\\app\\src\\main\\res\\mipmap-xhdpi\\ic_launcher_round.png"
     },
     {
-        "merged": "C:\\Users\\Owner.000\\Documents\\GitHub\\2021Capstone\\CampusNavigation\\app\\build\\intermediates\\res\\merged\\debug\\mipmap-xxhdpi_ic_launcher.png.flat",
-        "source": "C:\\Users\\Owner.000\\Documents\\GitHub\\2021Capstone\\CampusNavigation\\app\\src\\main\\res\\mipmap-xxhdpi\\ic_launcher.png"
+        "merged": "C:\\Users\\bjw3j\\Documents\\GitHub\\2021Capstone\\CampusNavigation\\app\\build\\intermediates\\res\\merged\\debug\\layout_activity_main.xml.flat",
+        "source": "C:\\Users\\bjw3j\\Documents\\GitHub\\2021Capstone\\CampusNavigation\\app\\src\\main\\res\\layout\\activity_main.xml"
     },
     {
-        "merged": "C:\\Users\\Owner.000\\Documents\\GitHub\\2021Capstone\\CampusNavigation\\app\\build\\intermediates\\res\\merged\\debug\\layout_activity_password_requirements_page.xml.flat",
-        "source": "C:\\Users\\Owner.000\\Documents\\GitHub\\2021Capstone\\CampusNavigation\\app\\src\\main\\res\\layout\\activity_password_requirements_page.xml"
+        "merged": "C:\\Users\\bjw3j\\Documents\\GitHub\\2021Capstone\\CampusNavigation\\app\\build\\intermediates\\res\\merged\\debug\\layout_activity_basic_login_functionality.xml.flat",
+        "source": "C:\\Users\\bjw3j\\Documents\\GitHub\\2021Capstone\\CampusNavigation\\app\\src\\main\\res\\layout\\activity_basic_login_functionality.xml"
     },
     {
-        "merged": "C:\\Users\\Owner.000\\Documents\\GitHub\\2021Capstone\\CampusNavigation\\app\\build\\intermediates\\res\\merged\\debug\\mipmap-hdpi_ic_launcher.png.flat",
-        "source": "C:\\Users\\Owner.000\\Documents\\GitHub\\2021Capstone\\CampusNavigation\\app\\src\\main\\res\\mipmap-hdpi\\ic_launcher.png"
+        "merged": "C:\\Users\\bjw3j\\Documents\\GitHub\\2021Capstone\\CampusNavigation\\app\\build\\intermediates\\res\\merged\\debug\\layout_account_creation.xml.flat",
+        "source": "C:\\Users\\bjw3j\\Documents\\GitHub\\2021Capstone\\CampusNavigation\\app\\src\\main\\res\\layout\\account_creation.xml"
     },
     {
-        "merged": "C:\\Users\\Owner.000\\Documents\\GitHub\\2021Capstone\\CampusNavigation\\app\\build\\intermediates\\res\\merged\\debug\\drawable-v24_ic_launcher_foreground.xml.flat",
-        "source": "C:\\Users\\Owner.000\\Documents\\GitHub\\2021Capstone\\CampusNavigation\\app\\src\\main\\res\\drawable-v24\\ic_launcher_foreground.xml"
+        "merged": "C:\\Users\\bjw3j\\Documents\\GitHub\\2021Capstone\\CampusNavigation\\app\\build\\intermediates\\res\\merged\\debug\\layout_activity_email_verif_sent.xml.flat",
+        "source": "C:\\Users\\bjw3j\\Documents\\GitHub\\2021Capstone\\CampusNavigation\\app\\src\\main\\res\\layout\\activity_email_verif_sent.xml"
     },
     {
-        "merged": "C:\\Users\\Owner.000\\Documents\\GitHub\\2021Capstone\\CampusNavigation\\app\\build\\intermediates\\res\\merged\\debug\\layout_activity_workout_creation.xml.flat",
-        "source": "C:\\Users\\Owner.000\\Documents\\GitHub\\2021Capstone\\CampusNavigation\\app\\src\\main\\res\\layout\\activity_workout_creation.xml"
+        "merged": "C:\\Users\\bjw3j\\Documents\\GitHub\\2021Capstone\\CampusNavigation\\app\\build\\intermediates\\res\\merged\\debug\\mipmap-hdpi_ic_launcher.png.flat",
+        "source": "C:\\Users\\bjw3j\\Documents\\GitHub\\2021Capstone\\CampusNavigation\\app\\src\\main\\res\\mipmap-hdpi\\ic_launcher.png"
     },
     {
-        "merged": "C:\\Users\\Owner.000\\Documents\\GitHub\\2021Capstone\\CampusNavigation\\app\\build\\intermediates\\res\\merged\\debug\\raw_paths.csv.flat",
-        "source": "C:\\Users\\Owner.000\\Documents\\GitHub\\2021Capstone\\CampusNavigation\\app\\src\\main\\res\\raw\\paths.csv"
+        "merged": "C:\\Users\\bjw3j\\Documents\\GitHub\\2021Capstone\\CampusNavigation\\app\\build\\intermediates\\res\\merged\\debug\\mipmap-xxxhdpi_ic_launcher_round.png.flat",
+        "source": "C:\\Users\\bjw3j\\Documents\\GitHub\\2021Capstone\\CampusNavigation\\app\\src\\main\\res\\mipmap-xxxhdpi\\ic_launcher_round.png"
     },
     {
-        "merged": "C:\\Users\\Owner.000\\Documents\\GitHub\\2021Capstone\\CampusNavigation\\app\\build\\intermediates\\res\\merged\\debug\\mipmap-xxhdpi_ic_launcher_round.png.flat",
-        "source": "C:\\Users\\Owner.000\\Documents\\GitHub\\2021Capstone\\CampusNavigation\\app\\src\\main\\res\\mipmap-xxhdpi\\ic_launcher_round.png"
+        "merged": "C:\\Users\\bjw3j\\Documents\\GitHub\\2021Capstone\\CampusNavigation\\app\\build\\intermediates\\res\\merged\\debug\\layout_activity_login.xml.flat",
+        "source": "C:\\Users\\bjw3j\\Documents\\GitHub\\2021Capstone\\CampusNavigation\\app\\src\\main\\res\\layout\\activity_login.xml"
     },
     {
-        "merged": "C:\\Users\\Owner.000\\Documents\\GitHub\\2021Capstone\\CampusNavigation\\app\\build\\intermediates\\res\\merged\\debug\\layout_account_creation.xml.flat",
-        "source": "C:\\Users\\Owner.000\\Documents\\GitHub\\2021Capstone\\CampusNavigation\\app\\src\\main\\res\\layout\\account_creation.xml"
+        "merged": "C:\\Users\\bjw3j\\Documents\\GitHub\\2021Capstone\\CampusNavigation\\app\\build\\intermediates\\res\\merged\\debug\\raw_coords.csv.flat",
+        "source": "C:\\Users\\bjw3j\\Documents\\GitHub\\2021Capstone\\CampusNavigation\\app\\src\\main\\res\\raw\\coords.csv"
     },
     {
-        "merged": "C:\\Users\\Owner.000\\Documents\\GitHub\\2021Capstone\\CampusNavigation\\app\\build\\intermediates\\res\\merged\\debug\\mipmap-anydpi-v26_ic_launcher.xml.flat",
-        "source": "C:\\Users\\Owner.000\\Documents\\GitHub\\2021Capstone\\CampusNavigation\\app\\src\\main\\res\\mipmap-anydpi-v26\\ic_launcher.xml"
+        "merged": "C:\\Users\\bjw3j\\Documents\\GitHub\\2021Capstone\\CampusNavigation\\app\\build\\intermediates\\res\\merged\\debug\\layout_activity_workout_route.xml.flat",
+        "source": "C:\\Users\\bjw3j\\Documents\\GitHub\\2021Capstone\\CampusNavigation\\app\\src\\main\\res\\layout\\activity_workout_route.xml"
     },
     {
-        "merged": "C:\\Users\\Owner.000\\Documents\\GitHub\\2021Capstone\\CampusNavigation\\app\\build\\intermediates\\res\\merged\\debug\\mipmap-xxxhdpi_ic_launcher.png.flat",
-        "source": "C:\\Users\\Owner.000\\Documents\\GitHub\\2021Capstone\\CampusNavigation\\app\\src\\main\\res\\mipmap-xxxhdpi\\ic_launcher.png"
+        "merged": "C:\\Users\\bjw3j\\Documents\\GitHub\\2021Capstone\\CampusNavigation\\app\\build\\intermediates\\res\\merged\\debug\\layout_activity_bulletin_board_g_u_i.xml.flat",
+        "source": "C:\\Users\\bjw3j\\Documents\\GitHub\\2021Capstone\\CampusNavigation\\app\\src\\main\\res\\layout\\activity_bulletin_board_g_u_i.xml"
     }
 ]
