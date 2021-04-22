@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">Wise Navigation</string>
     <string name="account_creation_btn_txt">Account Creation</string>
     <string name="Workouts_Btn_Text">Workouts</string>
@@ -82,5 +82,16 @@
         <item>Wesley Foundation</item>
         <item>Alumni Hall</item>
     </string-array>
+
+
+    <string-array name="Activites">
+        <item> </item>
+        <item>Workouts</item>
+        <item>Log in</item>
+        <item>Events</item>
+        <item>Event Search</item>
+        <item>Navigate</item>>
+    </string-array>
+
 
 </resources>
