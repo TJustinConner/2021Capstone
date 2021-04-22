@@ -39,7 +39,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/LoginButton"
+        android:id="@+id/CreateAcctButton"
         android:layout_width="197dp"
         android:layout_height="56dp"
         android:layout_marginStart="107dp"
@@ -53,7 +53,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
-        android:id="@+id/LoginPasswordBox"
+        android:id="@+id/NewAcctPasswordBox"
         android:layout_width="252dp"
         android:layout_height="79dp"
         android:layout_marginStart="79dp"
@@ -69,7 +69,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
-        android:id="@+id/LoginEmailAddressBox"
+        android:id="@+id/NewAcctEmailBox"
         android:layout_width="252dp"
         android:layout_height="79dp"
         android:layout_marginStart="79dp"
@@ -85,7 +85,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/LoginHeader"
+        android:id="@+id/ConfirmHeader"
         android:layout_width="215dp"
         android:layout_height="49dp"
         android:layout_marginStart="98dp"
@@ -110,6 +110,23 @@
         android:layout_marginBottom="297dp"
         android:gravity="center"
         android:text="@string/create_an_account"
+        android:textColor="#2196F3"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/confirmAccountLink"
+        android:layout_width="174dp"
+        android:layout_height="29dp"
+        android:layout_marginStart="118dp"
+        android:layout_marginTop="453dp"
+        android:layout_marginEnd="119dp"
+        android:layout_marginBottom="249dp"
+        android:gravity="center"
+        android:text="@string/confirm_account_link"
         android:textColor="#2196F3"
         android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"

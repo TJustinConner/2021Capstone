@@ -1,7 +1,5 @@
 package com.example.campusnavigation;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Handler;
 import android.os.Looper;
@@ -16,8 +14,6 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.security.MessageDigest;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Random;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -25,18 +21,9 @@ import java.net.URLEncoder;
 import javax.net.ssl.HttpsURLConnection;
 import java.net.URL;
 
-public class AccountCreation extends AppCompatActivity {
-
-    final ArrayList<Character> ACCEPTED_SPECIAL_CHARS = new ArrayList<Character>(Arrays.asList('!', '@', '#', '$', '%', '^', '&', '*',
-            '(', ')', '.', '?', '-', '_'));
+public class AccountCreation extends BasicLoginFunctionality {
 
     final String possibleSaltChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-
-    final int MAX_PASSWORD_LENGTH = 32;
-    final int MIN_PASSWORD_LENGTH = 12;
-    final int MAX_EMAIL_LENGTH = 22;
-
-
     private final String link = "https://medusa.mcs.uvawise.edu/~jdl8y/accountCreation.php";
 
     @Override
@@ -46,16 +33,14 @@ public class AccountCreation extends AppCompatActivity {
 
         setTitle("Account Creation");
 
-        Button CreateAccountButton = (Button) findViewById(R.id.LoginButton);
-        final EditText UsernameField = (EditText) findViewById(R.id.LoginEmailAddressBox);
-        final EditText PasswordField = (EditText) findViewById(R.id.LoginPasswordBox);
-        final EditText ConfirmPasswordField = (EditText) findViewById((R.id.UserConfirmPasswordBox));
-        TextView PasswordReqsLink = (TextView) findViewById((R.id.PasswordReqsLink));
+        final Button CreateAccountButton = (Button) findViewById(R.id.CreateAcctButton);
+        final EditText UsernameField = (EditText) findViewById(R.id.NewAcctEmailBox);
+        final EditText PasswordField = (EditText) findViewById(R.id.NewAcctPasswordBox);
+        final EditText ConfirmPasswordField = (EditText) findViewById((R.id.ConfirmPasswordNewBox));
+        final TextView PasswordReqsLink = (TextView) findViewById((R.id.PasswordReqsLink));
         final TextView PasswordMismatchText = (TextView) findViewById((R.id.PasswordMismatchError));
         final TextView BlankFieldText = (TextView) findViewById((R.id.BlankFieldsError));
         final TextView MissingRequirementsText = (TextView) findViewById((R.id.MissingRequirementsError));
-
-
 
         PasswordMismatchText.setVisibility(View.INVISIBLE);
         BlankFieldText.setVisibility(View.INVISIBLE);
@@ -120,11 +105,15 @@ public class AccountCreation extends AppCompatActivity {
                     String passwordInHex = null;
                     String salt = GenerateRandomSalt();
                     String saltAndPassword = salt.trim() + password.trim();
+
+                    //had to be put into try catch
                     try {
                         digest = MessageDigest.getInstance("SHA-512");
+                        //creates a byte rep of the salt and password combination
                         byte[] inBytes = digest.digest(saltAndPassword.getBytes());
-                        //change from byte array to hex
+                        //hashes each byte
                         StringBuilder createdHexRep = new StringBuilder();
+                        //changes the byte array to a string representation of the hashed salt and password
                         for(int i = 0; i < inBytes.length; i++){
                             //https://docs.oracle.com/javase/6/docs/api/java/util/Formatter.html#syntax
                             createdHexRep.append(String.format("%02X", inBytes[i]));
@@ -133,7 +122,7 @@ public class AccountCreation extends AppCompatActivity {
 
                     }
                     catch(java.security.NoSuchAlgorithmException e) {
-                        System.out.println("error in finding hashing algorithm");
+                        Log.d("AcctCreation","error in finding hashing algorithm");
                         inputIsGood = false; //stops data from being entered into db
                     }
 
@@ -184,67 +173,7 @@ public class AccountCreation extends AppCompatActivity {
         }
     }
 
-    //checks to see if input has the required chars in it, isPassword is true for checking the password, false for the email address
-    //password requires 1 uppercase letter, 1 lowercase letter, 1 number, and 1 special character
-    private boolean ContainsReqCharTypes(String input, boolean isPassword){
-
-        //check the password
-        if(isPassword){
-            boolean containsLowerAlpha = false;
-            boolean containsUpperAlpha = false;
-            boolean containsNumber = false;
-            boolean containsSpecialChar = false;
-
-            //check for each needed type of char, check each position
-            for(int i = 0; i < input.length(); i++){
-                if(ACCEPTED_SPECIAL_CHARS.contains(input.charAt(i))){
-                    containsSpecialChar = true;
-                }
-                else if(Character.isLowerCase(input.charAt(i))){
-                    containsLowerAlpha = true;
-                }
-                else if(Character.isUpperCase(input.charAt(i))){
-                    containsUpperAlpha = true;
-                }
-                else if(Character.isDigit(input.charAt(i))){
-                    containsNumber = true;
-                }
-            }
-
-            //if the password meets all char requirements
-            if(containsLowerAlpha && containsNumber && containsSpecialChar && containsUpperAlpha){
-                return true;
-            }
-            else{
-                Log.d("AcctCreation","Missing Required Char Type(s)");
-                return false;
-            }
-
-        }
-
-        //check the email
-        else{
-            if(input.contains("@uvawise.edu")){
-                return true;
-            }
-            else{
-                Log.d("AcctCreation","Missing Correct Email Domain");
-                return false;
-            }
-        }
-    }
-
-    private boolean InputLengthIsGood(String email, String password){
-        if(password.length() >= MIN_PASSWORD_LENGTH && password.length() <= MAX_PASSWORD_LENGTH && email.length() <= MAX_EMAIL_LENGTH){
-            return true;
-        }
-
-        else{
-            Log.d("AcctCreation","Invalid Input Length");
-            return false;
-        }
-    }
-
+    //sends the data to the server so that the server can try to create the account
     private boolean SendData(String email, String password, String salt){
         Boolean accountCreated = false;
         URL url = null;
@@ -282,9 +211,10 @@ public class AccountCreation extends AppCompatActivity {
                 //break;
             }
 
-            String result = builder.toString();
+            System.out.println("output:");
+            System.out.println(toString());
 
-            System.out.println(builder.toString()); //test code
+            String result = builder.toString();
 
             //see if the server returned that the account was created
             if(result.contains("true")){
@@ -318,8 +248,6 @@ public class AccountCreation extends AppCompatActivity {
         for(int i = 0; i < 8; i++){
             salt.append(possibleSaltChars.charAt(rand.nextInt(possibleSaltChars.length())));
         }
-
-        System.out.println(salt.toString());
 
         return salt.toString();
     }

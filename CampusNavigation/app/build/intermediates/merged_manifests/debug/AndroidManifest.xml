@@ -7,7 +7,6 @@
     <uses-sdk
         android:minSdkVersion="26"
         android:targetSdkVersion="30" />
-
     <!--
          The ACCESS_COARSE/FINE_LOCATION permissions are not required to use
          Google Maps Android API v2, but you must specify either coarse or fine
@@ -36,8 +35,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:testOnly="true"
-        android:theme="@style/Theme.CampusNavigation" >
-        <activity android:name="com.example.campusnavigation.LoginActivity" />
+        android:theme="@style/Base.Theme.AppCompat" >
+        <activity android:name="com.example.campusnavigation.Location_finder" />
+        <activity
+            android:name="com.example.campusnavigation.BulletinBoardGUI"
+            android:label="@string/title_activity_bulletin_board_g_u_i" />
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
@@ -51,6 +53,16 @@
             android:value="@string/google_maps_key" />
 
         <activity
+            android:name="com.example.campusnavigation.BulletinBoardGUI"
+            android:label="@string/title_activity_bulletin_board_g_u_i" />
+        <activity
+            android:name="com.example.campusnavigation.BasicLoginFunctionality"
+            android:label="@string/title_activity_basic_login_functionality"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.example.campusnavigation.ConfirmAcctActivity"
+            android:screenOrientation="portrait" />
+        <activity
             android:name="com.example.campusnavigation.MapsActivity"
             android:label="@string/title_activity_maps" />
         <activity
@@ -62,14 +74,21 @@
             android:name="com.example.campusnavigation.WorkoutCreation"
             android:label="Workout Creation"
             android:screenOrientation="portrait" />
-        <activity android:name="com.example.campusnavigation.PasswordRequirementsPage" />
-        <activity android:name="com.example.campusnavigation.EmailVerifSent" />
+        <activity
+            android:name="com.example.campusnavigation.PasswordRequirementsPage"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.example.campusnavigation.EmailVerifSent"
+            android:screenOrientation="portrait" />
         <activity
             android:name="com.example.campusnavigation.AccountCreation"
             android:label="Account Creation" />
         <activity
+            android:name="com.example.campusnavigation.LoginActivity"
+            android:screenOrientation="portrait" />
+        <activity
             android:name="com.example.campusnavigation.MainActivity"
-            android:label="Home Screen"
+            android:label="@string/main_activity_title"
             android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

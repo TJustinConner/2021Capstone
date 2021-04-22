@@ -8,6 +8,17 @@
     tools:context=".MainActivity">
 
     <Button
+        android:id="@+id/event_search_button_main"
+        android:layout_width="196dp"
+        android:layout_height="52dp"
+        android:layout_marginTop="64dp"
+        android:text="@string/event_search_button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.502"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/eventsButton" />
+
+    <Button
         android:id="@+id/accountCreationButton"
         android:layout_width="196dp"
         android:layout_height="52dp"
