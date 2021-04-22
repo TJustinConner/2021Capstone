@@ -20,17 +20,18 @@
         android:supportsRtl="true"
         android:theme="@style/Base.Theme.AppCompat">
         <activity android:name=".Location_finder"></activity>
-        <activity
-            android:name=".BulletinBoardGUI"
-            android:label="@string/title_activity_bulletin_board_g_u_i" />
         <!--
-             The API key for Google Maps-based APIs is defined as a string resource.
-             (See the file "res/values/google_maps_api.xml").
-             Note that the API key is linked to the encryption key used to sign the APK.
-             You need a different API key for each encryption key, including the release key that is used to
-             sign the APK for publishing.
-             You can define the keys for the debug and release targets in src/debug/ and src/release/.
-        -->
+      <activity
+          android:name=".BulletinBoardGUI"
+          android:label="@string/title_activity_bulletin_board_g_u_i" />
+
+           The API key for Google Maps-based APIs is defined as a string resource.
+           (See the file "res/values/google_maps_api.xml").
+           Note that the API key is linked to the encryption key used to sign the APK.
+           You need a different API key for each encryption key, including the release key that is used to
+           sign the APK for publishing.
+           You can define the keys for the debug and release targets in src/debug/ and src/release/.
+      -->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
@@ -45,9 +46,7 @@
         <activity
             android:name=".ConfirmAcctActivity"
             android:screenOrientation="portrait" />
-        <activity
-            android:name=".MapsActivity"
-            android:label="@string/title_activity_maps" />
+
         <activity
             android:name=".EventActivity"
             android:label="Event Creation"
@@ -69,10 +68,16 @@
         <activity
             android:name=".LoginActivity"
             android:screenOrientation="portrait" />
+     <!--
         <activity
             android:name=".MainActivity"
             android:label="@string/main_activity_title"
             android:screenOrientation="portrait">
+       -->
+            <activity
+                android:name=".MapsActivity"
+                android:label="@string/title_activity_maps"
+                android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
