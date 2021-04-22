@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".LoginActivity">
+
+    <TextView
+        android:id="@+id/EmailText"
+        android:layout_width="95dp"
+        android:layout_height="46dp"
+        android:layout_marginStart="99dp"
+        android:layout_marginTop="162dp"
+        android:layout_marginEnd="217dp"
+        android:layout_marginBottom="523dp"
+        android:scaleX="1.5"
+        android:scaleY="1.5"
+        android:text="@string/email"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/PasswordText"
+        android:layout_width="95dp"
+        android:layout_height="46dp"
+        android:layout_marginStart="99dp"
+        android:layout_marginTop="282dp"
+        android:layout_marginEnd="217dp"
+        android:layout_marginBottom="403dp"
+        android:scaleX="1.5"
+        android:scaleY="1.5"
+        android:text="@string/password"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/CreateAcctButton"
+        android:layout_width="197dp"
+        android:layout_height="56dp"
+        android:layout_marginStart="107dp"
+        android:layout_marginTop="565dp"
+        android:layout_marginEnd="107dp"
+        android:layout_marginBottom="110dp"
+        android:text="@string/login"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/NewAcctPasswordBox"
+        android:layout_width="252dp"
+        android:layout_height="79dp"
+        android:layout_marginStart="79dp"
+        android:layout_marginTop="300dp"
+        android:layout_marginEnd="80dp"
+        android:layout_marginBottom="352dp"
+        android:autofillHints=""
+        android:ems="10"
+        android:inputType="textPassword"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/NewAcctEmailBox"
+        android:layout_width="252dp"
+        android:layout_height="79dp"
+        android:layout_marginStart="79dp"
+        android:layout_marginTop="183dp"
+        android:layout_marginEnd="80dp"
+        android:layout_marginBottom="469dp"
+        android:autofillHints=""
+        android:ems="10"
+        android:inputType="textEmailAddress"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/ConfirmHeader"
+        android:layout_width="215dp"
+        android:layout_height="49dp"
+        android:layout_marginStart="98dp"
+        android:layout_marginTop="64dp"
+        android:layout_marginEnd="98dp"
+        android:layout_marginBottom="618dp"
+        android:gravity="center"
+        android:text="@string/faculty_log_in"
+        android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/newAccountLink"
+        android:layout_width="174dp"
+        android:layout_height="29dp"
+        android:layout_marginStart="118dp"
+        android:layout_marginTop="405dp"
+        android:layout_marginEnd="119dp"
+        android:layout_marginBottom="297dp"
+        android:gravity="center"
+        android:text="@string/create_an_account"
+        android:textColor="#2196F3"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/confirmAccountLink"
+        android:layout_width="174dp"
+        android:layout_height="29dp"
+        android:layout_marginStart="118dp"
+        android:layout_marginTop="453dp"
+        android:layout_marginEnd="119dp"
+        android:layout_marginBottom="249dp"
+        android:gravity="center"
+        android:text="@string/confirm_account_link"
+        android:textColor="#2196F3"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
