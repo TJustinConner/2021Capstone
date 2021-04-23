@@ -1,16 +1,16 @@
 {
     "logs": [
         {
-            "outputFile": "C:\\Users\\bjw3j\\Documents\\GitHub\\2021Capstone\\CampusNavigation\\app\\build\\intermediates\\incremental\\mergeDebugResources\\merged.dir\\values-round-v23\\values-round-v23.xml",
+            "outputFile": "/home/jwe3nv/Desktop/2021CapstoneNew/CampusNavigation/app/build/intermediates/incremental/mergeDebugResources/merged.dir/values-round-v23/values-round-v23.xml",
             "map": [
                 {
-                    "source": "C:\\Users\\bjw3j\\Documents\\GitHub\\2021Capstone\\CampusNavigation\\app\\src\\main\\res\\values-round\\strings.xml",
+                    "source": "/home/jwe3nv/Desktop/2021CapstoneNew/CampusNavigation/app/src/main/res/values-round/strings.xml",
                     "from": {
                         "startLines": "1",
                         "startColumns": "4",
-                        "startOffsets": "17",
+                        "startOffsets": "16",
                         "endColumns": "58",
-                        "endOffsets": "71"
+                        "endOffsets": "70"
                     },
                     "to": {
                         "startLines": "2",
