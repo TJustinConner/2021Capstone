@@ -140,6 +140,9 @@ public class BulletinBoardGUI extends AppCompatActivity implements AdapterView.O
         return output;
     }
 
+    public void pdfDisplay(){//takes a blob file and converts it into a pdf render
+        
+    }
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         try {
