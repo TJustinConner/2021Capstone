@@ -13,26 +13,31 @@
         android:layout_height="match_parent">
 
 
-
         <Spinner
             android:id="@+id/maps_Spinners"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="257dp"
+            android:layout_height="76dp"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
-            android:layout_marginStart="179dp"
-            android:layout_marginTop="437dp"
-            android:text=""></Spinner>
+            android:layout_marginStart="23dp"
+            android:layout_marginTop="67dp"
+            android:text=""
+            android:textSize="25dp"
+            ></Spinner>
 
-        <Spinner
-            android:id="@+id/main_activity_spinner"
-            android:layout_width="396dp"
-            android:layout_height="72dp"
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="350dp"
+            android:layout_height="42dp"
+            android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
             android:layout_alignParentEnd="true"
-            android:layout_marginTop="5dp"
-            android:layout_marginEnd="11dp"
-            android:background="@drawable/new_spinner" />
+            android:layout_marginStart="22dp"
+            android:layout_marginTop="26dp"
+            android:layout_marginEnd="39dp"
+            android:text="Select a location:"
+            android:textSize="25dp" />
+
 
     </RelativeLayout>
 

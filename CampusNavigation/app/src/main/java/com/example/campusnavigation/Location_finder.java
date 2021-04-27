@@ -2,6 +2,7 @@ package com.example.campusnavigation;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -38,10 +39,17 @@ public class Location_finder extends AppCompatActivity implements AdapterView.On
 
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         if(parent.getId()==R.id.maps_Spinners) {
+
             String text = parent.getItemAtPosition(position).toString();
             //  Toast.makeText(parent.getContext(), text, Toast.LENGTH_SHORT).show();
             display(text);
-
+            if(Coord_number != 0) {
+            String intToString = String.valueOf(Coord_number);
+            Intent sender = new Intent();
+            sender.putExtra("coordinate",intToString);
+            setResult(Activity.RESULT_OK,sender);
+            finish();
+            }
         }
     }
 
@@ -58,30 +66,11 @@ public class Location_finder extends AppCompatActivity implements AdapterView.On
         // manually... may have been a better solution but hey this is all
         //the GPS coordinates for all the main locations on campus so have fun with that.poly
 
-        //RemoveAll();//this eliminates the all the nodes each time a new node is added so that only one node is displayed at a time
-        String lat = "";
-        String lon="";
-        String title="";
-      String[] array = new String [3];
-
-        Intent sender = new Intent(Location_finder.this,MapsActivity.class);
-
         if( name.contains("Commonwealth Hall")) {
             LatLng marker = new LatLng(36.973036, -82.561149);
           //  Marker mark = mMap.addMarker(new MarkerOptions().position(marker).title("Common Wealth"));
             Coord_number =289;
-            lat = "36.973036";
-            lon = "-82.561149";
-            title = "Common Wealth";
-            array[0]=lat;
-            array[1]=lon;
-            array[2]=title;
 
-            sender.putExtra("data",array);
-            startActivity(sender);
-            finish();
-
-            // AllMarkers.add(mark);
         }
 
         if( name.contains("David J. Prior Convocation Center")) {

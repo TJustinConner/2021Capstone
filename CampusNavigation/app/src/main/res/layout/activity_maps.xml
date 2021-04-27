@@ -20,6 +20,21 @@
 
 
         <Button
+            android:id="@+id/stop_navigation"
+            android:layout_width="106dp"
+            android:layout_height="103dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_gravity="right"
+            android:layout_marginStart="148dp"
+            android:layout_marginLeft="148dp"
+            android:layout_marginTop="530dp"
+            android:text="Stop Navigation"
+            android:visibility="invisible"
+            />
+
+        <Button
             android:id="@+id/satellite"
             android:layout_width="106dp"
             android:layout_height="103dp"
@@ -72,15 +87,6 @@
             android:onClick="ReHome"
             android:text="*" />
 
-        <Spinner
-            android:id="@+id/maps_Spinners"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginStart="179dp"
-            android:layout_marginTop="437dp"
-            android:text=""></Spinner>
 
         <Spinner
             android:id="@+id/main_activity_spinner"

@@ -7,6 +7,7 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
@@ -23,6 +24,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -88,6 +90,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     List<Polyline> polylines = new ArrayList<Polyline>(); //holds the polylines used when drawing paths on the map
     private static List<Integer> my_paths = new ArrayList<Integer>(); //this will the current path that I am taking it will update every 2 seconds
 
+    //Handicap data
+    int[][] Handi_Matrix = new int[429][429];//will hold the physical places for the handicap layer
+    double[][] Handi_Coords = new double[429][2];
+
+
 
     //used to draw the GEO fence for the wrapper
     LatLng Wise = new LatLng(36.970702412486304, -82.56071600207069); //changes where
@@ -125,7 +132,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
-        //opens the paths.csv file to get all the data into a matrix to be used later
+        //opens the paths.csv file to get all the data into a matrix to be used later FOR THE MAIN LAYER
         InputStream is = getResources().openRawResource(R.raw.paths);
         BufferedReader reader = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
         String line = "";
@@ -198,6 +205,79 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             e.printStackTrace();
         }
 
+
+        //THis is used to extract the handicap data
+        InputStream h_is = getResources().openRawResource(R.raw.hpaths);
+        BufferedReader h_reader = new BufferedReader(new InputStreamReader(h_is, Charset.forName("UTF-8")));
+      //  String line = "";
+        //puts each line into the string array (called temp)
+        try {
+
+            List<String[]> temp = new ArrayList<String[]>();
+            while ((line = h_reader.readLine()) != null) {
+
+                temp.add((line.split(",")));
+
+            }//while loop
+
+
+            //makes a 2D array that when placed into the .toarray() method will put the data into the 2D array
+            //basically transforms string into 2d adday
+            String[][] array = new String[temp.size()][0];
+            temp.toArray(array);
+
+            //goes through every row and every column of the input matrix and puts into the
+            //global array called Matrix to be used by Dijkstra algorithm
+            //to find the shortest path
+            //also converts string to integers (this is why all the numbers int the CSV file
+            //are so bit, Dijkstra required the use of integers.)
+            for (int row = 0; row < 429; row++) {
+
+                for (int column = 0; column < 429; column++) {
+
+                    Handi_Matrix[row][column] = Integer.parseInt(array[row][column]);
+
+                }
+
+            }//end of loop
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }//if no file is found
+
+        //opens the coords.csv file to get all the data into a matrix to be used later
+        InputStream Handi_Coord_data = getResources().openRawResource(R.raw.hcoords);
+        BufferedReader Handi_Coord_reader = new BufferedReader(new InputStreamReader(Handi_Coord_data,Charset.forName("UTF-8")));
+
+        //try to open the file and attempt to put data into the 2D matrix
+        try {
+            //array to read in each line of the csv file
+            List<String[]> temp = new ArrayList<String[]>();
+            while ((line = Handi_Coord_reader.readLine()) != null) {
+
+                temp.add((line.split(",")));
+
+            }//end of while loop
+
+
+            //string array to hold the values and transfer them into a 2D array
+            String[][] h_Secondarray = new String[temp.size()][0];
+            temp.toArray(h_Secondarray);
+
+            //basicly takes the array and puts them into a 440 by 2 array to represent every node on campus
+            for(int row=0;row<429;row++){
+                for(int column=0; column<2;column++){
+
+                    Handi_Coords[row][column] = Double.parseDouble(h_Secondarray[row][column]);
+
+                }
+            }//for loop
+
+            //catch condition to see if it there is no file
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);//creates the Location service at start up
         locationrequest = LocationRequest.create(); //creates a location request
         locationrequest.setInterval(2000); //this is the update location request time (2 seconds)
@@ -210,28 +290,20 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);//loads a specific section of the map to use
         mapFragment.getMapAsync(this);
 
-        //gets spinners to work for displaying map data for the locations
-        Spinner spinner = findViewById(R.id.maps_Spinners);
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.Locations, android.R.layout.simple_dropdown_item_1line);
-        adapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
-        spinner.setAdapter(adapter);
-      //  spinner.setSelection(0,false);//will not run SetonItemSelectListener on start up
-        spinner.setOnItemSelectedListener(this);
-
         Spinner spinner_main = findViewById(R.id.main_activity_spinner);//unfortunatly to avoid an issue of not being able to click on a spinner twice this must be called.
 
         ArrayAdapter<CharSequence> adapter_main = ArrayAdapter.createFromResource(this, R.array.Activites, android.R.layout.simple_dropdown_item_1line);
         adapter_main.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
         spinner_main.setAdapter(adapter_main);
-      //  spinner_main.setSelection(0,false);//will not run SetonItemSelectListener on start up
+       //  spinner_main.setSelection(0,false);//will not run SetonItemSelectListener on start up
        spinner_main.setSelection(0);
-         spinner_main.setOnItemSelectedListener(this);
+       spinner_main.setOnItemSelectedListener(this);
 /*
         if(getIntent() != null) {
 
             String[] Location_getter = getIntent().getStringArrayExtra("key");
             Context context = getApplicationContext();
-            CharSequence text = Location_getter[0];
+            CharSequence text = "helo";
             int duration = Toast.LENGTH_SHORT;
 
             Toast toast = Toast.makeText(context, text, duration);
@@ -264,6 +336,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 Intent workouts = new Intent(view.getContext(), WorkoutCreation.class);
                 startActivity(workouts);
             }
+
             if(mytext.contains("Log in")) {
                 //makes a new spinner object that
                 //allows me to call the id more than once (a true blessing and the solution to the most annoying time vampire)
@@ -274,7 +347,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 Intent ToLoginActivity = new Intent(view.getContext(), LoginActivity.class);
                 startActivity(ToLoginActivity);
             }
-
 
             if(mytext.contains("Events")){
                 //makes a new spinner object that
@@ -302,15 +374,46 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 Spinner spinnerMy = findViewById(R.id.main_activity_spinner);
                 spinnerMy.setSelection(0);
 
-                Intent eventSearch = new Intent(view.getContext(),Location_finder.class);
-                eventSearch.putExtra("key","hello");
-                startActivity(eventSearch);
-
-
-
+                int launch = 1;
+                Intent eventSearch = new Intent(this,Location_finder.class);
+                startActivityForResult(eventSearch,launch);
 
             }
 
+        }
+    }
+
+    //this is used to get the location the person wants to travel to
+    //it
+    @Override
+    protected  void onActivityResult(int requestCode,int resultCode,Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        Context context = getApplicationContext();
+        String[] array = new String [3];
+
+        if(requestCode == 1){
+            if(resultCode == Activity.RESULT_OK){
+                array[0] = data.getStringExtra("data");
+                array[1] = data.getStringExtra("coordinate");
+                Coord_number = Integer.valueOf(array[1]);
+                repeater(0);
+
+                //this allows for the button to appear only after the
+                // location has been chosen.
+                //can stop the display of the route
+                Button stop_navigation = (Button)findViewById(R.id.stop_navigation); //access the STOP_navigaiton button
+                    if(Coord_number != 0){//works with coord value the coord value is up dated when a value is passed
+                        stop_navigation.setVisibility(View.VISIBLE);//turns the button on
+                        stop_navigation.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                repeater(42069);//stops the path generation repeater
+                                Coord_number = 0; //sets the coord back to zero
+                                v.setVisibility(View.INVISIBLE); //turns the button back to invisible
+                            }
+                        });
+                    }//when route is activating
+            }
         }
     }
 
@@ -585,6 +688,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }
 
+
     //press the button to rehome the map on your current location
     public void ReHome(View view){
         if(view.getId()==R.id.rehome){
@@ -592,6 +696,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
 
     }
+
+
+
 
     //zooms the map in or out
     public void Zoom(View view){
@@ -603,16 +710,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }
 
-    //removes all of the markers
-    private void RemoveAll(){
-        for(Marker mark: AllMarkers){
-            mark.remove();
-        }
-        for(Polyline line: polylines){
-            line.remove();
-        }
-        polylines.clear();
-    }
 
     //small equation that gets the distance between any two points
     //used to find the closest node to the user
@@ -654,19 +751,20 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     //this function calls the function over and over until we want it to stop
     // just repeats over and over
-    private void repeater(final int stoper){
-        handler.postDelayed(runnable = new Runnable() {
-            @Override
-            public void run() {
-                killLines();
-                makePaths(stoper);
+    private void repeater(final int stopper){
+        if(stopper != 42069) {
+            handler.postDelayed(runnable = new Runnable() {
+                @Override
+                public void run() {
+                    killLines();
+                    makePaths(0);
+                    handler.postDelayed(runnable, delay);
+                }
+            }, delay);
 
-                handler.postDelayed(runnable,delay);
-            }
-        }, delay);
+        }
 
-
-        if(stoper == 289){
+        if(stopper == 42069){
             killLines();
             handler.removeCallbacks(runnable);
         }
@@ -682,28 +780,51 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     //This actually draws the paths onto the map.
-    private void makePaths(int Coord_number) {
+    private void makePaths(int type) {
 
-        dijkstra(Matrix, GetClosest(), Coord_number); // returns values for coords gets the values for the closet points
-        if(Coord_number !=0) {
+        if(type == 0) {
+            dijkstra(Matrix, GetClosest(), Coord_number); // returns values for coords gets the values for the closet points
+            if (Coord_number != 0) {
 
-            polylines.add(this.mMap.addPolyline(new PolylineOptions().color(Color.RED).clickable(true).add(
-                    new LatLng(Coords[GetClosest()][1], Coords[GetClosest()][0]),
-                    new LatLng(Latitude, Longitude))));
+                polylines.add(this.mMap.addPolyline(new PolylineOptions().color(Color.RED).clickable(true).add(
+                        new LatLng(Coords[GetClosest()][1], Coords[GetClosest()][0]),
+                        new LatLng(Latitude, Longitude))));
 
+            }
+
+
+            for (int start = 1; start < my_paths.size(); start++) {
+
+                polylines.add(this.mMap.addPolyline(new PolylineOptions().color(Color.RED).clickable(true).add(
+                        new LatLng(Coords[my_paths.get(start - 1)][1], Coords[my_paths.get(start - 1)][0]),
+                        new LatLng(Coords[my_paths.get(start)][1], Coords[my_paths.get(start)][0]))));
+
+            }
+
+            clear_All();
         }
 
+        if(type == 1) {
+            dijkstra(Handi_Matrix, GetClosest(), Coord_number); // returns values for coords gets the values for the closet points
+            if (Coord_number != 0) {
+
+                polylines.add(this.mMap.addPolyline(new PolylineOptions().color(Color.RED).clickable(true).add(
+                        new LatLng(Handi_Coords[GetClosest()][1], Handi_Coords[GetClosest()][0]),
+                        new LatLng(Latitude, Longitude))));
+
+            }
 
 
-        for (int start = 1; start < my_paths.size(); start++) {
+            for (int start = 1; start < my_paths.size(); start++) {
 
-            polylines.add(this.mMap.addPolyline(new PolylineOptions().color(Color.RED).clickable(true).add(
-                    new LatLng(Coords[my_paths.get(start - 1)][1], Coords[my_paths.get(start - 1)][0]),
-                    new LatLng(Coords[my_paths.get(start)][1], Coords[my_paths.get(start)][0]))));
+                polylines.add(this.mMap.addPolyline(new PolylineOptions().color(Color.RED).clickable(true).add(
+                        new LatLng(Handi_Coords[my_paths.get(start - 1)][1], Handi_Coords[my_paths.get(start - 1)][0]),
+                        new LatLng(Handi_Coords[my_paths.get(start)][1], Handi_Coords[my_paths.get(start)][0]))));
+            }
 
+            clear_All();
         }
 
-        clear_All();
     }
 
 
