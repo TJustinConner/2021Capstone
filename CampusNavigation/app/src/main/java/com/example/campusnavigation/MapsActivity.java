@@ -12,7 +12,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -42,6 +45,8 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
@@ -72,32 +77,32 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private static final String TAG = "MapsActivity";
 
     int Location_Request_CODE = 10001;    //used as a request code by the program to ensure the user consents to use of location
-    double Longitude;     //global variables that hold the coords of the current location of the user
-    double Latitude;    //global variables that hold the coords of the current location of the user
+    double Longitude=-82.5619257479437;    //global variables that hold the coords of the current location of the user
+    double Latitude=36.97121534957083;    //global variables that hold the coords of the current location of the user
     int Coord_number = 0;     //used to choose the user's marker
     int place_holder = 0; // allows for a spinner item to be selected more than once
 
     Handler handler = new Handler(); //handler is used to communicate background used in time updating
     Runnable runnable; //used in creating a thread to run the time updating for path updating/displaying
-    int delay = 1*2000; //this is the delay between path generation on the map
+    int delay = 1*1000; //this is the delay between path generation on the map
 
     private GoogleMap mMap; //makes a mMap object to be to call GoogleMaps services
     int buttonChooser = 0;//used to show which button type you are on Satellite or
 
     int[][] Matrix = new int[440][440]; //This holds all of the Matrix between any two nodes
-    List<Marker> AllMarkers = new ArrayList<Marker>(); //Holds all the physical placed nodes in the map
     double[][] Coords = new double[440][2]; //translates each marker to each coord
     List<Polyline> polylines = new ArrayList<Polyline>(); //holds the polylines used when drawing paths on the map
     private static List<Integer> my_paths = new ArrayList<Integer>(); //this will the current path that I am taking it will update every 2 seconds
 
     //Handicap data
-    int[][] Handi_Matrix = new int[429][429];//will hold the physical places for the handicap layer
-    double[][] Handi_Coords = new double[429][2];
+    int[][] Handi_Matrix = new int[440][440];//will hold the physical places for the handicap layer
+    double[][] Handi_Coords = new double[440][2];
 
-
+    Marker update =null;
 
     //used to draw the GEO fence for the wrapper
-    LatLng Wise = new LatLng(36.970702412486304, -82.56071600207069); //changes where
+   LatLng Wise = new LatLng(Latitude, Longitude); //changes where
+   // LatLng Wise = new LatLng(36.969886859438894, -82.57048866982446);
     //the map appears
     LatLngBounds UVaWise = new LatLngBounds(
             new LatLng(36.969886859438894, -82.57048866982446),//South west bounds,
@@ -105,9 +110,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     );
 
 
+    public Bitmap resizeMapIcons(String iconName,int width, int height){
+        Bitmap imageBitmap = BitmapFactory.decodeResource(getResources(),getResources().getIdentifier(iconName, "drawable", getPackageName()));
+        Bitmap resizedBitmap = Bitmap.createScaledBitmap(imageBitmap, width, height, false);
+        return resizedBitmap;
+    }
+
     //Google play services that allow the user to find the current and accurate location of the user
     FusedLocationProviderClient fusedLocationProviderClient;
     LocationRequest locationrequest;
+
 
     //loop that runs every 2 seconds and updates the position to Longitude and Latitude
     LocationCallback locationCallback = new LocationCallback() {
@@ -118,8 +130,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
             for(Location location: locationResult.getLocations()){
                 //actually puts the Location object private data into global variables longitude and latitude
-                Longitude = location.getLongitude();
-                Latitude = location.getLatitude();
+
+                update.remove();
+                LatLng place = new LatLng(Latitude, Longitude);
+                MarkerOptions current = new MarkerOptions().position(place).title("hello").icon(BitmapDescriptorFactory.fromBitmap(resizeMapIcons("my_marker", 50, 100)));
+                update = mMap.addMarker(current);
+
+
+
+              Longitude = location.getLongitude() ;
+              Latitude = location.getLatitude();
 
             }
         }
@@ -133,7 +153,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     protected void onCreate(Bundle savedInstanceState) {
 
         //opens the paths.csv file to get all the data into a matrix to be used later FOR THE MAIN LAYER
-        InputStream is = getResources().openRawResource(R.raw.paths);
+        InputStream is = getResources().openRawResource(R.raw.upaths);
         BufferedReader reader = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
         String line = "";
 
@@ -173,7 +193,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }//if no file is found
 
         //opens the coords.csv file to get all the data into a matrix to be used later
-        InputStream Coord_data = getResources().openRawResource(R.raw.coords);
+        InputStream Coord_data = getResources().openRawResource(R.raw.ucoords);
         BufferedReader Coord_reader = new BufferedReader(new InputStreamReader(Coord_data,Charset.forName("UTF-8")));
 
         //try to open the file and attempt to put data into the 2D matrix
@@ -206,6 +226,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
 
 
+
         //THis is used to extract the handicap data
         InputStream h_is = getResources().openRawResource(R.raw.hpaths);
         BufferedReader h_reader = new BufferedReader(new InputStreamReader(h_is, Charset.forName("UTF-8")));
@@ -231,9 +252,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             //to find the shortest path
             //also converts string to integers (this is why all the numbers int the CSV file
             //are so bit, Dijkstra required the use of integers.)
-            for (int row = 0; row < 429; row++) {
+            for (int row = 0; row < 440; row++) {
 
-                for (int column = 0; column < 429; column++) {
+                for (int column = 0; column < 440; column++) {
 
                     Handi_Matrix[row][column] = Integer.parseInt(array[row][column]);
 
@@ -265,7 +286,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             temp.toArray(h_Secondarray);
 
             //basicly takes the array and puts them into a 440 by 2 array to represent every node on campus
-            for(int row=0;row<429;row++){
+            for(int row=0;row<440;row++){
                 for(int column=0; column<2;column++){
 
                     Handi_Coords[row][column] = Double.parseDouble(h_Secondarray[row][column]);
@@ -396,7 +417,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 array[0] = data.getStringExtra("data");
                 array[1] = data.getStringExtra("coordinate");
                 Coord_number = Integer.valueOf(array[1]);
-                repeater(0);
+                repeater(1);
 
                 //this allows for the button to appear only after the
                 // location has been chosen.
@@ -547,7 +568,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     // representation
     private static void dijkstra(int[][] adjacencyMatrix,
                                  int startVertex, int ender) {
-
         int nVertices = adjacencyMatrix[0].length;
 
         // shortestDistances[i] will hold the
@@ -666,6 +686,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.setMinZoomPreference(15.5f);//sets the max zoom so you cant zoom out to infinity
         googleMap.setLatLngBoundsForCameraTarget(UVaWise);//sets the bounds for the wrapper
 
+        LatLng place = new LatLng(Latitude, Longitude);
+        MarkerOptions current = new MarkerOptions().position(place).title("hello").icon(BitmapDescriptorFactory.fromBitmap(resizeMapIcons("my_marker", 50, 100)));
+        update = mMap.addMarker(current);
+
     }//end of map ready
 
     //used to toggle the button being turned on and off
@@ -692,12 +716,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     //press the button to rehome the map on your current location
     public void ReHome(View view){
         if(view.getId()==R.id.rehome){
-            mMap.moveCamera(CameraUpdateFactory.newLatLng(Wise));
+            LatLng me = new LatLng(Latitude,Longitude);
+            mMap.moveCamera(CameraUpdateFactory.newLatLng(me));
         }
 
     }
-
-
 
 
     //zooms the map in or out
@@ -749,6 +772,17 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         return counter;
     }
 
+    private int hGetClosest(){
+        double distance=900000000;
+        int counter = 0;
+        for(int x=0;x<440;x++){
+            if(GetDistance(Handi_Coords[x][1],Handi_Coords[x][0])<distance){
+                counter = x;
+                distance = GetDistance(Handi_Coords[x][1],Handi_Coords[x][0]);
+            }
+        }
+        return counter;
+    }
     //this function calls the function over and over until we want it to stop
     // just repeats over and over
     private void repeater(final int stopper){
@@ -757,7 +791,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 @Override
                 public void run() {
                     killLines();
-                    makePaths(0);
+                    makePaths(1);
                     handler.postDelayed(runnable, delay);
                 }
             }, delay);
@@ -805,11 +839,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
 
         if(type == 1) {
-            dijkstra(Handi_Matrix, GetClosest(), Coord_number); // returns values for coords gets the values for the closet points
+            dijkstra(Handi_Matrix, hGetClosest(), Coord_number); // returns values for coords gets the values for the closet points
             if (Coord_number != 0) {
 
                 polylines.add(this.mMap.addPolyline(new PolylineOptions().color(Color.RED).clickable(true).add(
-                        new LatLng(Handi_Coords[GetClosest()][1], Handi_Coords[GetClosest()][0]),
+                        new LatLng(Handi_Coords[hGetClosest()][1], Handi_Coords[hGetClosest()][0]),
                         new LatLng(Latitude, Longitude))));
 
             }
