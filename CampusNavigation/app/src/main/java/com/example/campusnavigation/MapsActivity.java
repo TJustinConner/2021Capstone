@@ -7,6 +7,7 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -29,6 +30,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -80,7 +82,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     double Longitude=-82.5619257479437;    //global variables that hold the coords of the current location of the user
     double Latitude=36.97121534957083;    //global variables that hold the coords of the current location of the user
     int Coord_number = 0;     //used to choose the user's marker
-    int place_holder = 0; // allows for a spinner item to be selected more than once
+    int handi_changer = 0; // changes the handicap option to stares option
 
     Handler handler = new Handler(); //handler is used to communicate background used in time updating
     Runnable runnable; //used in creating a thread to run the time updating for path updating/displaying
@@ -99,6 +101,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     double[][] Handi_Coords = new double[440][2];
 
     Marker update =null;
+    int type = 0;
 
     //used to draw the GEO fence for the wrapper
    LatLng Wise = new LatLng(Latitude, Longitude); //changes where
@@ -133,12 +136,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                 update.remove();
                 LatLng place = new LatLng(Latitude, Longitude);
-                MarkerOptions current = new MarkerOptions().position(place).title("hello").icon(BitmapDescriptorFactory.fromBitmap(resizeMapIcons("my_marker", 50, 100)));
+                MarkerOptions current = new MarkerOptions().position(place).title("me").icon(BitmapDescriptorFactory.fromBitmap(resizeMapIcons("my_marker", 50, 100)));
                 update = mMap.addMarker(current);
 
 
-
-              Longitude = location.getLongitude() ;
+              Longitude = location.getLongitude();
               Latitude = location.getLatitude();
 
             }
@@ -375,6 +377,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 Spinner spinnerMy = findViewById(R.id.main_activity_spinner);
                 spinnerMy.setSelection(0);
 
+
                 Intent eventCreation = new Intent(view.getContext(), EventActivity.class);
                 startActivity(eventCreation);
             }
@@ -385,9 +388,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 Spinner spinnerMy = findViewById(R.id.main_activity_spinner);
                 spinnerMy.setSelection(0);
 
+
+                String value = "Carl Smith Stadium";
                 Intent eventSearch = new Intent(view.getContext(), BulletinBoardGUI.class);
+                eventSearch.putExtra("location",value);
                 startActivity(eventSearch);
             }
+
+
             if(mytext.contains("Navigate")){
 
                 //makes a new spinner object that
@@ -423,14 +431,49 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 // location has been chosen.
                 //can stop the display of the route
                 Button stop_navigation = (Button)findViewById(R.id.stop_navigation); //access the STOP_navigaiton button
+               // final Button handicap = (Button)findViewById(R.id.handicap);
+
+                final ImageButton handi = (ImageButton)findViewById(R.id.handi);
+                final ImageButton walkie = (ImageButton)findViewById(R.id.walkie);
+
+
                     if(Coord_number != 0){//works with coord value the coord value is up dated when a value is passed
+                        walkie.setVisibility(View.VISIBLE);
                         stop_navigation.setVisibility(View.VISIBLE);//turns the button on
+
+
+                        handi.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                walkie.setVisibility(View.VISIBLE);
+                                v.setVisibility(View.INVISIBLE);
+
+                                repeater(42069);
+                                type = 0;
+                                repeater(0);
+
+                            }
+                        });
+                        walkie.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                v.setVisibility(View.INVISIBLE);
+                                handi.setVisibility(View.VISIBLE);
+                                repeater(42069);
+                                type=1;
+                                repeater(0);
+                            }
+                        });
+
+
                         stop_navigation.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
                                 repeater(42069);//stops the path generation repeater
                                 Coord_number = 0; //sets the coord back to zero
                                 v.setVisibility(View.INVISIBLE); //turns the button back to invisible
+                                handi.setVisibility(View.INVISIBLE);
+                                walkie.setVisibility(View.INVISIBLE);
                             }
                         });
                     }//when route is activating
@@ -690,27 +733,82 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         MarkerOptions current = new MarkerOptions().position(place).title("hello").icon(BitmapDescriptorFactory.fromBitmap(resizeMapIcons("my_marker", 50, 100)));
         update = mMap.addMarker(current);
 
+
+
+
+        final String[] location_number = getResources().getStringArray(R.array.Location_number);//this holds the values in the string array location_number
+        double mini_lat;//places the bulletin board
+        double mini_long;//helps to place bulletin board
+
+
+        //Goes through the entire Array-string extracts the
+        //coord number and relates it to latitude and longitude
+        //at the same time it is doing that it is also placing the string associated
+        //with each marker in the marker as well
+        for(int skipper = 1; skipper<77;skipper = skipper +2) {
+
+            //gets the lat and from the other value in the string array
+            mini_lat = Coords[Integer.valueOf(location_number[skipper])][1];
+            mini_long = Coords[Integer.valueOf(location_number[skipper])][0];
+
+            //makes a new latlong
+            LatLng tester = new LatLng(mini_lat, mini_long);
+            MarkerOptions whereyouat = new MarkerOptions().position(tester).icon(BitmapDescriptorFactory.fromBitmap(resizeMapIcons("event", 30, 60)));;
+            Marker test = null;
+
+            //places the item on the map and assigns its string
+            test = mMap.addMarker(whereyouat);
+            test.setTag(location_number[skipper-1]);
+        }
+
+        //THIS IS WHERE YOU WOULD PUT CODE THAT HAPPENS WHEN YOU CLICK ON A BULLTIN BOARD
+        //String.valueof(marker.tag()); will hold the string you want
+        mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(Marker marker) {
+
+                    Context context = getApplicationContext();
+                    CharSequence text = String.valueOf(marker.getTag());
+                    int duration = Toast.LENGTH_SHORT;
+                    Toast toast = Toast.makeText(context, text, duration);
+                    toast.show();
+
+                return true;
+            }
+        });
+
     }//end of map ready
 
     //used to toggle the button being turned on and off
     //for satellite
     //if button chooser is 0 it turns on satellite else turns it off
     public void Satellite(View view){
-        if(view.getId() == R.id.satellite) {
+
+
+        ImageButton sat = (ImageButton)findViewById(R.id.satell); //access the STOP_navigaiton button
+        ImageButton maper = (ImageButton)findViewById(R.id.maper); //access the STOP_navigaiton button
             if (buttonChooser == 0) {
                 mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+                sat.setVisibility(View.INVISIBLE);
+                maper.setVisibility(View.VISIBLE);
                 buttonChooser = 1;
                 // onPause();
 
             }
             else{
                 mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+                sat.setVisibility(View.VISIBLE);
+                maper.setVisibility(View.INVISIBLE);
                 buttonChooser = 0;
                 // onResume();
 
             }
-        }
+
     }
+
+
+
+
 
 
     //press the button to rehome the map on your current location
@@ -732,6 +830,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             mMap.animateCamera(CameraUpdateFactory.zoomIn());
         }
     }
+
 
 
     //small equation that gets the distance between any two points
@@ -791,7 +890,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 @Override
                 public void run() {
                     killLines();
-                    makePaths(1);
+                    makePaths();
                     handler.postDelayed(runnable, delay);
                 }
             }, delay);
@@ -814,7 +913,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     //This actually draws the paths onto the map.
-    private void makePaths(int type) {
+    private void makePaths() {
 
         if(type == 0) {
             dijkstra(Matrix, GetClosest(), Coord_number); // returns values for coords gets the values for the closet points

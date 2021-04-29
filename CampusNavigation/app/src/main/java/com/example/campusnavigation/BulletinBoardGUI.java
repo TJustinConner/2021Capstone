@@ -1,5 +1,6 @@
 package com.example.campusnavigation;
 
+import android.content.Context;
 import android.os.Bundle;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -14,6 +15,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -26,10 +28,23 @@ import javax.net.ssl.HttpsURLConnection;
 
 public class BulletinBoardGUI extends AppCompatActivity implements AdapterView.OnItemSelectedListener{
 
-    private String location;
+
+
+
+        private String location;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        Bundle extras = getIntent().getExtras();
+        if(extras != null )
+
+        {
+        location = extras.getString("location");
+        }
+
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bulletin_board_g_u_i);
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
@@ -42,11 +57,14 @@ public class BulletinBoardGUI extends AppCompatActivity implements AdapterView.O
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
         spinner.setOnItemSelectedListener(this);
+
     }
     protected static String eventSearch(String location) throws IOException {//query the database with the location that was given
         URL url = null;
         HttpsURLConnection urlConnection = null;;
         BufferedReader reader = null;
+
+
 
         String input = location;
         String output = "";

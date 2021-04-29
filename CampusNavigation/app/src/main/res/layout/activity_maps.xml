@@ -2,6 +2,7 @@
 
 
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -31,22 +32,7 @@
             android:layout_marginLeft="148dp"
             android:layout_marginTop="530dp"
             android:text="Stop Navigation"
-            android:visibility="invisible"
-            />
-
-        <Button
-            android:id="@+id/satellite"
-            android:layout_width="106dp"
-            android:layout_height="103dp"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentTop="true"
-            android:layout_gravity="right"
-            android:layout_marginStart="16dp"
-            android:layout_marginLeft="16dp"
-            android:layout_marginTop="531dp"
-            android:onClick="Satellite"
-            android:text="Switch map type" />
+            android:visibility="invisible" />
 
         <Button
             android:id="@+id/zoomout"
@@ -61,32 +47,33 @@
             android:onClick="Zoom"
             android:text="-" />
 
+
         <Button
             android:id="@+id/zoomin"
-            android:layout_width="41dp"
-            android:layout_height="wrap_content"
+            android:layout_width="45dp"
+            android:layout_height="47dp"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
             android:layout_alignParentBottom="true"
-            android:layout_marginEnd="39dp"
-            android:layout_marginRight="39dp"
-            android:layout_marginBottom="93dp"
+            android:layout_marginEnd="36dp"
+            android:layout_marginRight="36dp"
+            android:layout_marginBottom="94dp"
             android:onClick="Zoom"
             android:text="+" />
 
-        <Button
+        <ImageButton
             android:id="@+id/rehome"
-            android:layout_width="31dp"
-            android:layout_height="30dp"
+            android:layout_width="21dp"
+            android:layout_height="34dp"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
             android:layout_alignParentBottom="true"
-            android:layout_marginEnd="355dp"
-            android:layout_marginRight="355dp"
-            android:layout_marginBottom="126dp"
+            android:layout_marginEnd="369dp"
+            android:layout_marginRight="369dp"
+            android:layout_marginBottom="151dp"
+            android:background="@drawable/rehome"
             android:onClick="ReHome"
-            android:text="*" />
-
+            android:scaleType="fitXY" />
 
         <Spinner
             android:id="@+id/main_activity_spinner"
@@ -97,6 +84,61 @@
             android:layout_marginTop="5dp"
             android:layout_marginEnd="11dp"
             android:background="@drawable/new_spinner" />
+
+
+        <ImageButton
+            android:id="@+id/maper"
+            android:layout_width="112dp"
+            android:layout_height="106dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginEnd="273dp"
+            android:layout_marginBottom="31dp"
+            android:background="@drawable/map_switch"
+            android:onClick="Satellite"
+            android:scaleType="fitXY"
+            android:src="@drawable/map_switch"
+            android:visibility="invisible" />
+
+        <ImageButton
+            android:id="@+id/satell"
+            android:layout_width="114dp"
+            android:layout_height="103dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginEnd="273dp"
+            android:layout_marginBottom="34dp"
+            android:background="@drawable/satellite_switch"
+            android:onClick="Satellite"
+            android:scaleType="fitXY"
+            android:src="@drawable/satellite_switch" />
+
+        <ImageButton
+            android:id="@+id/handi"
+            android:layout_width="50dp"
+            android:layout_height="43dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginEnd="48dp"
+            android:layout_marginBottom="520dp"
+            android:background="@drawable/handi"
+            android:scaleType="fitXY"
+            android:src="@drawable/handi"
+            android:visibility="invisible" />
+
+        <ImageButton
+            android:id="@+id/walkie"
+            android:layout_width="48dp"
+            android:layout_height="41dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginEnd="49dp"
+            android:layout_marginBottom="523dp"
+            android:background="@drawable/walkie"
+            android:scaleType="fitXY"
+            android:src="@drawable/walkie"
+            android:visibility="invisible" />
+
 
     </RelativeLayout>
 

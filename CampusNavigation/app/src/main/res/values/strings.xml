@@ -39,12 +39,10 @@
 
     <string-array name="Locations">
         <item>Location</item>
-        <item>Cavalier House</item>
         <item>David J. Prior Convocation Center</item>
         <item>Humphreys-Thomas Field House</item>
         <item>Carl Smith Stadium</item>
         <item>Ramseyer Press Box</item>
-        <item>Baptitst Collegiate Ministries</item>
         <item>Culberston Hall</item>
         <item>College Relations/Napoleon Hill Foundation</item>
         <item>Commonwealth Hall</item>
@@ -76,12 +74,94 @@
         <item>Women\'s Softball Field</item>
         <item>Intramural Sports</item>
         <item>Observatory</item>
-        <item>Townhouses</item>
         <item>Resource Center</item>
         <item>Center for Teaching Excellence</item>
         <item>Wesley Foundation</item>
         <item>Alumni Hall</item>
     </string-array>
+
+
+    <string-array name = "Location_number">
+        <item>David J. Prior Convocation Center</item>
+        <item>193</item>
+        <item>Humphreys-Thomas Field House</item>
+        <item>190</item>
+        <item>Carl Smith Stadium</item>
+        <item>270</item>
+        <item>Ramseyer Press Box</item>
+        <item>227</item>
+        <item>Culberston Hall</item>
+        <item>92</item>
+        <item>College Relations/Napoleon Hill Foundation</item>
+        <item>104</item>
+        <item>Commonwealth Hall</item>
+        <item>289</item>
+        <item>Lila Vicars Smith House</item>
+        <item>377</item>
+        <item>McCrary Hall</item>
+        <item>1</item>
+        <item>Gilliam Center for the Arts</item>
+        <item>130</item>
+        <item>Hunter J. Smith Dining Commons</item>
+        <item>132</item>
+        <item>Thompson Hall</item>
+        <item>135</item>
+        <item>Asbury Hall</item>
+        <item>139</item>
+        <item>Martha Randolph Hall</item>
+        <item>305</item>
+        <item>Crocket Hall (Admissions Office)</item>
+        <item>77</item>
+        <item>Cantrell Hall</item>
+        <item>308</item>
+        <item>Chapel of all Faiths</item>
+        <item>171</item>
+        <item>Henson Hall</item>
+        <item>143</item>
+        <item>Smiddy Hall</item>
+        <item>18</item>
+        <item>C. Bascom Slemp Student Center</item>
+        <item>56</item>
+        <item>Wyllie Hall</item>
+        <item>49</item>
+        <item>UVA-Wise Library</item>
+        <item>168</item>
+        <item>Zehmer Hall</item>
+        <item>317</item>
+        <item>Darden Hall</item>
+        <item>318</item>
+        <item>Leonard W. Sandridge Science Center</item>
+        <item>324</item>
+        <item>Betty J. Gilliam Sculpture Garden</item>
+        <item>319</item>
+        <item>Physical Plant</item>
+        <item>351</item>
+        <item>Winston Ely Health and Wellness Center</item>
+        <item>31</item>
+        <item>Bower-Sturgill Hall</item>
+        <item>35</item>
+        <item>Stallard Field (Baseball)</item>
+        <item>67</item>
+        <item>Fred B. Greear Gym and Swimming Pool</item>
+        <item>42</item>
+        <item>Humphreys Tennis Complex</item>
+        <item>65</item>
+        <item>Women\'s Softball Field</item>
+        <item>68</item>
+        <item>Intramural Sports</item>
+        <item>361</item>
+        <item>Observatory</item>
+        <item>374</item>
+        <item>Resource Center</item>
+        <item>409</item>
+        <item>Center for Teaching Excellence</item>
+        <item>403</item>
+        <item>Wesley Foundation</item>
+        <item>424</item>
+        <item>Alumni Hall</item>
+        <item>398</item>
+    </string-array>
+
 
 
     <string-array name="Activites">

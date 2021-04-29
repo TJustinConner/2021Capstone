@@ -2,6 +2,7 @@
 
 
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -19,11 +20,10 @@
             android:layout_height="76dp"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
-            android:layout_marginStart="23dp"
+            android:layout_marginStart="24dp"
             android:layout_marginTop="67dp"
-            android:text=""
-            android:textSize="25dp"
-            ></Spinner>
+            android:text="Select a location"
+            android:textSize="20dp"></Spinner>
 
         <TextView
             android:id="@+id/textView3"
@@ -37,6 +37,50 @@
             android:layout_marginEnd="39dp"
             android:text="Select a location:"
             android:textSize="25dp" />
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="181dp"
+            android:layout_height="175dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginEnd="206dp"
+            android:layout_marginBottom="267dp"
+            android:scaleType="fitXY"
+            app:srcCompat="@drawable/handicap" />
+
+        <ImageView
+            android:id="@+id/imageView2"
+            android:layout_width="183dp"
+            android:layout_height="186dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="23dp"
+            android:layout_marginBottom="31dp"
+            android:scaleType="fitXY"
+            app:srcCompat="@drawable/walkie_map" />
+
+        <TextView
+            android:id="@+id/textView4"
+            android:layout_width="156dp"
+            android:layout_height="160dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginEnd="28dp"
+            android:layout_marginBottom="264dp"
+            android:text="Using the handicap feature will avoid all stairs."
+            android:textSize="20dp" />
+
+        <TextView
+            android:id="@+id/textView5"
+            android:layout_width="151dp"
+            android:layout_height="142dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginEnd="37dp"
+            android:layout_marginBottom="72dp"
+            android:textSize="20dp"
+            android:text="The walking feature will use elevators and stairs to find the shortest route to the destination." />
 
 
     </RelativeLayout>
