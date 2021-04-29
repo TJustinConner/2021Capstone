@@ -1,21 +1,28 @@
 package com.example.campusnavigation;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 
 import android.Manifest;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.net.Uri;
+import android.os.Handler;
 import android.os.StrictMode;
 import android.provider.CalendarContract;
+import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.Spinner;
 import android.os.Bundle;
 import android.util.Log;
@@ -24,27 +31,18 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
-import java.io.BufferedInputStream;
 import java.io.BufferedReader;
+import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLConnection;
 import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Base64;
 import java.util.Calendar;
 
 import javax.net.ssl.HttpsURLConnection;
@@ -69,11 +67,16 @@ public class EventActivity extends AppCompatActivity implements AdapterView.OnIt
     private EditText descInput;
     private TextView eventImageButton;
     private TextView exportCalendarButton;
-    Uri path;
+    private String path, serverPath, FILE_NAME;
+    private static String[] PERMISSIONS_STORAGE = {Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE};
 
     @Override
     //this runs on start of the app
     protected void onCreate(Bundle savedInstanceState) {
+        int permission = ActivityCompat.checkSelfPermission(EventActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        if (permission != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(EventActivity.this, PERMISSIONS_STORAGE, 1);
+        }
         Log.d("SUCCESS", "made it into onCreate");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event);
@@ -125,19 +128,8 @@ public class EventActivity extends AppCompatActivity implements AdapterView.OnIt
                 loc = text;
                 recurrence = text2;
 
-                //convert pdf to blob
-                Path pdfPath = Paths.get(path.toString());
-                byte[] pdfByteArray = new byte[0];
-                try {
-                    pdfByteArray = Files.readAllBytes(pdfPath);
-                    Files.write(pdfPath, pdfByteArray);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                blob = pdfByteArray.toString();
-                Log.d("SUCCESS", "The pdfPathS (before encode) is: " + blob);
-                Log.d("SUCCESS", "Retrieved strings");
 
+                serverPath = "https://medusa.mcs.uvawise.edu/~jwe3nv/events/" + FILE_NAME;
 
                 //https://androidexample.com/How_To_Make_HTTP_POST_Request_To_Server_-_Android_Example/index.php?view=article_discription&aid=64&aaid=89
                 //https://stackoverflow.com/questions/7537377/how-to-include-a-php-variable-inside-a-mysql-statement
@@ -145,7 +137,7 @@ public class EventActivity extends AppCompatActivity implements AdapterView.OnIt
                 String testCheck = sanitize(event, time, date);
                 displayText(testCheck);
 
-                if (testCheck.compareTo("SAFE")==0){
+                if (testCheck.compareTo("SAFE") == 0) {
                     Log.d("DEBUGGING", testCheck);
 
                     eventError.setVisibility(View.INVISIBLE);
@@ -174,11 +166,14 @@ public class EventActivity extends AppCompatActivity implements AdapterView.OnIt
                         totalInput += "&" + URLEncoder.encode("loc", "UTF-8")
                                 + "=" + URLEncoder.encode(loc, "UTF-8");
 
-                        totalInput += "&" + URLEncoder.encode("blob", "UTF-8")
-                                + "=" + URLEncoder.encode(blob, "UTF-8");
+                        totalInput += "&" + URLEncoder.encode("path", "UTF-8")
+                                + "=" + URLEncoder.encode(serverPath, "UTF-8");
 
                         totalInput += "&" + URLEncoder.encode("recur", "UTF-8")
                                 + "=" + URLEncoder.encode(recurrence, "UTF-8");
+
+                        totalInput += "&" + URLEncoder.encode("filename", "UTF-8")
+                                + "=" + URLEncoder.encode(FILE_NAME, "UTF-8");
 
                         //opening connection to php file
                         url = new URL("https://medusa.mcs.uvawise.edu/~jwe3nv/connect.php");
@@ -212,7 +207,6 @@ public class EventActivity extends AppCompatActivity implements AdapterView.OnIt
 
                     // after all the data has been set, now we will insert into database
 
-
                     //This is displaying the text that was saved in the previous step
                     displayText(event);
                     displayText(time);
@@ -220,17 +214,17 @@ public class EventActivity extends AppCompatActivity implements AdapterView.OnIt
                     displayText(date);
                     displayText(loc);
                     displayText(desc);
+                    uploadFile();
 
-                    try {
+                    /*try {
                         BulletinBoardGUI.eventSearch(loc);
                     } catch (IOException e) {
                         e.printStackTrace();
-                    }
-                }
-                else{//this prints error messages to the screen for the user and gives a debugging
+                    }*/
+                } else {//this prints error messages to the screen for the user and gives a debugging
                     //message to console/terminal/whatever its called
                     Log.d("FAILED", "user input is bad: " + testCheck);
-                    if (testCheck.equals("SCE")){
+                    if (testCheck.equals("SCE")) {
                         Log.d("FAILED", "Event error.");
                         eventError.setVisibility(View.VISIBLE);
                     }
@@ -268,7 +262,7 @@ public class EventActivity extends AppCompatActivity implements AdapterView.OnIt
                 month = month + 1;
                 Log.d("SUCCESS", "onDateSet: mm/dd/yyyy: " + month + "/" + day + "/" + year);
 
-                String date = month + "/" + day + "/" + year;
+                String date = month + "-" + day + "-" + year;
                 dateDisplay.setText(date);
 
             }
@@ -328,11 +322,21 @@ public class EventActivity extends AppCompatActivity implements AdapterView.OnIt
         eventImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //https://stackoverflow.com/questions/2227209/how-to-get-the-images-from-device-in-android-java-application
-                Intent pdfPickerIntent = new Intent(Intent.ACTION_GET_CONTENT);
-                pdfPickerIntent.setType("application/pdf");
-                pdfPickerIntent.setAction(Intent.ACTION_GET_CONTENT);
-                startActivityForResult(Intent.createChooser(pdfPickerIntent, "Select PDF"), 1);
+                //display popup
+                TextView view = new TextView(EventActivity.this);
+                onButtonShowPopupWindowClick(view);
+                //wait for a few seconds
+
+                Handler handler = new Handler();
+                handler.postDelayed(new Runnable(){
+                    public void run(){
+                        //https://stackoverflow.com/questions/2227209/how-to-get-the-images-from-device-in-android-java-application
+                        Intent pdfPickerIntent = new Intent(Intent.ACTION_GET_CONTENT);
+                        pdfPickerIntent.setType("application/pdf");
+                        pdfPickerIntent.setAction(Intent.ACTION_GET_CONTENT);
+                        startActivityForResult(Intent.createChooser(pdfPickerIntent, "Select PDF"), 1);
+                    }
+                }, 3000);
 
             }
         });
@@ -365,17 +369,31 @@ public class EventActivity extends AppCompatActivity implements AdapterView.OnIt
     //and submitting a debugging message
     public void onActivityResult(int requestCode, int resultCode, Intent result) {
         super.onActivityResult(requestCode, resultCode, result);
+        Log.d("DEBUG", "Made it to onActivityResult");
         if (resultCode == RESULT_OK) {
             if (requestCode == 1) {
-                path = result.getData();
-                Log.d("SUCCESS", "The 'path' saved is: " + path);
+                if (requestCode == 1) {
+                    String[] x = result.getData().getPath().split(":");
+                    String fileName = x[x.length -1];
+                    Log.d("DEBUG", "The file name is: " + fileName);
+                    path = "/storage/emulated/0/";
+                    if (result.getData().toString().contains("download")){
+                        path += "Download/";
+                    }
+                    else{
+                        path += "Documents/";
+                    }
+                    path += fileName;
+                    FILE_NAME = fileName;
+                }
             }
         }
+
     }
 
     //this is mainly for debugging, it prints the parameter to the screen in a little gray box
     //However this can/is used for just displaying text to the user for a brief period of time.
-    private void displayText(String text){//This just displays the input at the bottom of the screen
+    private void displayText(String text) {//This just displays the input at the bottom of the screen
         Toast.makeText(EventActivity.this, text, Toast.LENGTH_SHORT).show();
     }
 
@@ -387,24 +405,25 @@ public class EventActivity extends AppCompatActivity implements AdapterView.OnIt
     }
 
     @Override
-    public void onNothingSelected(AdapterView<?> parent){}//default function, has no purpose, but is required for syntax
+    public void onNothingSelected(AdapterView<?> parent) {
+    }//default function, has no purpose, but is required for syntax
 
-    private String sanitize(String event, String time, String date){//sanitize user input for special characters
+    private String sanitize(String event, String time, String date) {//sanitize user input for special characters
         //checks the given user input for any of the ArrayList of characters. There has to be separate ArrayLists
         //because Date can have '/', but event and time can't, and etc. You could probably refactor this
         //to something cleaner but this is sufficient for now.
-        final ArrayList<Character> SC_ARRAY_E = new ArrayList<Character>(Arrays.<Character>asList('!', '"', '#', '$', '%', '^', '&', '*', '(', ')', '+', '=', '-', '_', ',', '<',
-        '.', '>', '/', '?', ':', ';', '|', '[', '{', '}', ']', '`', '~', '@', (char) ('[' + 1)));
+        final ArrayList<Character> SC_ARRAY_E = new ArrayList<Character>(Arrays.<Character>asList('!', '"', '#', '$', '%', '^', '&', '*', '(', ')', '+', '=',
+                '-', '_', ',', '<', '.', '>', '/', '?', ':', ';', '|', '[', '{', '}', ']', '`', '~', '@', (char) ('[' + 1)));
 
-        for (int i = 0; i < event.length(); i+=1){
-            if (SC_ARRAY_E.contains(event.charAt(i))){
+        for (int i = 0; i < event.length(); i += 1) {
+            if (SC_ARRAY_E.contains(event.charAt(i))) {
                 return "SCE";
             }
         }
         return "SAFE";
     }
 
-    public void addToCalendar(String title, String location, String date, String sTime, String eTime, String description, String recurrence){
+    public void addToCalendar(String title, String location, String date, String sTime, String eTime, String description, String recurrence) {
         //This is to add events a user has created or selected from a bulletin board to their personal calendar
         //The title, location, date, time(start then end time), and description are required for the import.
         //Adding the possibility of inviting other people (perhaps through user accounts or emails) to the events is a good future
@@ -421,24 +440,172 @@ public class EventActivity extends AppCompatActivity implements AdapterView.OnIt
         intent.putExtra(CalendarContract.Events.ALL_DAY, "false");
         intent.putExtra(CalendarContract.Events.DTSTART, sTime);
         intent.putExtra(CalendarContract.Events.DTEND, eTime);
-        if (recurrence.equals("Monthly")){
+        if (recurrence.equals("Monthly")) {
             intent.putExtra(CalendarContract.Events.RRULE, "FREQ=MONTHLY;COUNT=12");
         }
-        if (recurrence.equals("Weekly")){
+        if (recurrence.equals("Weekly")) {
             Log.d("DEBUG", "in weekly add");
             intent.putExtra(CalendarContract.Events.RRULE, "FREQ=WEEKLY;COUNT=52");
         }
         //intent.putExtra(Intent.EXTRA_EMAIL, value "insert email");
 
-        if(intent.resolveActivity(getPackageManager()) != null){
+        if (intent.resolveActivity(getPackageManager()) != null) {
             startActivity(intent);
-        }
-        else{
+        } else {
             displayText("There is no app to support this action");
         }
         displayText("Successfully saved event to personal calendar.");
         Log.d("SUCCESS", "Calendar event 'created' check phone calendar");
     }
 
+    private void uploadFile(){//source for this function is https://stackoverflow.com/questions/25398200/uploading-file-in-php-server-from-android-device
+        try {
+            String sourceFileUri = path;
+            Log.d("DEBUG", "File path is: " + sourceFileUri);
 
+            HttpsURLConnection conn = null;
+            DataOutputStream dos = null;
+            String lineEnd = "\r\n";
+            String twoHyphens = "--";
+            String boundary = "*****";
+            int bytesRead, bytesAvailable, bufferSize;
+            byte[] buffer;
+            int maxBufferSize = 1 * 1024 * 1024;
+            File sourceFile = new File(sourceFileUri);//creates a copy of the file from the given path
+
+            Log.d("UF", "0");
+            if (sourceFile.isFile()) {
+
+                try {
+                    String upLoadServerUri = "https://medusa.mcs.uvawise.edu/~jwe3nv/connect2.php";
+
+                    // open a URL connection to the Servlet
+                    FileInputStream fileInputStream = new FileInputStream(
+                            sourceFile);
+                    Log.d("UF", "1.5");
+                    URL url = new URL(upLoadServerUri);
+
+                    Log.d("UF", "2");
+                    // Open a HTTP connection to the URL
+                    conn = (HttpsURLConnection) url.openConnection();
+                    conn.setDoInput(true); // Allow Inputs
+                    conn.setDoOutput(true); // Allow Outputs
+                    conn.setUseCaches(false); // Don't use a Cached Copy
+                    conn.setRequestMethod("POST");//Sets method to post
+                    conn.setRequestProperty("Connection", "Keep-Alive");//keep connection alive
+                    conn.setRequestProperty("ENCTYPE",
+                            "multipart/form-data");//how to encrypt
+                    conn.setRequestProperty("Content-Type",
+                            "multipart/form-data;boundary=" + boundary);//something about a boundary
+                    conn.setRequestProperty("file", sourceFileUri);
+
+                    Log.d("UF", "3");
+                    dos = new DataOutputStream(conn.getOutputStream());//new output stream
+
+                    dos.writeBytes(twoHyphens + boundary + lineEnd);//write bytes to the output stream
+                    dos.writeBytes("Content-Disposition: form-data; name=\"file\";filename=\""
+                            + sourceFileUri + "\"" + lineEnd);//write more bytes
+                    Log.d("UF", "Content-Disposition: form-data; name=\"file\";filename=\""
+                            + sourceFileUri + "\"");
+
+                    dos.writeBytes(lineEnd);//end writing
+
+                    Log.d("UF", "4");
+                    // create a buffer of maximum size
+                    bytesAvailable = fileInputStream.available();
+
+                    bufferSize = Math.min(bytesAvailable, maxBufferSize);
+                    buffer = new byte[bufferSize];
+
+                    // read file and write it into form...
+                    bytesRead = fileInputStream.read(buffer, 0, bufferSize);
+
+                    Log.d("UF", "Reading bytes");
+                    while (bytesRead > 0) {
+
+                        dos.write(buffer, 0, bufferSize);
+                        bytesAvailable = fileInputStream.available();
+                        bufferSize = Math
+                                .min(bytesAvailable, maxBufferSize);
+                        bytesRead = fileInputStream.read(buffer, 0,
+                                bufferSize);
+
+                    }
+
+                    // send multipart form data necesssary after file
+                    // data...
+                    dos.writeBytes(lineEnd);
+                    dos.writeBytes(twoHyphens + boundary + twoHyphens
+                            + lineEnd);
+
+                    Log.d("UF", "Finished writing bytes");
+                    // Responses from the server (code and message)
+                    Log.d("UF", "About to get response code");
+                    int serverResponseCode = conn.getResponseCode();
+                    String serverResponseMessage = conn
+                            .getResponseMessage();
+
+                    if (serverResponseCode == 200) {
+                        Log.d("UploadFile", "We successfully uploaded the file.");
+                        //Toast messageText = null;
+                        //messageText.setText(msg);
+                        //Toast.makeText(ctx, "File Upload Complete.",
+                        //Toast.LENGTH_SHORT).show();
+
+                        //recursiveDelete(mDirectory1);
+
+                    }
+
+                    // close the streams //
+                    fileInputStream.close();
+                    dos.flush();
+                    dos.close();
+
+                } catch (Exception e) {
+
+                    // dialog.dismiss();
+                    e.printStackTrace();
+
+                }
+                // dialog.dismiss();
+
+            } // End else block
+            else {
+                Log.d("UF", "Unable to find source file.");
+            }
+        } catch (Exception ex) {
+            // dialog.dismiss();
+
+            ex.printStackTrace();
+        }
+        finish();
+        //Intent intent = new Intent(getApplicationContext(), MapsActivity.class);
+        //startActivity(intent);
+    }
+
+    public void onButtonShowPopupWindowClick(View view){//when this is called, display a popup window
+        // inflate the layout of the popup window
+        LayoutInflater inflater = (LayoutInflater)
+                getSystemService(LAYOUT_INFLATER_SERVICE);
+        View popupView = inflater.inflate(R.layout.popup_window, null);
+
+        // create the popup window
+        int width = LinearLayout.LayoutParams.WRAP_CONTENT;
+        int height = LinearLayout.LayoutParams.WRAP_CONTENT;
+        boolean focusable = true; // lets taps outside the popup also dismiss it
+        final PopupWindow popupWindow = new PopupWindow(popupView, width, height, focusable);
+
+        // show the popup window
+        // which view you pass in doesn't matter, it is only used for the window tolken
+        popupWindow.showAtLocation(view, Gravity.CENTER, 0, 0);
+
+        // dismiss the popup window when touched
+        popupView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                popupWindow.dismiss();
+                return true;
+            }
+        });
+    }
 }

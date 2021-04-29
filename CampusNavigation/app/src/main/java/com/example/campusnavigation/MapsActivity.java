@@ -370,7 +370,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 Intent ToLoginActivity = new Intent(view.getContext(), LoginActivity.class);
                 startActivity(ToLoginActivity);
             }
-
+/*
             if(mytext.contains("Events")){
                 //makes a new spinner object that
                 //allows me to call the id more than once (a true blessing and the solution to the most annoying time vampire)
@@ -394,7 +394,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 eventSearch.putExtra("location",value);
                 startActivity(eventSearch);
             }
-
+*/
 
             if(mytext.contains("Navigate")){
 
@@ -761,17 +761,17 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             test.setTag(location_number[skipper-1]);
         }
 
-        //THIS IS WHERE YOU WOULD PUT CODE THAT HAPPENS WHEN YOU CLICK ON A BULLTIN BOARD
+        //THIS IS WHERE YOU WOULD PUT CODE THAT HAPPENS WHEN YOU CLICK ON A BULLETIN BOARD
         //String.valueof(marker.tag()); will hold the string you want
         mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
 
-                    Context context = getApplicationContext();
                     CharSequence text = String.valueOf(marker.getTag());
-                    int duration = Toast.LENGTH_SHORT;
-                    Toast toast = Toast.makeText(context, text, duration);
-                    toast.show();
+
+                Intent eventSearch = new Intent(getBaseContext(),BulletinBoardGUI.class);
+                eventSearch.putExtra("location",text);
+                startActivity(eventSearch);
 
                 return true;
             }
