@@ -370,10 +370,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 spinnerMyList.setSelection(0);
 
                 //runs the AR activity
-                Intent workouts = new Intent(view.getContext(), HelloArActivity.class);
-                startActivity(workouts);
+                Intent AR = new Intent(view.getContext(), ar_view_placement.class);
+                startActivity(AR);
             }
-
         }
     }
 

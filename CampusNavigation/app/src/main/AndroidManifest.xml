@@ -68,6 +68,10 @@
         <activity
             android:name=".LoginActivity"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".ar_view_placement"
+            android:label="ar_view_placement"
+            android:screenOrientation="portrait"></activity>
      <!--
         <activity
             android:name=".MainActivity"

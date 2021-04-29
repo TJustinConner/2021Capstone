@@ -85,9 +85,9 @@ import java.util.List;
  * ARCore API. The application will display any detected planes and will allow the user to tap on a
  * plane to place a 3D model.
  */
-public class HelloArActivity extends AppCompatActivity implements SampleRender.Renderer {
+public class ar_view_placement extends AppCompatActivity implements SampleRender.Renderer {
 
-  private static final String TAG = HelloArActivity.class.getSimpleName();
+  private static final String TAG = ar_view_placement.class.getSimpleName();
 
   private static final String SEARCHING_PLANE_MESSAGE = "Searching for surfaces...";
   private static final String WAITING_FOR_TAP_MESSAGE = "Tap on a surface to place an object.";
@@ -194,8 +194,8 @@ public class HelloArActivity extends AppCompatActivity implements SampleRender.R
         new View.OnClickListener() {
           @Override
           public void onClick(View v) {
-            PopupMenu popup = new PopupMenu(HelloArActivity.this, v);
-            popup.setOnMenuItemClickListener(HelloArActivity.this::settingsMenuClick);
+            PopupMenu popup = new PopupMenu(ar_view_placement.this, v);
+            popup.setOnMenuItemClickListener(ar_view_placement.this::settingsMenuClick);
             popup.inflate(R.menu.settings_menu);
             popup.show();
           }
