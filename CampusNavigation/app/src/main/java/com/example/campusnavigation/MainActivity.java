@@ -7,6 +7,8 @@ import android.view.View;
 import android.widget.Button;
 import android.os.Bundle;
 
+//import com.example.campusnavigation.sharedcamera.SharedCameraActivity; //from old AR attempts
+
 public class MainActivity extends AppCompatActivity {
 
     @Override
@@ -19,6 +21,8 @@ public class MainActivity extends AppCompatActivity {
         Button eventsButton = (Button) findViewById(R.id.eventsButton);
         Button mapButton = (Button) findViewById(R.id.mapButton);
         Button eventSearchButton = (Button) findViewById(R.id.event_search_button_main);
+
+        //Button ARButton = (Button) findViewById(R.id.ARButton);
 
         LoginButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -58,7 +62,14 @@ public class MainActivity extends AppCompatActivity {
                 Intent eventSearch = new Intent(v.getContext(), BulletinBoardGUI.class);
                 startActivity(eventSearch);
             }});
-
-
+/*
+        eventSearchButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                //takes user to event search
+                Log.d("SUCCESS", "Going to AR Base Event");
+                Intent eventSearch = new Intent(v.getContext(), SharedCameraActivity.class);
+                startActivity(eventSearch);
+            }});
+*/
     }
 }
