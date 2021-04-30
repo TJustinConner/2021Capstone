@@ -76,6 +76,13 @@
             android:name=".LoginActivity"
             android:screenOrientation="portrait" />
         <activity
+            android:name=".SetNewPasswordActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ResetPasswordActivity"
+            android:screenOrientation="portrait">
+        </activity>
+        <activity
             android:name=".ArViewPlacement"
             android:label="ar_view_placement"
             android:screenOrientation="portrait"></activity>

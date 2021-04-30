@@ -16,8 +16,6 @@ import java.io.OutputStreamWriter;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.security.MessageDigest;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -26,12 +24,10 @@ import java.util.concurrent.FutureTask;
 
 import javax.net.ssl.HttpsURLConnection;
 
-public class LoginActivity extends BasicLoginFunctionality {
-
-    private final String loginLink = "https://medusa.mcs.uvawise.edu/~jdl8y/login.php";
+public class LoginActivity extends BasicLoginFunctionality{
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
@@ -42,6 +38,18 @@ public class LoginActivity extends BasicLoginFunctionality {
         final EditText PasswordLoginField = (EditText) findViewById(R.id.NewAcctPasswordBox);
         final TextView NewAccountLink = (TextView) findViewById((R.id.newAccountLink));
         final TextView ConfirmAccountLink = (TextView) findViewById((R.id.confirmAccountLink));
+        final TextView ResetPasswordLink = (TextView) findViewById((R.id.resetPasswordLink));
+        final TextView EmailPasswordError = (TextView) findViewById((R.id.EmailPasswordLoginError));
+        final TextView UnconfirmedAcctError = (TextView) findViewById((R.id.UnconfirmedUserLoginError));
+        final TextView EmptyFieldsError = (TextView) findViewById((R.id.EmptyFieldsLoginError));
+        final TextView NoAcctError = (TextView) findViewById((R.id.InvalidEmailLoginError));
+        final TextView PasswordError = (TextView) findViewById((R.id.InvalidPasswordLoginError));
+
+        EmailPasswordError.setVisibility(View.INVISIBLE);
+        UnconfirmedAcctError.setVisibility(View.INVISIBLE);
+        EmptyFieldsError.setVisibility(View.INVISIBLE);
+        NoAcctError.setVisibility(View.INVISIBLE);
+        PasswordError.setVisibility(View.INVISIBLE);
 
         NewAccountLink.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -55,37 +63,55 @@ public class LoginActivity extends BasicLoginFunctionality {
         ConfirmAccountLink.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //takes user to password requirements activity
+                //takes user to confirm account activity
                 Intent ToAccountConfirmation = new Intent(v.getContext(), ConfirmAcctActivity.class);
                 startActivity(ToAccountConfirmation);
             }
         });
 
-        LoginButton.setOnClickListener(new View.OnClickListener() {
+        ResetPasswordLink.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final String email = EmailLoginField.getText().toString();
-                final String password = PasswordLoginField.getText().toString();
+                //take user to page where they input their email to reset their password
+                Intent ToPasswordReset = new Intent(v.getContext(), ResetPasswordActivity.class);
+                startActivity(ToPasswordReset);
+            }
+        });
 
-                boolean inputIsGood = true;
+        LoginButton.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                EmailPasswordError.setVisibility(View.INVISIBLE);
+                UnconfirmedAcctError.setVisibility(View.INVISIBLE);
+                EmptyFieldsError.setVisibility(View.INVISIBLE);
+                NoAcctError.setVisibility(View.INVISIBLE);
+                PasswordError.setVisibility(View.INVISIBLE);
+
+                final String email = EmailLoginField.getText().toString(); //email input from user
+                final String password = PasswordLoginField.getText().toString(); //password input from user
+
+                boolean inputIsGood = true; //keeps track of when the input validates some part of the criteria for valid input
 
                 //check if any fields are empty
-                if (email.isEmpty() || password.isEmpty()) {
+                if (email.isEmpty() || password.isEmpty()){
                     inputIsGood = false;
+                    EmptyFieldsError.setVisibility(View.VISIBLE);
                 }
 
                 //check to see if input length is in our set bounds
-                else if (!InputLengthIsGood(email, password)) {
+                else if (!InputLengthIsGood(email, false)||!InputLengthIsGood(password, true)){
                     inputIsGood = false;
+                    EmailPasswordError.setVisibility(View.VISIBLE);
                 }
 
                 //check to see if input length is in our set bounds
                 else if (!ContainsReqCharTypes(email, false) || !ContainsReqCharTypes(password, true)){
                     inputIsGood = false;
+                    EmailPasswordError.setVisibility(View.VISIBLE);
                 }
 
                 //take user to email sent page if all input was good
-                if (inputIsGood) {
+                if (inputIsGood){
 
                     //https://stackoverflow.com/questions/58767733/android-asynctask-api-deprecating-in-android-11-what-are-the-alternatives
                     //can't run network tasks on main thread, so we use an executor to do this task
@@ -106,7 +132,7 @@ public class LoginActivity extends BasicLoginFunctionality {
 
                     StringBuilder salt = new StringBuilder();
 
-                    try {
+                    try{
                         salt.append(task.get()); //get the salt from the task
                     } catch (ExecutionException e) {
                         e.printStackTrace();
@@ -117,6 +143,7 @@ public class LoginActivity extends BasicLoginFunctionality {
                     //check if the salt was returned
                     if(salt.toString().contains("Account Does Not Exist") || salt.toString().isEmpty()){
                         inputIsGood = false;
+                        NoAcctError.setVisibility(View.VISIBLE);
                     }
 
                     if (inputIsGood) {
@@ -151,18 +178,34 @@ public class LoginActivity extends BasicLoginFunctionality {
                                 @Override
                                 public void run() {
                                     //try to login
-                                    final boolean result = SendDataLogin(UserAccountInfo[0], UserAccountInfo[1]);
+                                    final String result = SendDataLogin(UserAccountInfo[0], UserAccountInfo[1]);
 
                                     handler.post(new Runnable() {
                                         @Override
                                         public void run() {
                                             //if login was successful
-                                            if (result) {
+                                            if (result.contains("success")){
                                                 //change screen to home page
-                                                startActivity(new Intent(LoginActivity.this, MainActivity.class));
-                                            } else {
+                                                startActivity(new Intent(LoginActivity.this, EventActivity.class));
+                                            }
+                                            else if(result.contains("user_not_found")){
+                                                //user does not exist, set message
+                                                Log.d("Login", "User not found");
+                                                NoAcctError.setVisibility(View.VISIBLE);
+                                            }
+                                            else if(result.contains("invalid_password")){
                                                 //wrong password, set message
-                                                Log.d("Login","Could not login");
+                                                Log.d("Login","Incorrect password");
+                                                PasswordError.setVisibility(View.VISIBLE);
+                                            }
+                                            else if(result.contains("unconfirmed_acct")){
+                                                //unconfirmed account, set message
+                                                Log.d("Login","Unconfirmed account");
+                                                UnconfirmedAcctError.setVisibility(View.VISIBLE);
+                                            }
+                                            else{
+                                                //should not fire
+                                                Log.d("Login", "Unexpected return from server");
                                             }
                                         }
                                     });
@@ -173,62 +216,5 @@ public class LoginActivity extends BasicLoginFunctionality {
                 }
             }
         });
-    }
-
-    //tries to log in the user
-    private boolean SendDataLogin(String email, String password){
-        Boolean successfulSignIn = false;
-        URL url = null;
-        HttpsURLConnection conn = null;
-        String data = null;
-        BufferedReader reader = null;
-        try {
-            //https://www.tutorialspoint.com/android/android_php_mysql.htm
-            //create a url object and open a connection to the specified link
-            url = new URL(loginLink);
-            conn = (HttpsURLConnection) url.openConnection();
-            conn.setDoOutput(true);
-            conn.setDoInput(true);
-
-            //tries to encode the user's data
-            data = URLEncoder.encode("email", "UTF-8") + "=" + URLEncoder.encode(email, "UTF-8");
-            data += "&" + URLEncoder.encode("password", "UTF-8") + "=" + URLEncoder.encode(password, "UTF-8");
-
-            OutputStreamWriter writer = new OutputStreamWriter(conn.getOutputStream());
-
-            writer.write(data); //send the user's data
-            writer.flush();
-
-            //can't get input stream
-            //read returned message from server
-            reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-            StringBuilder builder = new StringBuilder();
-            String line = "";
-
-            while((line = reader.readLine()) != null) {
-                builder.append(line + "\n");
-                //break;
-            }
-
-            System.out.println(password);
-
-            //see if the server returned that the user was logged in
-            if(builder.toString().contains("true")){
-                successfulSignIn = true;
-            }
-
-            writer.close();
-        }
-        catch (java.net.MalformedURLException malformedURLException){
-            Log.d("Login","Bad url.");
-        }
-        catch(java.io.UnsupportedEncodingException unsupportedEncodingException){
-            Log.d("Login","Could not encode data.");
-        }
-        catch (java.io.IOException ioException){
-            Log.d("Login","Could not open connection");
-        }
-
-        return successfulSignIn; //true if account was created
     }
 }

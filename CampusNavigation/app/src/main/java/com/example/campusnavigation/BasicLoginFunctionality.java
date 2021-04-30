@@ -2,7 +2,6 @@ package com.example.campusnavigation;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.os.Bundle;
 import android.util.Log;
 
 import java.io.BufferedReader;
@@ -12,6 +11,7 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Random;
 
 import javax.net.ssl.HttpsURLConnection;
 
@@ -19,12 +19,15 @@ import javax.net.ssl.HttpsURLConnection;
 
 public class BasicLoginFunctionality extends AppCompatActivity {
 
-    private final String getSaltLink = "https://medusa.mcs.uvawise.edu/~jdl8y/getSalt.php";
-    final int MAX_PASSWORD_LENGTH = 32;
-    final int MIN_PASSWORD_LENGTH = 12;
-    final int MAX_EMAIL_LENGTH = 32;
+    private final String GET_SALT_LINK = "https://medusa.mcs.uvawise.edu/~jdl8y/getSalt.php"; //link for the php file used to retrieve a user's salt
+    final int MAX_PASSWORD_LENGTH = 32; //maximum allowed password length
+    final int MIN_PASSWORD_LENGTH = 12; //minimum allowed password length
+    final int MAX_EMAIL_LENGTH = 32; //maximum allowed length for an input email
+    final int CONFIRM_CODE_LENGTH = 6; //required length for a code input into the confirm field
+    final String POSSIBLE_SALT_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"; //list of characters used to generate a salt
     final ArrayList<Character> ACCEPTED_SPECIAL_CHARS = new ArrayList<Character>(Arrays.asList('!', '@', '#', '$', '%', '^', '&', '*',
-            '(', ')', '.', '?', '-', '_'));
+            '(', ')', '.', '?', '-', '_')); //special characters allowed in an input password
+    private final String loginLink = "https://medusa.mcs.uvawise.edu/~jdl8y/login.php"; //link for the php file used to login a user
 
     //Grabs the salt from the database for the user so we can rehash their password
     protected String GetSalt(String email){
@@ -37,7 +40,7 @@ public class BasicLoginFunctionality extends AppCompatActivity {
         try {
             //https://www.tutorialspoint.com/android/android_php_mysql.htm
             //create a url object and open a connection to the specified link
-            url = new URL(getSaltLink);
+            url = new URL(GET_SALT_LINK);
             conn = (HttpsURLConnection) url.openConnection();
             conn.setDoOutput(true);
             conn.setDoInput(true);
@@ -57,19 +60,18 @@ public class BasicLoginFunctionality extends AppCompatActivity {
 
             while((line = reader.readLine()) != null) {
                 salt.append(line + "\n");
-                //break;
             } //salt will either be empty or contain an error message if no salt was found
 
             writer.close();
         }
         catch (java.net.MalformedURLException malformedURLException){
-            Log.d("Login","Bad url.");
+            Log.d("BasicLoginFunctionality","Bad url.");
         }
         catch(java.io.UnsupportedEncodingException unsupportedEncodingException){
-            Log.d("Login","Could not encode data.");
+            Log.d("BasicLoginFunctionality","Could not encode data.");
         }
         catch (java.io.IOException ioException){
-            Log.d("Login","Could not open connection");
+            Log.d("BasicLoginFunctionality","Could not open connection");
         }
 
         return salt.toString(); //true if account was created
@@ -111,7 +113,7 @@ public class BasicLoginFunctionality extends AppCompatActivity {
                 return true;
             }
             else{
-                Log.d("AcctCreation","Missing Required Char Type(s) or Invalid Char");
+                Log.d("BasicLoginFunctionality","Missing Required Char Type(s) or Invalid Char");
                 return false;
             }
 
@@ -123,20 +125,93 @@ public class BasicLoginFunctionality extends AppCompatActivity {
                 return true;
             }
             else{
-                Log.d("AcctCreation","Missing Correct Email Domain");
+                Log.d("BasicLoginFunctionality","Missing Correct Email Domain");
                 return false;
             }
         }
     }
 
-    protected boolean InputLengthIsGood(String email, String password){
-        if(password.length() >= MIN_PASSWORD_LENGTH && password.length() <= MAX_PASSWORD_LENGTH && email.length() <= MAX_EMAIL_LENGTH){
-            return true;
+    protected boolean InputLengthIsGood(String input, boolean isPassword){
+        if(isPassword) {
+            if(input.length() >= MIN_PASSWORD_LENGTH && input.length() <= MAX_PASSWORD_LENGTH) {
+                return true;
+            }
+            else{
+                Log.d("BasicLoginFunctionality","Invalid Input Length");
+                return false;
+            }
         }
 
         else{
-            Log.d("AcctCreation","Invalid Input Length");
-            return false;
+            if(input.length() <= MAX_EMAIL_LENGTH) {
+                return true;
+            }
+            else{
+                Log.d("BasicLoginFunctionality","Invalid Input Length");
+                return false;
+            }
         }
+    }
+
+    //generate a random salt value of length 8 to use for the password hash
+    protected String GenerateRandomSalt(){
+        StringBuilder salt = new StringBuilder();
+        Random rand = new Random();
+        //generate a hash 8 characters long, with each char from the possibleSaltChars characters
+        for(int i = 0; i < 8; i++){
+            salt.append(POSSIBLE_SALT_CHARS.charAt(rand.nextInt(POSSIBLE_SALT_CHARS.length())));
+        }
+
+        return salt.toString();
+    }
+
+    //tries to log in the user
+    protected String SendDataLogin(String email, String password){
+        StringBuilder queryResult = new StringBuilder();
+        URL url = null;
+        HttpsURLConnection conn = null;
+        String data = null;
+        BufferedReader reader = null;
+        try{
+            //https://www.tutorialspoint.com/android/android_php_mysql.htm
+            //create a url object and open a connection to the specified link
+            url = new URL(loginLink);
+            conn = (HttpsURLConnection) url.openConnection();
+            conn.setDoOutput(true);
+            conn.setDoInput(true);
+
+            //tries to encode the user's data
+            data = URLEncoder.encode("email", "UTF-8") + "=" + URLEncoder.encode(email, "UTF-8");
+            data += "&" + URLEncoder.encode("password", "UTF-8") + "=" + URLEncoder.encode(password, "UTF-8");
+
+            OutputStreamWriter writer = new OutputStreamWriter(conn.getOutputStream());
+
+            writer.write(data); //send the user's data
+            writer.flush();
+
+            //can't get input stream
+            //read returned message from server
+            reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+            String line = "";
+
+            while((line = reader.readLine()) != null){
+                queryResult.append(line + "\n");
+            }
+
+            System.out.println(queryResult.toString());
+
+            writer.close();
+        }
+        catch (java.net.MalformedURLException malformedURLException){
+            Log.d("BasicLoginFunctionality","Bad url.");
+        }
+        catch(java.io.UnsupportedEncodingException unsupportedEncodingException){
+            Log.d("BasicLoginFunctionality","Could not encode data.");
+        }
+        catch (java.io.IOException ioException){
+            Log.d("BasicLoginFunctionality","Could not open connection");
+        }
+
+        return queryResult.toString(); //true if account was created
     }
 }

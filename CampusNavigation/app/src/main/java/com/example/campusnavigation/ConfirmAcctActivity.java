@@ -4,10 +4,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.renderscript.ScriptGroup;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -24,8 +26,7 @@ import java.util.concurrent.FutureTask;
 import javax.net.ssl.HttpsURLConnection;
 
 public class ConfirmAcctActivity extends BasicLoginFunctionality {
-    private final String confirmLink = "https://medusa.mcs.uvawise.edu/~jdl8y/confirmAccount.php";
-    private final int CONFIRM_CODE_LENGTH = 6;
+    private final String CONFIRM_LINK = "https://medusa.mcs.uvawise.edu/~jdl8y/confirmAccount.php";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,10 +39,27 @@ public class ConfirmAcctActivity extends BasicLoginFunctionality {
         final EditText ConfirmEmailField = (EditText) findViewById(R.id.ConfirmAcctEmailBox);
         final EditText ConfirmPasswordField = (EditText) findViewById(R.id.ConfirmAcctPasswordBox);
         final EditText ConfirmCodeField = (EditText) findViewById((R.id.UserConfirmCodeBox));
+        final TextView BlankFieldsError = (TextView) findViewById((R.id.BlankFieldsConfirmError));
+        final TextView AccountNotFoundError = (TextView) findViewById((R.id.AcctUnfoundConfirmError));
+        final TextView IncorrectPasswordError = (TextView) findViewById((R.id.IncorrectPasswordConfirmError));
+        final TextView IncorrectConfirmCodeError = (TextView) findViewById((R.id.IncorrectConfirmCodeError));
+        final TextView IncorrectEmailPasswordLength = (TextView) findViewById((R.id.IncorrectEmailPasswordConfirmError));
+
+        BlankFieldsError.setVisibility(View.INVISIBLE);
+        AccountNotFoundError.setVisibility(View.INVISIBLE);
+        IncorrectPasswordError.setVisibility(View.INVISIBLE);
+        IncorrectConfirmCodeError.setVisibility(View.INVISIBLE);
+        IncorrectEmailPasswordLength.setVisibility(View.INVISIBLE);
 
         ConfirmAcctButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    BlankFieldsError.setVisibility(View.INVISIBLE);
+                    AccountNotFoundError.setVisibility(View.INVISIBLE);
+                    IncorrectPasswordError.setVisibility(View.INVISIBLE);
+                    IncorrectConfirmCodeError.setVisibility(View.INVISIBLE);
+                    IncorrectEmailPasswordLength.setVisibility(View.INVISIBLE);
+
                     final String email = ConfirmEmailField.getText().toString();
                     final String password = ConfirmPasswordField.getText().toString();
                     final String confirmationCode = ConfirmCodeField.getText().toString();
@@ -50,18 +68,22 @@ public class ConfirmAcctActivity extends BasicLoginFunctionality {
                     //check if any fields are empty
                     if(email.isEmpty() || password.isEmpty() || confirmationCode.isEmpty()){
                         inputIsGood = false;
+                        BlankFieldsError.setVisibility(View.VISIBLE);
                     }
                     //check if the input length of the email and password are good
-                    else if(!InputLengthIsGood(email, password)){
+                    else if(!InputLengthIsGood(email, false)||!InputLengthIsGood(password, true)){
                         inputIsGood = false;
+                        IncorrectEmailPasswordLength.setVisibility(View.VISIBLE);
                     }
                     //check if the input length of the confirmation code is good
                     else if(confirmationCode.length() != CONFIRM_CODE_LENGTH){
                         inputIsGood = false;
+                        IncorrectConfirmCodeError.setVisibility(View.VISIBLE);
                     }
                     //makes sure email and password have the required chars in them that they need to fit our criteria
                     else if(!ContainsReqCharTypes(email, false) || !ContainsReqCharTypes(password, true)){
                         inputIsGood = false;
+                        IncorrectEmailPasswordLength.setVisibility(View.VISIBLE);
                     }
 
                     if(inputIsGood){
@@ -98,6 +120,7 @@ public class ConfirmAcctActivity extends BasicLoginFunctionality {
                             //check if the salt was returned
                             if(salt.toString().contains("Account Does Not Exist") || salt.toString().isEmpty()){
                                 inputIsGood = false;
+                                AccountNotFoundError.setVisibility(View.VISIBLE);
                             }
 
                             if (inputIsGood) {
@@ -132,18 +155,34 @@ public class ConfirmAcctActivity extends BasicLoginFunctionality {
                                         @Override
                                         public void run() {
                                             //try to login
-                                            final boolean result = SendDataConfirmAcct(UserAccountInfo[0], UserAccountInfo[1], UserAccountInfo[2]);
+                                            final String result = SendDataConfirmAcct(UserAccountInfo[0], UserAccountInfo[1], UserAccountInfo[2]);
 
                                             handler.post(new Runnable() {
                                                 @Override
                                                 public void run() {
                                                     //if login was successful
-                                                    if (result) {
+                                                    if (result.contains("success")) {
                                                         //change screen to home page
                                                         startActivity(new Intent(ConfirmAcctActivity.this, LoginActivity.class));
-                                                    } else {
+                                                    }
+                                                    else if(result.contains("email_not_found")){
+                                                        //account doesn't exist, set message
+                                                        Log.d("Confirmation","Account doesn't exist");
+                                                        AccountNotFoundError.setVisibility(View.VISIBLE);
+                                                    }
+                                                    else if(result.contains("wrong_password")){
                                                         //wrong password, set message
+                                                        Log.d("Confirmation","Incorrect password");
+                                                        IncorrectPasswordError.setVisibility(View.VISIBLE);
+                                                    }
+                                                    else if(result.contains("wrong_code")){
+                                                        //wrong confirmation code, set message
                                                         Log.d("Confirmation","Could not confirm account");
+                                                        IncorrectConfirmCodeError.setVisibility(View.VISIBLE);
+                                                    }
+                                                    else{
+                                                        //should not fire
+                                                        Log.d("Confirmation", "Unexpected return from server");
                                                     }
                                                 }
                                             });
@@ -159,8 +198,8 @@ public class ConfirmAcctActivity extends BasicLoginFunctionality {
     }
 
     //tries to send data to confirm the user's account
-    private boolean SendDataConfirmAcct(String email, String password, String confirmationCode){
-        Boolean successfulSignIn = false;
+    private String SendDataConfirmAcct(String email, String password, String confirmationCode){
+        StringBuilder queryResult = new StringBuilder();
         URL url = null;
         HttpsURLConnection conn = null;
         String data = null;
@@ -168,7 +207,7 @@ public class ConfirmAcctActivity extends BasicLoginFunctionality {
         try {
             //https://www.tutorialspoint.com/android/android_php_mysql.htm
             //create a url object and open a connection to the specified link
-            url = new URL(confirmLink);
+            url = new URL(CONFIRM_LINK);
             conn = (HttpsURLConnection) url.openConnection();
             conn.setDoOutput(true);
             conn.setDoInput(true);
@@ -186,20 +225,10 @@ public class ConfirmAcctActivity extends BasicLoginFunctionality {
             //can't get input stream
             //read returned message from server
             reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-            StringBuilder builder = new StringBuilder();
             String line = "";
 
             while((line = reader.readLine()) != null) {
-                builder.append(line + "\n");
-                //break;
-            }
-
-            System.out.println("hi");
-            System.out.println(builder.toString());
-
-            //see if the server returned that the user was confirmed
-            if(builder.toString().contains("true")){
-                successfulSignIn = true;
+                queryResult.append(line + "\n");
             }
 
             writer.close();
@@ -214,7 +243,7 @@ public class ConfirmAcctActivity extends BasicLoginFunctionality {
             Log.d("Login","Could not open connection");
         }
 
-        return successfulSignIn; //true if account was created
+        return queryResult.toString();
     }
 }
 

@@ -370,18 +370,17 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 Intent ToLoginActivity = new Intent(view.getContext(), LoginActivity.class);
                 startActivity(ToLoginActivity);
             }
-/*
+
             if(mytext.contains("Events")){
                 //makes a new spinner object that
                 //allows me to call the id more than once (a true blessing and the solution to the most annoying time vampire)
                 Spinner spinnerMy = findViewById(R.id.main_activity_spinner);
                 spinnerMy.setSelection(0);
 
-
-                Intent eventCreation = new Intent(view.getContext(), EventActivity.class);
-                startActivity(eventCreation);
+                Intent toLogin= new Intent(view.getContext(), LoginActivity.class);
+                startActivity(toLogin);
             }
-
+/*
             if(mytext.contains("Event Search")){
                 //makes a new spinner object that
                 //allows me to call the id more than once (a true blessing and the solution to the most annoying time vampire)

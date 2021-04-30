@@ -9,16 +9,34 @@
 
     <TextView
         android:id="@+id/emailSentText"
-        android:layout_width="257dp"
-        android:layout_height="166dp"
+        android:layout_width="286dp"
+        android:layout_height="197dp"
         android:layout_marginStart="77dp"
         android:layout_marginTop="282dp"
         android:layout_marginEnd="77dp"
         android:layout_marginBottom="283dp"
         android:text="@string/acct_verif_email_sent"
+        android:textAlignment="center"
         android:textSize="24sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/acctConfirmLink"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="138dp"
+        android:layout_marginTop="474dp"
+        android:layout_marginEnd="138dp"
+        android:layout_marginBottom="233dp"
+        android:text="@string/confirm_account_link"
+        android:textColor="#2196F3"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

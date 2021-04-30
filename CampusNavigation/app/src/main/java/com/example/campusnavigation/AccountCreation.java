@@ -14,7 +14,6 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.security.MessageDigest;
-import java.util.Random;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.net.URLEncoder;
@@ -22,9 +21,7 @@ import javax.net.ssl.HttpsURLConnection;
 import java.net.URL;
 
 public class AccountCreation extends BasicLoginFunctionality {
-
-    final String possibleSaltChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-    private final String link = "https://medusa.mcs.uvawise.edu/~jdl8y/accountCreation.php";
+    private final String ACCT_CREATION_LINK = "https://medusa.mcs.uvawise.edu/~jdl8y/accountCreation.php";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,14 +34,18 @@ public class AccountCreation extends BasicLoginFunctionality {
         final EditText UsernameField = (EditText) findViewById(R.id.NewAcctEmailBox);
         final EditText PasswordField = (EditText) findViewById(R.id.NewAcctPasswordBox);
         final EditText ConfirmPasswordField = (EditText) findViewById((R.id.ConfirmPasswordNewBox));
-        final TextView PasswordReqsLink = (TextView) findViewById((R.id.PasswordReqsLink));
-        final TextView PasswordMismatchText = (TextView) findViewById((R.id.PasswordMismatchError));
-        final TextView BlankFieldText = (TextView) findViewById((R.id.BlankFieldsError));
-        final TextView MissingRequirementsText = (TextView) findViewById((R.id.MissingRequirementsError));
+        final TextView PasswordReqsLink = (TextView) findViewById((R.id.PasswordReqsLinkCreation));
+        final TextView PasswordMismatchText = (TextView) findViewById((R.id.PasswordMismatchCreateError));
+        final TextView BlankFieldText = (TextView) findViewById((R.id.BlankFieldsCreateError));
+        final TextView MissingRequirementsText = (TextView) findViewById((R.id.MissingRequirementsCreateError));
+        final TextView AcctAlreadyExistsText = (TextView) findViewById((R.id.AccountExistsCreateError));
+        final TextView AcctNotWhitelistedText = (TextView) findViewById((R.id.UnwhitelistedEmailCreateError));
 
         PasswordMismatchText.setVisibility(View.INVISIBLE);
         BlankFieldText.setVisibility(View.INVISIBLE);
         MissingRequirementsText.setVisibility(View.INVISIBLE);
+        AcctNotWhitelistedText.setVisibility(View.INVISIBLE);
+        AcctNotWhitelistedText.setVisibility(View.INVISIBLE);
 
         PasswordReqsLink.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -60,35 +61,36 @@ public class AccountCreation extends BasicLoginFunctionality {
                 PasswordMismatchText.setVisibility(View.INVISIBLE);
                 BlankFieldText.setVisibility(View.INVISIBLE);
                 MissingRequirementsText.setVisibility(View.INVISIBLE);
+                AcctNotWhitelistedText.setVisibility(View.INVISIBLE);
+                AcctNotWhitelistedText.setVisibility(View.INVISIBLE);
 
                 //do action on click
-                String email = UsernameField.getText().toString();
-                String password = PasswordField.getText().toString();
-                String confirmedPassword = ConfirmPasswordField.getText().toString();
-                boolean inputIsGood = true;
+                String email = UsernameField.getText().toString(); //email input from user
+                String password = PasswordField.getText().toString(); //password input from user
+                String confirmedPassword = ConfirmPasswordField.getText().toString(); //confirmed password input from user
+                boolean inputIsGood = true; //keeps track of when the input validates some part of the criteria for valid input
 
-                //check if any fields are empty
-                if(email.isEmpty() || password.isEmpty() || confirmedPassword.isEmpty()){
+                if(email.isEmpty() || password.isEmpty() || confirmedPassword.isEmpty()){ //check if any fields are empty
                     //don't send, make user re-enter input
                     BlankFieldText.setVisibility(View.VISIBLE);
 
                     inputIsGood = false;
                 }
-                //check if passwords match
-                else if(!PasswordSuccessfullyConfirmed(password, confirmedPassword)){
+                else if(!password.equals(confirmedPassword)){ //check if passwords match
+                    Log.d("AcctCreation","Password Mismatch");
                     PasswordMismatchText.setVisibility(View.VISIBLE);
 
                     inputIsGood = false;
                 }
-                //check to see if input length is in our set bounds
-                else if(!InputLengthIsGood(email, password)){
+                //check to see if input password is within the required password length requirements and has the correct character types in it
+                else if(!ContainsReqCharTypes(password, true)||!InputLengthIsGood(password, true)){
                     MissingRequirementsText.setVisibility(View.VISIBLE);
-                    //shows refer to password requirements if email length is bad
+                    //shows refer to password requirements if input length is bad
                     inputIsGood = false;
                 }
-                //makes sure email and password have the required chars in them that they need to fit our criteria
-                else if(!ContainsReqCharTypes(email, false) || !ContainsReqCharTypes(password, true)){
-                    MissingRequirementsText.setVisibility(View.VISIBLE);
+                //check to see if input password is within the required password length requirements and has the correct character types in it
+                else if(!ContainsReqCharTypes(email, false) || !InputLengthIsGood(email, false)){
+                    AcctNotWhitelistedText.setVisibility(View.VISIBLE);
 
                     inputIsGood = false;
                 }
@@ -139,18 +141,30 @@ public class AccountCreation extends BasicLoginFunctionality {
                             @Override
                             public void run() {
                                 //try to create the account
-                                final boolean result = SendData(UserAccountInfo[0], UserAccountInfo[1], UserAccountInfo[2]);
+                                final String result = SendData(UserAccountInfo[0], UserAccountInfo[1], UserAccountInfo[2]);
 
                                 handler.post(new Runnable() {
                                     @Override
                                     public void run() {
                                         //if the account was created
-                                        if (result) {
+                                        if(result.contains("created")) {
                                             //change screen to confirmation email sent page
+                                            Log.d("AcctCreation","Account successfully created");
                                             startActivity(new Intent(AccountCreation.this, EmailVerifSent.class));
-                                        } else {
-                                            //set message account could not be created
-                                            Log.d("AcctCreation","Account Couldn't Be Created");
+                                        }
+                                        else if(result.contains("acct_exists")){
+                                            //set message account already exists
+                                            AcctAlreadyExistsText.setVisibility(View.VISIBLE);
+                                            Log.d("AcctCreation","Account already exists");
+                                        }
+                                        else if(result.contains("not_whitelisted")){
+                                            //set message email not whitelisted
+                                            AcctNotWhitelistedText.setVisibility(View.VISIBLE);
+                                            Log.d("AcctCreation", "Email is not whitelisted");
+                                        }
+                                        else{
+                                            //should not trigger
+                                            Log.d("AcctCreation", "Unexpected return from server");
                                         }
                                     }
                                 });
@@ -162,20 +176,9 @@ public class AccountCreation extends BasicLoginFunctionality {
         });
     }
 
-    //checks to make sure the password matches the confirmed password
-    private boolean PasswordSuccessfullyConfirmed(String password1, String password2) {
-        if (password1.equals(password2)) {
-            return true;
-        }
-        else {
-            Log.d("AcctCreation","Password Mismatch");
-            return false;
-        }
-    }
-
     //sends the data to the server so that the server can try to create the account
-    private boolean SendData(String email, String password, String salt){
-        Boolean accountCreated = false;
+    private String SendData(String email, String password, String salt){
+        StringBuilder queryResult = new StringBuilder();
         URL url = null;
         HttpsURLConnection conn = null;
         String data = null;
@@ -183,7 +186,7 @@ public class AccountCreation extends BasicLoginFunctionality {
         try {
             //https://www.tutorialspoint.com/android/android_php_mysql.htm
             //create a url object and open a connection to the specified link
-            url = new URL(link);
+            url = new URL(ACCT_CREATION_LINK);
             conn = (HttpsURLConnection) url.openConnection();
             conn.setDoOutput(true);
             conn.setDoInput(true);
@@ -200,31 +203,13 @@ public class AccountCreation extends BasicLoginFunctionality {
 
             Log.d("AcctCreation","Data Written to Server");
 
-            //can't get input stream
             //read returned message from server
             reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-            StringBuilder builder = new StringBuilder();
             String line = "";
 
             while((line = reader.readLine()) != null) {
-                builder.append(line + "\n");
-                //break;
+                queryResult.append(line + "\n");
             }
-
-            System.out.println("output:");
-            System.out.println(toString());
-
-            String result = builder.toString();
-
-            //see if the server returned that the account was created
-            if(result.contains("true")){
-                accountCreated = true;
-                Log.d("AcctCreation","Account Successfully Created");
-            }
-            else if(result.contains("false")){
-                accountCreated = false;
-            }
-
             writer.close();
         }
         catch (java.net.MalformedURLException malformedURLException){
@@ -237,18 +222,6 @@ public class AccountCreation extends BasicLoginFunctionality {
             Log.d("AcctCreation","Could not open connection");
         }
 
-        return accountCreated; //true if account was created
-    }
-
-    //generate a random salt value of length 8 to use for the password hash
-    private String GenerateRandomSalt(){
-        StringBuilder salt = new StringBuilder();
-        Random rand = new Random();
-        //generate a hash 8 characters long, with each char from the possibleSaltChars characters
-        for(int i = 0; i < 8; i++){
-            salt.append(possibleSaltChars.charAt(rand.nextInt(possibleSaltChars.length())));
-        }
-
-        return salt.toString();
+        return queryResult.toString();
     }
 }

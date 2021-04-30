@@ -30,6 +30,18 @@
     <string name="event_search_button">Event Search</string>
     <string name="location">Locations</string>
     <string name="title_activity_basic_login_functionality">BasicLoginFunctionality</string>
+    <string name="account_does_not_exist">Account does not exist.</string>
+    <string name="incorrect_confirmation_code">Incorrect confirmation code.</string>
+    <string name="incorrect_password">Incorrect password.</string>
+    <string name="error_in_input_for_email_or_password">Error in input for email or password.</string>
+    <string name="invalid_email">Invalid email.</string>
+    <string name="invalid_password">Invalid password.</string>
+    <string name="this_account_has_not_yet_been_confirmed">This account has not yet been confirmed.</string>
+    <string name="email_is_not_in_whitelist_if_you_have_multiple_faculty_email_addresses_please_try_a_different_one">Email is not in whitelist. If you have multiple faculty email addresses please try a different one.</string>
+    <string name="account_already_exists">Account already exists.</string>
+    <string name="send_email">Send email</string>
+    <string name="set_new_password">Set New Password</string>
+    <string name="reset_password"><u>Reset Password</u></string>
 
     <string-array name="Recurrence">
         <item>Does not recur</item>
@@ -167,7 +179,6 @@
     <string-array name="Activites">
         <item> </item>
         <item>Workouts</item>
-        <item>Log in</item>
         <item>Events</item>
         <item>Event Search</item>
         <item>Navigate</item>>
