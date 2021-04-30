@@ -122,8 +122,6 @@ public class SetNewPasswordActivity extends BasicLoginFunctionality {
                     FutureTask task = new FutureTask(new Callable<Boolean>() {
                         @Override
                         public Boolean call() throws Exception {
-                            System.out.println(confirmCode);
-
                             boolean result = SendDataCheckCode(email, confirmCode);
 
                             return result;
@@ -176,7 +174,7 @@ public class SetNewPasswordActivity extends BasicLoginFunctionality {
                             //check if the confirm code is correct for the email stored
                             ExecutorService executor = Executors.newSingleThreadExecutor();
 
-                            final String finalPasswordInHex = passwordInHex;
+                            String finalPasswordInHex = passwordInHex;
                             executor.execute(new Runnable() {
                                 @Override
                                 public void run() {
@@ -184,7 +182,7 @@ public class SetNewPasswordActivity extends BasicLoginFunctionality {
                                 }
                             });
 
-                            startActivity(new Intent(SetNewPasswordActivity.this, MapsActivity.class));
+                            startActivity(new Intent(SetNewPasswordActivity.this, LoginActivity.class));
                         }
                     }
                     else{
@@ -232,9 +230,7 @@ public class SetNewPasswordActivity extends BasicLoginFunctionality {
                 queryResult.append(line + "\n");
             }
             writer.close();
-
-            System.out.println(queryResult.toString());
-
+            conn.disconnect();
             if(queryResult.toString().contains("true")){
                 result = true;
             }
@@ -277,6 +273,9 @@ public class SetNewPasswordActivity extends BasicLoginFunctionality {
 
             writer.write(data); //send the user's data
             writer.flush();
+
+            writer.close();
+            conn.disconnect();
 
             Log.d("SetNewPassword","Data Written to Server");
         }

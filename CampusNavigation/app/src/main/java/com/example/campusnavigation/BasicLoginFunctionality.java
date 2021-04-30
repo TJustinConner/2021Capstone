@@ -62,6 +62,7 @@ public class BasicLoginFunctionality extends AppCompatActivity {
             } //salt will either be empty or contain an error message if no salt was found
 
             writer.close();
+            conn.disconnect();
         }
         catch (java.net.MalformedURLException malformedURLException){
             Log.d("BasicLoginFunctionality","Bad url.");
