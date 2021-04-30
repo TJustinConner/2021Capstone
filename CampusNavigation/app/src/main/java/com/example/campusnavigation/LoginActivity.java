@@ -220,7 +220,7 @@ public class LoginActivity extends BasicLoginFunctionality{
     }
 
     //tries to log in the user
-    protected String SendDataLogin(String email, String password){
+    private String SendDataLogin(String email, String password){
         StringBuilder queryResult = new StringBuilder();
         URL url = null;
         HttpsURLConnection conn = null;
