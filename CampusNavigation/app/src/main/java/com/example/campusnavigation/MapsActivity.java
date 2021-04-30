@@ -1,13 +1,12 @@
 package com.example.campusnavigation;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -16,23 +15,17 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.graphics.drawable.BitmapDrawable;
-import android.location.Address;
-import android.location.Geocoder;
+
 import android.location.Location;
 import android.os.Handler;
 import android.os.Looper;
-import android.provider.Settings;
-import android.util.Log;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Spinner;
-import android.widget.Toast;
 
 import com.google.android.gms.common.api.ResolvableApiException;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -47,7 +40,6 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
@@ -55,24 +47,16 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.lang.reflect.Array;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
-import java.lang.Math;
-
-import static java.sql.DriverManager.println;
-
 
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, AdapterView.OnItemSelectedListener {
@@ -98,14 +82,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     //Handicap data
     int[][] Handi_Matrix = new int[440][440];//will hold the physical places for the handicap layer
-    double[][] Handi_Coords = new double[440][2];
+    double[][] Handi_Coords = new double[440][2];//used to translate the outputs from the hani matrix in dijkstra to actual coordinates
 
     Marker update =null;
-    int type = 0;
+    int type = 0;//handi cap or regular
 
     //used to draw the GEO fence for the wrapper
-   LatLng Wise = new LatLng(Latitude, Longitude); //changes where
-   // LatLng Wise = new LatLng(36.969886859438894, -82.57048866982446);
+    LatLng Wise = new LatLng(Latitude, Longitude); //changes where
+    // LatLng Wise = new LatLng(36.969886859438894, -82.57048866982446);
     //the map appears
     LatLngBounds UVaWise = new LatLngBounds(
             new LatLng(36.969886859438894, -82.57048866982446),//South west bounds,
@@ -140,8 +124,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 update = mMap.addMarker(current);
 
 
-              Longitude = location.getLongitude();
-              Latitude = location.getLatitude();
+                Longitude = location.getLongitude();
+                Latitude = location.getLatitude();
 
             }
         }
@@ -232,7 +216,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         //THis is used to extract the handicap data
         InputStream h_is = getResources().openRawResource(R.raw.hpaths);
         BufferedReader h_reader = new BufferedReader(new InputStreamReader(h_is, Charset.forName("UTF-8")));
-      //  String line = "";
+        //  String line = "";
         //puts each line into the string array (called temp)
         try {
 
@@ -318,9 +302,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         ArrayAdapter<CharSequence> adapter_main = ArrayAdapter.createFromResource(this, R.array.Activites, android.R.layout.simple_dropdown_item_1line);
         adapter_main.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
         spinner_main.setAdapter(adapter_main);
-       //  spinner_main.setSelection(0,false);//will not run SetonItemSelectListener on start up
-       spinner_main.setSelection(0);
-       spinner_main.setOnItemSelectedListener(this);
+        //  spinner_main.setSelection(0,false);//will not run SetonItemSelectListener on start up
+        spinner_main.setSelection(0);
+        spinner_main.setOnItemSelectedListener(this);
 /*
         if(getIntent() != null) {
 
@@ -403,7 +387,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 spinnerMy.setSelection(0);
 
                 int launch = 1;
-                Intent eventSearch = new Intent(this,Location_finder.class);
+                Intent eventSearch = new Intent(this, LocationFinder.class);
                 startActivityForResult(eventSearch,launch);
 
             }
@@ -441,52 +425,52 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 // location has been chosen.
                 //can stop the display of the route
                 Button stop_navigation = (Button)findViewById(R.id.stop_navigation); //access the STOP_navigaiton button
-               // final Button handicap = (Button)findViewById(R.id.handicap);
+                // final Button handicap = (Button)findViewById(R.id.handicap);
 
                 final ImageButton handi = (ImageButton)findViewById(R.id.handi);
                 final ImageButton walkie = (ImageButton)findViewById(R.id.walkie);
 
 
-                    if(Coord_number != 0){//works with coord value the coord value is up dated when a value is passed
-                        walkie.setVisibility(View.VISIBLE);
-                        stop_navigation.setVisibility(View.VISIBLE);//turns the button on
+                if(Coord_number != 0){//works with coord value the coord value is up dated when a value is passed
+                    walkie.setVisibility(View.VISIBLE);
+                    stop_navigation.setVisibility(View.VISIBLE);//turns the button on
 
 
-                        handi.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                walkie.setVisibility(View.VISIBLE);
-                                v.setVisibility(View.INVISIBLE);
+                    handi.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            walkie.setVisibility(View.VISIBLE);
+                            v.setVisibility(View.INVISIBLE);
 
-                                repeater(42069);
-                                type = 0;
-                                repeater(0);
+                            repeater(42069);
+                            type = 0;
+                            repeater(0);
 
-                            }
-                        });
-                        walkie.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                v.setVisibility(View.INVISIBLE);
-                                handi.setVisibility(View.VISIBLE);
-                                repeater(42069);
-                                type=1;
-                                repeater(0);
-                            }
-                        });
+                        }
+                    });
+                    walkie.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            v.setVisibility(View.INVISIBLE);
+                            handi.setVisibility(View.VISIBLE);
+                            repeater(42069);
+                            type=1;
+                            repeater(0);
+                        }
+                    });
 
 
-                        stop_navigation.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                repeater(42069);//stops the path generation repeater
-                                Coord_number = 0; //sets the coord back to zero
-                                v.setVisibility(View.INVISIBLE); //turns the button back to invisible
-                                handi.setVisibility(View.INVISIBLE);
-                                walkie.setVisibility(View.INVISIBLE);
-                            }
-                        });
-                    }//when route is activating
+                    stop_navigation.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            repeater(42069);//stops the path generation repeater
+                            Coord_number = 0; //sets the coord back to zero
+                            v.setVisibility(View.INVISIBLE); //turns the button back to invisible
+                            handi.setVisibility(View.INVISIBLE);
+                            walkie.setVisibility(View.INVISIBLE);
+                        }
+                    });
+                }//when route is activating
             }
         }
     }
@@ -533,6 +517,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     //This is literally just making sure the user wants to let the phone have their location
     //if they do not it will ask them for the location
     //This also starts the update location function
+    //https://www.youtube.com/watch?v=Ak1O9Gip-pg
     private void checksettingsAndStartLocationUpdates() {
         LocationSettingsRequest request = new LocationSettingsRequest.Builder().addLocationRequest(locationrequest).build();//asks for location
 
@@ -619,8 +604,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     // algorithm for a graph represented
     // using adjacency matrix
     // representation
-    private static void dijkstra(int[][] adjacencyMatrix,
-                                 int startVertex, int ender) {
+    //https://www.geeksforgeeks.org/printing-paths-dijkstras-shortest-path-algorithm/
+    private static void dijkstra(int[][] adjacencyMatrix,int startVertex, int ender) {
         int nVertices = adjacencyMatrix[0].length;
 
         // shortestDistances[i] will hold the
@@ -692,6 +677,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     //used to destroy all the paths made by the algorithm
     private static void clear_All() {
+
         my_paths.clear();
     }
 
@@ -777,7 +763,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             @Override
             public boolean onMarkerClick(Marker marker) {
 
-                    CharSequence text = String.valueOf(marker.getTag());
+                CharSequence text = String.valueOf(marker.getTag());
 
                 Intent eventSearch = new Intent(getBaseContext(),BulletinBoardGUI.class);
                 eventSearch.putExtra("location",text);
@@ -797,22 +783,22 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         ImageButton sat = (ImageButton)findViewById(R.id.satell); //access the STOP_navigaiton button
         ImageButton maper = (ImageButton)findViewById(R.id.maper); //access the STOP_navigaiton button
-            if (buttonChooser == 0) {
-                mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
-                sat.setVisibility(View.INVISIBLE);
-                maper.setVisibility(View.VISIBLE);
-                buttonChooser = 1;
-                // onPause();
+        if (buttonChooser == 0) {
+            mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+            sat.setVisibility(View.INVISIBLE);
+            maper.setVisibility(View.VISIBLE);
+            buttonChooser = 1;
+            // onPause();
 
-            }
-            else{
-                mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-                sat.setVisibility(View.VISIBLE);
-                maper.setVisibility(View.INVISIBLE);
-                buttonChooser = 0;
-                // onResume();
+        }
+        else{
+            mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+            sat.setVisibility(View.VISIBLE);
+            maper.setVisibility(View.INVISIBLE);
+            buttonChooser = 0;
+            // onResume();
 
-            }
+        }
 
     }
 
@@ -845,6 +831,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     //small equation that gets the distance between any two points
     //used to find the closest node to the user
+    //updated from python code
+    //https://stackoverflow.com/questions/5407969/distance-formula-between-two-points-in-a-list
     private double GetDistance(double tlat1,double tlon1){
 
         double Lat1 = java.lang.Math.toRadians(tlat1);
@@ -870,7 +858,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     //looks at every point and finds the closest
     //one to the user
     private int GetClosest(){
-        double distance=900000000;
+        double distance=900000000;//large impossible distance to initialize an "infinity" distance
         int counter = 0;
         for(int x=0;x<440;x++){
             if(GetDistance(Coords[x][1],Coords[x][0])<distance){

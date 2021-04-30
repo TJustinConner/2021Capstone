@@ -10,13 +10,12 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
-import android.widget.Toast;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-public class Location_finder extends AppCompatActivity implements AdapterView.OnItemSelectedListener{
+public class LocationFinder extends AppCompatActivity implements AdapterView.OnItemSelectedListener{
 
 
     int Coord_number = 0;
@@ -47,11 +46,11 @@ public class Location_finder extends AppCompatActivity implements AdapterView.On
             //  Toast.makeText(parent.getContext(), text, Toast.LENGTH_SHORT).show();
             display(text,loc);
             if(Coord_number != 0) {
-            String intToString = String.valueOf(Coord_number);
-            Intent sender = new Intent();
-            sender.putExtra("coordinate",intToString);
-            setResult(Activity.RESULT_OK,sender);
-            finish();
+                String intToString = String.valueOf(Coord_number);
+                Intent sender = new Intent();
+                sender.putExtra("coordinate",intToString);
+                setResult(Activity.RESULT_OK,sender);
+                finish();
             }
         }
     }
@@ -60,7 +59,7 @@ public class Location_finder extends AppCompatActivity implements AdapterView.On
     public void onNothingSelected(AdapterView<?> parent) {
 
     }
-//THIS IS SOO CUTE COMPARED TO WHAT IT WAS BEFORE!!!!
+    //THIS IS SOO CUTE COMPARED TO WHAT IT WAS BEFORE!!!!
     //basicly loc is a string array that lists every location along with the
     //place where they are in the coords.xml file
     //so we can tie the title of the location to the coordant to the place in the Coords datasheet
@@ -77,5 +76,4 @@ public class Location_finder extends AppCompatActivity implements AdapterView.On
         }
 
     }//display
-
 }
