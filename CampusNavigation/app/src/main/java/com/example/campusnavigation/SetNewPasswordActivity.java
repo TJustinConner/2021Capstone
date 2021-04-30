@@ -271,6 +271,16 @@ public class SetNewPasswordActivity extends BasicLoginFunctionality {
             writer.write(data); //send the user's data
             writer.flush();
 
+            Log.d("SetNewPassword","Data Written to Server");
+
+            //read returned message from server
+            reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+            String line = "";
+
+            while((line = reader.readLine()) != null) {
+                queryResult.append(line + "\n");
+            }
+
             writer.close();
             conn.disconnect();
 
