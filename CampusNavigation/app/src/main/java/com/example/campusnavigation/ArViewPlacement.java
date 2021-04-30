@@ -13,6 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+/*
+Gethub Directory for basic google ARcore Apps
+https://github.com/google-ar/arcore-android-sdk.git
+program used as guide
+arcore-android-sdk/samples/hello_ar_java
+includes also the
+assets folder (and sub folders)
+
+ */
 package com.example.campusnavigation;
 
 import android.content.DialogInterface;
