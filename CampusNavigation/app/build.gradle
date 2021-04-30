@@ -23,8 +23,8 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_7
-        targetCompatibility JavaVersion.VERSION_1_7
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
 }
 
@@ -37,9 +37,12 @@ dependencies {
     implementation 'com.google.android.gms:play-services-maps:17.0.0'
     implementation 'androidx.navigation:navigation-fragment:2.2.2'
     implementation 'androidx.navigation:navigation-ui:2.2.2'
+    implementation 'com.google.ar:core:1.23.0'
+    implementation 'de.javagl:obj:0.2.1'
+    testImplementation 'junit:junit:4.+'
     implementation 'com.itextpdf:itextg:5.5.10'
     implementation 'es.voghdev.pdfviewpager:library:1.1.2'
-    testImplementation 'junit:junit:4.+'
+    implementation 'androidx.appcompat:appcompat:1.1.0'
     implementation'com.google.android.gms:play-services-maps:9.8.0'
     implementation'com.google.android.gms:play-services-location:9.8.0'
     implementation "com.google.android.gms:play-services-location:15.0.1"

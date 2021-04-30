@@ -409,6 +409,17 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
             }
 
+            if(mytext.contains("AR")) {
+                //makes a new spinner object that
+                //allows me to call the id more than once (a true blessing and the solution to the most annoying time vampire)
+                Spinner spinnerMyList = findViewById(R.id.main_activity_spinner);
+                spinnerMyList.setSelection(0);
+
+                //runs the AR activity
+                Intent AR = new Intent(view.getContext(), ArViewPlacement.class);
+                startActivity(AR);
+            }
+
         }
     }
 

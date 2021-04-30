@@ -13,6 +13,9 @@
     <uses-permission android:name="android.permission.WRITE_CALENDAR" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-feature android:name="android.hardware.camera.ar" android:required="true"/>
+    <uses-feature android:glEsVersion="0x00020000" android:required="true" />
 
     <application
         android:allowBackup="true"
@@ -39,7 +42,7 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
-
+        <meta-data android:name="com.google.ar.core" android:value="required" />
         <activity
             android:name=".BulletinBoardGUI"
             android:label="@string/title_activity_bulletin_board_g_u_i"></activity>
@@ -72,6 +75,10 @@
         <activity
             android:name=".LoginActivity"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".ArViewPlacement"
+            android:label="ar_view_placement"
+            android:screenOrientation="portrait"></activity>
      <!--
         <activity
             android:name=".MainActivity"

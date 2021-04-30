@@ -59,6 +59,14 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(eventSearch);
             }});
 
-
+/*
+        eventSearchButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                //takes user to event search
+                Log.d("SUCCESS", "Going to AR Base Event");
+                Intent eventSearch = new Intent(v.getContext(), SharedCameraActivity.class);
+                startActivity(eventSearch);
+            }});
+*/
     }
 }
