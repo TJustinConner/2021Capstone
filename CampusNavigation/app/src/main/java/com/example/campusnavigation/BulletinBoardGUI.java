@@ -1,8 +1,10 @@
 package com.example.campusnavigation;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.StrictMode;
+import android.provider.CalendarContract;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -57,61 +59,16 @@ public class BulletinBoardGUI extends AppCompatActivity implements DownloadFile.
         pdfLayout = findViewById(R.id.pdf_layout);
         eventClearText = findViewById(R.id.clearText);
         eventClearText.setVisibility(View.INVISIBLE);
+
         Button nextPage = findViewById(R.id.nextPDF);
         Button prevPage = findViewById(R.id.prevPDF);
         Button flipButton = findViewById(R.id.flipPDF);
+        Button exportButton = findViewById(R.id.export);
 
         //This stuff is 'required' for the http connection stuff
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
 
-
-        nextPage.setOnClickListener(new View.OnClickListener() {//Initialize a clicker for the next page button
-            @Override
-            public void onClick(View v) {//do things once clicked
-                Log.d("DEBUG", "Hit the next button");
-                if (position < urlList.size()-1) {//move to the right one
-                    position += 1;
-                }
-                else{//if already the farthest to the right, go back to the start
-                    position = 0;
-                }
-                Log.d("POS", "The position is: " + position);
-                pdfLayout.removeAllViews();
-                remotePDFViewPager = new RemotePDFViewPager (BulletinBoardGUI.this, urlList.get(position), BulletinBoardGUI.this);
-                if (flipped){
-                    flipStuff();
-                }
-
-
-            }
-        });//end of prevPage onClickListener
-
-        prevPage.setOnClickListener(new View.OnClickListener() {//Initialize a clicker for the prev page button
-            @Override
-            public void onClick(View v) {//do things once clicked
-                Log.d("DEBUG", "Hit the prev button");
-                if (position > 0) {//move to the left one
-                    position -= 1;
-                }
-                else{//if we are at the start and move to the left, go to the far right
-                    position = urlList.size()-1;
-                }
-                Log.d("POS", "The position is: " + position);
-                pdfLayout.removeAllViews();
-                remotePDFViewPager = new RemotePDFViewPager (BulletinBoardGUI.this, urlList.get(position), BulletinBoardGUI.this);
-                if (flipped){
-                    flipStuff();
-                }
-            }
-        });//end of prevPage onClickListener
-
-        flipButton.setOnClickListener(new View.OnClickListener(){//Function to handle "FLIP" button
-            @Override
-            public void onClick(View v) {//Display event information when pressed
-                flipStuff();
-            }
-        });//end of flipButton onClickListener
 
         try {
             eventSearch(location);
@@ -126,11 +83,70 @@ public class BulletinBoardGUI extends AppCompatActivity implements DownloadFile.
         if (urlList.isEmpty()){
             Log.d("Display", "The url list is empty, there are no events");
             remotePDFViewPager = new RemotePDFViewPager(BulletinBoardGUI.this, "https://medusa.mcs.uvawise.edu/~jwe3nv/events/empty.pdf", BulletinBoardGUI.this);
+            nextPage.setVisibility(View.INVISIBLE);
+            prevPage.setVisibility(View.INVISIBLE);
+            flipButton.setVisibility(View.INVISIBLE);
+            exportButton.setVisibility(View.INVISIBLE);
+
         }//end of if
-        else{
+        else{//If stuff is actually returned then put the button listeners and stuff on the screen
             Log.d("POS", "The position is: " + position);
             remotePDFViewPager = new RemotePDFViewPager(BulletinBoardGUI.this, urlList.get(position), BulletinBoardGUI.this);
+
+            nextPage.setOnClickListener(new View.OnClickListener() {//Initialize a clicker for the next page button
+                @Override
+                public void onClick(View v) {//do things once clicked
+                    Log.d("DEBUG", "Hit the next button");
+                    if (position < urlList.size()-1) {//move to the right one
+                        position += 1;
+                    }
+                    else{//if already the farthest to the right, go back to the start
+                        position = 0;
+                    }
+                    Log.d("POS", "The position is: " + position);
+                    pdfLayout.removeAllViews();
+                    remotePDFViewPager = new RemotePDFViewPager (BulletinBoardGUI.this, urlList.get(position), BulletinBoardGUI.this);
+                    if (flipped){
+                        flipStuff();
+                    }
+                }
+            });//end of prevPage onClickListener
+
+            prevPage.setOnClickListener(new View.OnClickListener() {//Initialize a clicker for the prev page button
+                @Override
+                public void onClick(View v) {//do things once clicked
+                    Log.d("DEBUG", "Hit the prev button");
+                    if (position > 0) {//move to the left one
+                        position -= 1;
+                    }
+                    else{//if we are at the start and move to the left, go to the far right
+                        position = urlList.size()-1;
+                    }
+                    Log.d("POS", "The position is: " + position);
+                    pdfLayout.removeAllViews();
+                    remotePDFViewPager = new RemotePDFViewPager (BulletinBoardGUI.this, urlList.get(position), BulletinBoardGUI.this);
+                    if (flipped){
+                        flipStuff();
+                    }
+                }
+            });//end of prevPage onClickListener
+
+            flipButton.setOnClickListener(new View.OnClickListener(){//Function to handle "FLIP" button
+                @Override
+                public void onClick(View v) {//Display event information when pressed
+                    flipStuff();
+                }
+            });//end of flipButton onClickListener
+
+            exportButton.setOnClickListener(new View.OnClickListener() {//Function for when button is pressed
+                @Override
+                public void onClick(View v) {//do stuff when pressed
+                    exportToCalendar("title", location, "5/1/2021", "5:00pm", "6:00pm", "This is an event", "Weekly");
+                }
+            });
         }//end of else
+
+
 
 
     }//end of onCreate
@@ -283,5 +299,31 @@ public class BulletinBoardGUI extends AppCompatActivity implements DownloadFile.
             flipped = false;
         }//end of else
     }//end of flip stuff
+
+    private void exportToCalendar(String title, String location, String date, String sTime, String eTime, String description, String recurrence){
+        Intent intent = new Intent(Intent.ACTION_INSERT);
+        intent.setData(CalendarContract.Events.CONTENT_URI);
+
+        Log.d("DEBUG", "The recurrence is: " + recurrence);
+        //modify below if you need to add/change calendar inputs
+        intent.putExtra(CalendarContract.Events.TITLE, title);
+        intent.putExtra(CalendarContract.Events.DESCRIPTION, description);
+        intent.putExtra(CalendarContract.Events.EVENT_LOCATION, location);
+        intent.putExtra(CalendarContract.Events.ALL_DAY, "false");
+        intent.putExtra(CalendarContract.Events.DTSTART, sTime);
+        intent.putExtra(CalendarContract.Events.DTEND, eTime);
+        if (recurrence.equals("Monthly")) {
+            intent.putExtra(CalendarContract.Events.RRULE, "FREQ=MONTHLY;COUNT=12");
+        }//end of monthly if
+        if (recurrence.equals("Weekly")) {
+            Log.d("DEBUG", "in weekly add");
+            intent.putExtra(CalendarContract.Events.RRULE, "FREQ=WEEKLY;COUNT=52");
+        }//end of Weekly if
+        //intent.putExtra(Intent.EXTRA_EMAIL, value "insert email");
+
+        if (intent.resolveActivity(getPackageManager()) != null) {
+            startActivity(intent);
+        }//end of if/else
+    }//end of calendar export
 
 }//end of class
