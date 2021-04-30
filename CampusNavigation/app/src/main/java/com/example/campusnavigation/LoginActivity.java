@@ -255,6 +255,7 @@ public class LoginActivity extends BasicLoginFunctionality{
             System.out.println(queryResult.toString());
 
             writer.close();
+            conn.disconnect();
         }
         catch (java.net.MalformedURLException malformedURLException){
             Log.d("BasicLoginFunctionality","Bad url.");

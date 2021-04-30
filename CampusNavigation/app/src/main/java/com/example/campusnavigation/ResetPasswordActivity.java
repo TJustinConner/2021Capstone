@@ -154,6 +154,7 @@ public class ResetPasswordActivity extends BasicLoginFunctionality {
                 queryResult.append(line + "\n");
             }
             writer.close();
+            conn.disconnect();
         }
         catch (java.net.MalformedURLException malformedURLException){
             Log.d("PasswordResetCheckEmail","Bad URL");
