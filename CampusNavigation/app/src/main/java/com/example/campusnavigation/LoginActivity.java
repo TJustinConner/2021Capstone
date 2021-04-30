@@ -25,6 +25,7 @@ import java.util.concurrent.FutureTask;
 import javax.net.ssl.HttpsURLConnection;
 
 public class LoginActivity extends BasicLoginFunctionality{
+    private final String LOGIN_LINK = "https://medusa.mcs.uvawise.edu/~jdl8y/login.php"; //link for the php file used to login a user
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -216,5 +217,55 @@ public class LoginActivity extends BasicLoginFunctionality{
                 }
             }
         });
+    }
+
+    //tries to log in the user
+    protected String SendDataLogin(String email, String password){
+        StringBuilder queryResult = new StringBuilder();
+        URL url = null;
+        HttpsURLConnection conn = null;
+        String data = null;
+        BufferedReader reader = null;
+        try{
+            //https://www.tutorialspoint.com/android/android_php_mysql.htm
+            //create a url object and open a connection to the specified link
+            url = new URL(LOGIN_LINK);
+            conn = (HttpsURLConnection) url.openConnection();
+            conn.setDoOutput(true);
+            conn.setDoInput(true);
+
+            //tries to encode the user's data
+            data = URLEncoder.encode("email", "UTF-8") + "=" + URLEncoder.encode(email, "UTF-8");
+            data += "&" + URLEncoder.encode("password", "UTF-8") + "=" + URLEncoder.encode(password, "UTF-8");
+
+            OutputStreamWriter writer = new OutputStreamWriter(conn.getOutputStream());
+
+            writer.write(data); //send the user's data
+            writer.flush();
+
+            //can't get input stream
+            //read returned message from server
+            reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+            String line = "";
+
+            while((line = reader.readLine()) != null){
+                queryResult.append(line + "\n");
+            }
+
+            System.out.println(queryResult.toString());
+
+            writer.close();
+        }
+        catch (java.net.MalformedURLException malformedURLException){
+            Log.d("BasicLoginFunctionality","Bad url.");
+        }
+        catch(java.io.UnsupportedEncodingException unsupportedEncodingException){
+            Log.d("BasicLoginFunctionality","Could not encode data.");
+        }
+        catch (java.io.IOException ioException){
+            Log.d("BasicLoginFunctionality","Could not open connection");
+        }
+
+        return queryResult.toString(); //true if account was created
     }
 }
