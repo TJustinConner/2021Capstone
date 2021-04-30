@@ -17,7 +17,7 @@ import javax.net.ssl.HttpsURLConnection;
 
 //This activity is used for inheritance only, it should not be accessible by the user in the final app
 
-public class BasicLoginFunctionality extends AppCompatActivity {
+public abstract class BasicLoginFunctionality extends AppCompatActivity {
 
     private final String GET_SALT_LINK = "https://medusa.mcs.uvawise.edu/~jdl8y/getSalt.php"; //link for the php file used to retrieve a user's salt
     final int MAX_PASSWORD_LENGTH = 32; //maximum allowed password length
