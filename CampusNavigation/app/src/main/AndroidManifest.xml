@@ -6,6 +6,17 @@
          Google Maps Android API v2, but you must specify either coarse or fine
          location permissions for the "MyLocation" functionality.
     -->
+
+
+    <!--
+Gethub Directory for basic google ARcore Apps
+https://github.com/google-ar/arcore-android-sdk.git
+program used as guide
+arcore-android-sdk/samples/hello_ar_java
+includes also the
+assets folder (and sub folders)
+    -->
+
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
