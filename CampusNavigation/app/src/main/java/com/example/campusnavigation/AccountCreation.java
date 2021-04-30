@@ -45,7 +45,7 @@ public class AccountCreation extends BasicLoginFunctionality {
         BlankFieldText.setVisibility(View.INVISIBLE);
         MissingRequirementsText.setVisibility(View.INVISIBLE);
         AcctNotWhitelistedText.setVisibility(View.INVISIBLE);
-        AcctNotWhitelistedText.setVisibility(View.INVISIBLE);
+        AcctAlreadyExistsText.setVisibility(View.INVISIBLE);
 
         PasswordReqsLink.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -62,7 +62,8 @@ public class AccountCreation extends BasicLoginFunctionality {
                 BlankFieldText.setVisibility(View.INVISIBLE);
                 MissingRequirementsText.setVisibility(View.INVISIBLE);
                 AcctNotWhitelistedText.setVisibility(View.INVISIBLE);
-                AcctNotWhitelistedText.setVisibility(View.INVISIBLE);
+                AcctAlreadyExistsText.setVisibility(View.INVISIBLE);
+
 
                 //do action on click
                 String email = UsernameField.getText().toString(); //email input from user

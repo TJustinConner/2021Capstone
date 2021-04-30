@@ -203,12 +203,12 @@
 
     <TextView
         android:id="@+id/UnwhitelistedEmailCreateError"
-        android:layout_width="317dp"
-        android:layout_height="70dp"
-        android:layout_marginStart="47dp"
-        android:layout_marginTop="629dp"
-        android:layout_marginEnd="47dp"
-        android:layout_marginBottom="32dp"
+        android:layout_width="404dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="3dp"
+        android:layout_marginTop="622dp"
+        android:layout_marginEnd="4dp"
+        android:layout_marginBottom="59dp"
         android:text="@string/email_is_not_in_whitelist_if_you_have_multiple_faculty_email_addresses_please_try_a_different_one"
         android:textAlignment="center"
         android:textColor="#E91E1E"
