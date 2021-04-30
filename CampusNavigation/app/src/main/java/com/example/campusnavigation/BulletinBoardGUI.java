@@ -29,36 +29,39 @@ import es.voghdev.pdfviewpager.library.util.FileUtil;
 //https://levelup.gitconnected.com/open-pdf-files-in-android-without-webviews-or-intents-3cc960752cca
 public class BulletinBoardGUI extends AppCompatActivity implements DownloadFile.Listener{
 
-    private RemotePDFViewPager remotePDFViewPager;
-    private PDFPagerAdapter pdfPagerAdapter;
-    private static List<String> urlList = new ArrayList<>();
-    private LinearLayout pdfLayout;
+    private RemotePDFViewPager remotePDFViewPager;//used for pdf display
+    private PDFPagerAdapter pdfPagerAdapter;//used for pdf display
+    private static List<String> urlList = new ArrayList<>();//list for urls
+    private LinearLayout pdfLayout;//layout for pdf display
 
-    private String location;
-    private TextView eventClearText;
-    private static List<List<String>> outputArrayList = new ArrayList<List<String>>();
-    private static int position = 0;
-    private static String eventInformation;
-    private static boolean flipped = false;
+    private String location;//location that is passed
+    private TextView eventClearText;//used for display of "plain text" event information
+    private static List<List<String>> outputArrayList = new ArrayList<List<String>>();//this list stores the parsed event information
+    private static int position = 0;//this holds the position in the url/outputArrayList for event information
+    private static String eventInformation;//this is the string used to set the text for eventClearText
+    private static boolean flipped = false;//this is just used to keep track of the pdf view vs text view
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        //this clears the static lists just in case
         urlList.clear();
         outputArrayList.clear();
-        location = getIntent().getStringExtra("location");
-        Log.d("TEST", "kill me");
 
+        //This sets the location as passed from maps
+        location = getIntent().getStringExtra("location");
+
+        //This is the declarations of the view/button display stuff from xml
         setContentView(R.layout.activity_bulletin_board_g_u_i);
         pdfLayout = findViewById(R.id.pdf_layout);
-
         eventClearText = findViewById(R.id.clearText);
         eventClearText.setVisibility(View.INVISIBLE);
-
         Button nextPage = findViewById(R.id.nextPDF);
         Button prevPage = findViewById(R.id.prevPDF);
         Button flipButton = findViewById(R.id.flipPDF);
 
+        //This stuff is 'required' for the http connection stuff
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
 
@@ -82,7 +85,7 @@ public class BulletinBoardGUI extends AppCompatActivity implements DownloadFile.
 
 
             }
-        });
+        });//end of prevPage onClickListener
 
         prevPage.setOnClickListener(new View.OnClickListener() {//Initialize a clicker for the prev page button
             @Override
@@ -101,29 +104,36 @@ public class BulletinBoardGUI extends AppCompatActivity implements DownloadFile.
                     flipStuff();
                 }
             }
-        });
+        });//end of prevPage onClickListener
 
         flipButton.setOnClickListener(new View.OnClickListener(){//Function to handle "FLIP" button
             @Override
             public void onClick(View v) {//Display event information when pressed
                 flipStuff();
             }
-        });
+        });//end of flipButton onClickListener
 
         try {
             eventSearch(location);
         } catch (IOException e) {
             e.printStackTrace();
-        }
+        }//end of IOException catch
 
         for (int i = 0; i < urlList.size();i++){
             Log.d("URL", urlList.get(i));
-        }
+        }//end of i for loop
 
-        Log.d("POS", "The position is: " + position);
-        remotePDFViewPager = new RemotePDFViewPager(BulletinBoardGUI.this, urlList.get(position), BulletinBoardGUI.this);
+        if (urlList.isEmpty()){
+            Log.d("Display", "The url list is empty, there are no events");
+            remotePDFViewPager = new RemotePDFViewPager(BulletinBoardGUI.this, "https://medusa.mcs.uvawise.edu/~jwe3nv/events/empty.pdf", BulletinBoardGUI.this);
+        }//end of if
+        else{
+            Log.d("POS", "The position is: " + position);
+            remotePDFViewPager = new RemotePDFViewPager(BulletinBoardGUI.this, urlList.get(position), BulletinBoardGUI.this);
+        }//end of else
 
-    }
+
+    }//end of onCreate
     protected static String eventSearch(String location) throws IOException {//query the database with the location that was given
         URL url = null;
         HttpsURLConnection urlConnection = null;;
@@ -154,7 +164,7 @@ public class BulletinBoardGUI extends AppCompatActivity implements DownloadFile.
         String line = null;
         while ((line = reader.readLine()) != null) {
             sb.append(line + "\n");
-        }
+        }//end of while loop
         output = sb.toString();
         Log.d("SUCCESS", "The SQL QUERY RETURNED:" + output);
 
@@ -174,44 +184,44 @@ public class BulletinBoardGUI extends AppCompatActivity implements DownloadFile.
                     int2 = outputS[i].indexOf(')');//saves the second pos
                     output += "ID: " + outputS[i].substring(int1+1, int2) + "\n";
                     row.add("ID: " + outputS[i].substring(int1+1, int2));
-                }
-            }
+                }//end of ( if
+            }//end of id if
             else if (outputS[i].contains("name")){//found the name field
                 Log.d("DEBUG", "Found the name string.");
                 i +=1;
                 int1 = outputS[i].indexOf(')');
                 row.add("NAME: " + outputS[i].substring(int1 +3, outputS[i].length() - 1));
-            }
+            }//end of else if
             else if (outputS[i].contains("Time")){
                 i +=1;
                 int1 = outputS[i].indexOf(')');
                 row.add("TIME: " + outputS[i].substring(int1 +3, outputS[i].length() - 1));
-            }
+            }//end of else if
             else if (outputS[i].contains("eTime")){
                 i +=1;
                 int1 = outputS[i].indexOf(')');
                 row.add("ETIME: " + outputS[i].substring(int1 +3, outputS[i].length() - 1));
-            }
+            }//end of else if
             else if (outputS[i].contains("Date")){
                 i +=1;
                 int1 = outputS[i].indexOf(')');
                 row.add("DATE: " + outputS[i].substring(int1 +3, outputS[i].length() - 1));
-            }
+            }//end of else if
             else if (outputS[i].contains("recur")){
                 i +=1;
                 int1 = outputS[i].indexOf(')');
                 row.add("RECUR: " + outputS[i].substring(int1 +3, outputS[i].length() - 1));
-            }
+            }//end of else if
             else if (outputS[i].contains("location")){
                 i +=1;
                 int1 = outputS[i].indexOf(')');
                 row.add("LOCATION: " + outputS[i].substring(int1 +3, outputS[i].length() - 1));
-            }
+            }//end of else if
             else if (outputS[i].contains("description")){
                 i +=1;
                 int1 = outputS[i].indexOf(')');
                 row.add("DESCRIPTION: " + outputS[i].substring(int1 +3, outputS[i].length() - 1));
-            }
+            }//end of else if
             else if (outputS[i].contains("path")){
                 i +=1;
                 int1 = outputS[i].indexOf(')');
@@ -219,18 +229,18 @@ public class BulletinBoardGUI extends AppCompatActivity implements DownloadFile.
                 outputArrayList.add(row);
                 row = new ArrayList<String>();
                 urlList.add(outputS[i].substring(int1 +3, outputS[i].length() - 1));
-            }
-        }
+            }//end of else if
+        }//end of i for loop
         Log.d("SUCCESS", "The trimmed output is: " + output);
 
         for (int x = 0; x < outputArrayList.size(); x +=1){
             for (int y = 0; y < outputArrayList.get(x).size(); y +=1){
                 Log.d("DEBUG", outputArrayList.get(x).get(y));
-            }
-        }
+            }//end of y for loop
+        }//end of x for loop
         Log.d("SUCCESS", "The search has returned");
         return output;
-    }
+    }//end of eventSearch
 
     @Override
     public void onSuccess(String url, String destinationPath) {//The download was successful
@@ -238,40 +248,40 @@ public class BulletinBoardGUI extends AppCompatActivity implements DownloadFile.
         remotePDFViewPager.setAdapter(pdfPagerAdapter);
         updateLayout();
         Log.d("RUN", "onSuccess");
-    }
+    }//end of onSuccess
 
-    private void updateLayout(){
+    private void updateLayout(){//updates layout when called
         pdfLayout.addView(remotePDFViewPager, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
         Log.d("RUN", "updateLayout");
-    }
+    }//end of updateLayout
+
     @Override
-    public void onFailure(Exception e) {
+    public void onFailure(Exception e) {//does stuff when the download fails
         Log.d("FAIL", "Did not download file");
-    }
+    }//end of onFailure
 
     @Override
-    public void onProgressUpdate(int progress, int total) {
+    public void onProgressUpdate(int progress, int total) {//does stuff while downloading is occuring
         Log.d("PROG", "Progress Update");
-    }
+    }//end of onProgressUpdate
 
-    public void flipStuff(){
+    public void flipStuff(){//This function is used to swap between pdf view and plain text view
         eventInformation = "";
         for (int i = 0; i < 8; i++){//
             eventInformation += outputArrayList.get(position).get(i) + "\n";
-        }
+        }//end of for loop
 
         eventClearText.setText(eventInformation);
         if(eventClearText.getVisibility() == View.INVISIBLE) {
             eventClearText.setVisibility(View.VISIBLE);
             pdfLayout.setVisibility(View.INVISIBLE);
             flipped = true;
-        }
-
+        }//end of if
         else{
             pdfLayout.setVisibility(View.VISIBLE);
             eventClearText.setVisibility(View.INVISIBLE);
             flipped = false;
-        }
-    }
+        }//end of else
+    }//end of flip stuff
 
-}
+}//end of class
