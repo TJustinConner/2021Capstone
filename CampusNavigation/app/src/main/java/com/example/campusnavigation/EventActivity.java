@@ -143,7 +143,7 @@ public class EventActivity extends AppCompatActivity implements AdapterView.OnIt
                 //https://stackoverflow.com/questions/7537377/how-to-include-a-php-variable-inside-a-mysql-statement
                 //https://www.w3schools.com/php/php_mysql_prepared_statements.asp
                 String testCheck = sanitize(event, time, date);
-                displayText(testCheck);
+                //displayText(testCheck);
 
                 if (testCheck.compareTo("SAFE") == 0) {//If the user input has been run through sanitize, and pass, do this
                     Log.d("DEBUGGING", testCheck);
@@ -216,12 +216,12 @@ public class EventActivity extends AppCompatActivity implements AdapterView.OnIt
                     // after all the data has been set, now we will insert into database
 
                     //This is displaying the text that was saved in the previous step
-                    displayText(event);
+                    /*displayText(event);
                     displayText(time);
                     displayText(eTime);
                     displayText(date);
                     displayText(loc);
-                    displayText(desc);
+                    displayText(desc);*/
                     uploadFile();
 
                 } else {//this prints error messages to the screen for the user and gives a debugging
