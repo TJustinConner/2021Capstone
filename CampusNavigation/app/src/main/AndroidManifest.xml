@@ -37,7 +37,7 @@ assets folder (and sub folders)
         android:theme="@style/Base.Theme.AppCompat"
         android:requestLegacyExternalStorage="true"
         android:usesCleartextTraffic="true">
-        <activity android:name=".Location_finder"></activity>
+        <activity android:name=".LocationFinder"></activity>
         <!--
       <activity
           android:name=".BulletinBoardGUI"

@@ -1,17 +1,17 @@
 {
     "logs": [
         {
-            "outputFile": "C:\\Users\\jonat\\Documents\\GitHub\\2021Capstone-main\\2021Capstone-main\\CampusNavigation\\app\\build\\intermediates\\incremental\\mergeDebugResources\\merged.dir\\values-round-v23\\values-round-v23.xml",
+            "outputFile": "C:\\Users\\bjw3j\\Documents\\GitHub\\2021Capstone\\CampusNavigation\\app\\build\\intermediates\\incremental\\mergeDebugResources\\merged.dir\\values-round-v23\\values-round-v23.xml",
             "map": [
                 {
-                    "source": "C:\\Users\\jonat\\Documents\\GitHub\\2021Capstone-main\\2021Capstone-main\\CampusNavigation\\app\\src\\main\\res\\values-round\\strings.xml",
+                    "source": "C:\\Users\\bjw3j\\Documents\\GitHub\\2021Capstone\\CampusNavigation\\app\\src\\main\\res\\values-round\\strings.xml",
                     "from": {
                         "startLines": "10,15,3,6,5,4,9,1,14,7,8",
                         "startColumns": "4,4,4,4,4,4,4,4,4,4,4",
-                        "startOffsets": "775,1039,76,420,339,147,716,16,932,503,604",
+                        "startOffsets": "785,1054,79,426,344,151,725,17,946,510,612",
                         "endLines": "13,17,3,6,5,4,9,1,14,7,8",
                         "endColumns": "19,19,70,82,80,191,58,58,106,100,111",
-                        "endOffsets": "927,1179,142,498,415,334,770,70,1034,599,711"
+                        "endOffsets": "940,1196,145,504,420,338,779,71,1048,606,719"
                     },
                     "to": {
                         "startLines": "2,6,9,10,11,12,13,14,15,16,17",

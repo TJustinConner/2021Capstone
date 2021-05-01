@@ -62,11 +62,10 @@ import java.util.List;
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, AdapterView.OnItemSelectedListener {
     private static final String TAG = "MapsActivity";
 
-    int Location_Request_CODE = 10001;    //used as a request code by the program to ensure the user consents to use of location
+    int locationRequestCode = 10001;    //used as a request code by the program to ensure the user consents to use of location
     double Longitude=-82.5619257479437;    //global variables that hold the coords of the current location of the user
     double Latitude=36.97121534957083;    //global variables that hold the coords of the current location of the user
     int Coord_number = 0;     //used to choose the user's marker
-    int handi_changer = 0; // changes the handicap option to stares option
 
     Handler handler = new Handler(); //handler is used to communicate background used in time updating
     Runnable runnable; //used in creating a thread to run the time updating for path updating/displaying
@@ -81,8 +80,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private static List<Integer> my_paths = new ArrayList<Integer>(); //this will the current path that I am taking it will update every 2 seconds
 
     //Handicap data
-    int[][] Handi_Matrix = new int[440][440];//will hold the physical places for the handicap layer
-    double[][] Handi_Coords = new double[440][2];//used to translate the outputs from the hani matrix in dijkstra to actual coordinates
+    int[][] handiMatrix = new int[440][440];//will hold the physical places for the handicap layer
+    double[][] handiCoords = new double[440][2];//used to translate the outputs from the hani matrix in dijkstra to actual coordinates
 
     Marker update =null;
     int type = 0;//handi cap or regular
@@ -242,7 +241,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                 for (int column = 0; column < 440; column++) {
 
-                    Handi_Matrix[row][column] = Integer.parseInt(array[row][column]);
+                    handiMatrix[row][column] = Integer.parseInt(array[row][column]);
 
                 }
 
@@ -275,7 +274,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             for(int row=0;row<440;row++){
                 for(int column=0; column<2;column++){
 
-                    Handi_Coords[row][column] = Double.parseDouble(h_Secondarray[row][column]);
+                    handiCoords[row][column] = Double.parseDouble(h_Secondarray[row][column]);
 
                 }
             }//for loop
@@ -305,19 +304,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         //  spinner_main.setSelection(0,false);//will not run SetonItemSelectListener on start up
         spinner_main.setSelection(0);
         spinner_main.setOnItemSelectedListener(this);
-/*
-        if(getIntent() != null) {
-
-            String[] Location_getter = getIntent().getStringArrayExtra("key");
-            Context context = getApplicationContext();
-            CharSequence text = "helo";
-            int duration = Toast.LENGTH_SHORT;
-
-            Toast toast = Toast.makeText(context, text, duration);
-
-           toast.show();
-        }
-*/
 
     }//onCreate
 
@@ -327,7 +313,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         if(parent.getId()==R.id.maps_Spinners) {
             String text = parent.getItemAtPosition(position).toString();
-            //  Toast.makeText(parent.getContext(), text, Toast.LENGTH_SHORT).show();
 
         }
         if(parent.getId()==R.id.main_activity_spinner){
@@ -364,20 +349,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 Intent toLogin= new Intent(view.getContext(), LoginActivity.class);
                 startActivity(toLogin);
             }
-/*
-            if(mytext.contains("Event Search")){
-                //makes a new spinner object that
-                //allows me to call the id more than once (a true blessing and the solution to the most annoying time vampire)
-                Spinner spinnerMy = findViewById(R.id.main_activity_spinner);
-                spinnerMy.setSelection(0);
-
-
-                String value = "Carl Smith Stadium";
-                Intent eventSearch = new Intent(view.getContext(), BulletinBoardGUI.class);
-                eventSearch.putExtra("location",value);
-                startActivity(eventSearch);
-            }
-*/
 
             if(mytext.contains("Navigate")){
 
@@ -591,9 +562,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private void askLocationPermission() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_FINE_LOCATION)) {
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, Location_Request_CODE);
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, locationRequestCode);
             } else {
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, Location_Request_CODE);
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, locationRequestCode);
             }
         }
     }//end of asklocationpermission
@@ -873,9 +844,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         double distance=900000000;
         int counter = 0;
         for(int x=0;x<440;x++){
-            if(GetDistance(Handi_Coords[x][1],Handi_Coords[x][0])<distance){
+            if(GetDistance(handiCoords[x][1],handiCoords[x][0])<distance){
                 counter = x;
-                distance = GetDistance(Handi_Coords[x][1],Handi_Coords[x][0]);
+                distance = GetDistance(handiCoords[x][1],handiCoords[x][0]);
             }
         }
         return counter;
@@ -936,11 +907,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
 
         if(type == 1) {
-            dijkstra(Handi_Matrix, hGetClosest(), Coord_number); // returns values for coords gets the values for the closet points
+            dijkstra(handiMatrix, hGetClosest(), Coord_number); // returns values for coords gets the values for the closet points
             if (Coord_number != 0) {
 
                 polylines.add(this.mMap.addPolyline(new PolylineOptions().color(Color.RED).clickable(true).add(
-                        new LatLng(Handi_Coords[hGetClosest()][1], Handi_Coords[hGetClosest()][0]),
+                        new LatLng(handiCoords[hGetClosest()][1], handiCoords[hGetClosest()][0]),
                         new LatLng(Latitude, Longitude))));
 
             }
@@ -949,8 +920,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             for (int start = 1; start < my_paths.size(); start++) {
 
                 polylines.add(this.mMap.addPolyline(new PolylineOptions().color(Color.RED).clickable(true).add(
-                        new LatLng(Handi_Coords[my_paths.get(start - 1)][1], Handi_Coords[my_paths.get(start - 1)][0]),
-                        new LatLng(Handi_Coords[my_paths.get(start)][1], Handi_Coords[my_paths.get(start)][0]))));
+                        new LatLng(handiCoords[my_paths.get(start - 1)][1], handiCoords[my_paths.get(start - 1)][0]),
+                        new LatLng(handiCoords[my_paths.get(start)][1], handiCoords[my_paths.get(start)][0]))));
             }
 
             clear_All();
